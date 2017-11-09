@@ -1,9 +1,6 @@
 ﻿using EPMConnector;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GoHome
 {
@@ -335,7 +332,7 @@ namespace GoHome
                                         SendRequest(
                                             Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
                                             Eleon.Modding.CmdId.Request_Player_ChangePlayerfield
-                                            , new Eleon.Modding.IdPlayfieldPositionRotation(obj.playerId, homeworldData.Playfield, homeworldData.Location, homeworldData.Rotation));
+                                             , new Eleon.Modding.IdPlayfieldPositionRotation(obj.playerId, homeworldData.Playfield, homeworldData.Location, homeworldData.Rotation));
                                     }
                                 }
 

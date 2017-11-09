@@ -2,8 +2,6 @@
 using EPMConnector;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 
 namespace PlanetOwnership
@@ -12,7 +10,7 @@ namespace PlanetOwnership
     // TODO: create API to send messages to players, factions, etc.
     // TODO: have module that keeps track of loaded playfields and then queries for structures on that playfield if owned.
     // ask for structures for that playfield regularly, and if factionId != 0 && != owningFactionId, then prompt before destorying them in X minutes.
-    
+
 
     class Program
     {
