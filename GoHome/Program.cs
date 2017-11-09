@@ -6,7 +6,7 @@ namespace GoHome
 {
     class Program
     {
-        static readonly string k_versionString = "GoHome 0.1 by Mortlath.";
+        static readonly string k_versionString = "GoHome 0.2 by Mortlath.";
 
         static EPMConnector.Client _client = new EPMConnector.Client();
 
@@ -42,12 +42,6 @@ namespace GoHome
                 {
                     Output("Empty Package id rec: {0}", p.cmd);
                     return;
-                }
-
-                //if (mainWindowDataContext != null && mainWindowDataContext.EnableOutput_DataRecieved)
-                {
-                    //Output("Package received, id: {0}, type: {1}", p.cmd, Enum.GetName(cmdType, p.cmd));
-                    //Output("received  event: c=" + p.cmd + " sNr=" + p.seqNr + " d=" + p.data + " client=" + client);
                 }
 
                 switch (p.cmd)
@@ -176,12 +170,6 @@ namespace GoHome
                             if (obj == null) { break; }
 
                             Output("Playfield {0} loaded pid={1}", obj.playfield, obj.processId);
-
-                            //lock (playfields)
-                            //{
-                            //    playfields.Add(obj.playfield);
-                            //    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.onlinePlayfields.Add(obj.playfield)));
-                            //}
                         }
                         break;
 
@@ -191,12 +179,6 @@ namespace GoHome
                             if (obj == null) { break; }
 
                             Output("Playfield {0} unloaded pid={1}", obj.playfield, obj.processId);
-
-                            //lock (playfields)
-                            //{
-                            //    playfields.Remove(obj.playfield);
-                            //    System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.onlinePlayfields.Remove(obj.playfield)));
-                            //}
                         }
                         break;
 
@@ -326,13 +308,14 @@ namespace GoHome
                                     if (config.FactionHomeWorlds.ContainsKey(playerInfoById[obj.playerId].factionId))
                                     {
                                         var homeworldData = config.FactionHomeWorlds[playerInfoById[obj.playerId].factionId];
+                                        var location = homeworldData.GetNextLocation();
                                         //string playfield = ;
                                         //Eleon.Modding.PVector3 co = new Eleon.Modding.PVector3(0, 150, 0);
                                         //Eleon.Modding.PVector3 rot = new Eleon.Modding.PVector3(0, 0, 0);
                                         SendRequest(
                                             Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
                                             Eleon.Modding.CmdId.Request_Player_ChangePlayerfield
-                                             , new Eleon.Modding.IdPlayfieldPositionRotation(obj.playerId, homeworldData.Playfield, homeworldData.Location, homeworldData.Rotation));
+                                            , new Eleon.Modding.IdPlayfieldPositionRotation(obj.playerId, homeworldData.Playfield, location.Position, location.Rotation));
                                     }
                                 }
 

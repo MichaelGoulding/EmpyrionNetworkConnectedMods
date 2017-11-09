@@ -22,13 +22,37 @@ namespace GoHome.Config
             }
         }
 
+        public class WarpLocation
+        {
+            public Vector3 Position { get; set; }
+
+            public Vector3 Rotation { get; set; }
+        }
+
         public class FactionHomeWorldData
         {
             public string Playfield { get; set; }
 
-            public Vector3 Location { get; set; }
+            public List<WarpLocation> WarpLocations { get; set; }
 
-            public Vector3 Rotation { get; set; }
+            public FactionHomeWorldData()
+            {
+                WarpLocations = new List<WarpLocation>();
+            }
+
+            public WarpLocation GetNextLocation()
+            {
+                var nextLocation = WarpLocations[_currentLocationIndex];
+
+                if (++_currentLocationIndex > WarpLocations.Count)
+                {
+                    _currentLocationIndex = 0;
+                }
+
+                return nextLocation;
+            }
+
+            private int _currentLocationIndex = 0;
         }
 
         public Dictionary<int, FactionHomeWorldData> FactionHomeWorlds { get; set; }

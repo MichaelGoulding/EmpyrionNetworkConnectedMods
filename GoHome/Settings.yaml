@@ -6,21 +6,31 @@ GameServerApiPort: 22345
 FactionHomeWorlds:
  100:
   Playfield: "Akua2"
-  Location:
-   X: 0.0
-   Y: 150.0
-   Z: 0.0
-  Rotation:
-   X: 0.0
-   Y: 0.0
-   Z: 0.0
+  WarpLocations:
+   - Position:
+      X: 0.0
+      Y: 150.0
+      Z: 0.0
+     Rotation:
+      X: 0.0
+      Y: 0.0
+      Z: 0.0
+   - Position:
+      X: 150.0
+      Y: 150.0
+      Z: 0.0
+     Rotation:
+      X: 0.0
+      Y: 0.0
+      Z: 0.0
  71:
   Playfield: "Omicron"
-  Location:
-   X: 0.0
-   Y: 150.0
-   Z: 0.0
-  Rotation:
-   X: 0.0
-   Y: 0.0
-   Z: 0.0
+  WarpLocations:
+   - Position:
+      X: 0.0
+      Y: 150.0
+      Z: 0.0
+     Rotation:
+      X: 0.0
+      Y: 0.0
+      Z: 0.0
