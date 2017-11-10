@@ -317,13 +317,13 @@ namespace GoHome
                                         homeworldData = config.FactionHomeWorlds[-1];
                                     }
 
-                                    if (homeworldData != null)
+                                    if (homeworldData != null && ((homeworldData.FromPlayfield == null) || homeworldData.FromPlayfield == playerInfoById[obj.playerId].playfield))
                                     {
                                         var location = homeworldData.GetNextLocation();
                                         SendRequest(
                                             Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
                                             Eleon.Modding.CmdId.Request_Player_ChangePlayerfield
-                                            , new Eleon.Modding.IdPlayfieldPositionRotation(obj.playerId, homeworldData.Playfield, location.Position, location.Rotation));
+                                            , new Eleon.Modding.IdPlayfieldPositionRotation(obj.playerId, homeworldData.ToPlayfield, location.Position, location.Rotation));
                                     }
                                 }
 

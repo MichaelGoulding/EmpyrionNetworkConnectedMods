@@ -33,7 +33,9 @@ namespace GoHome.Config
 
         public class FactionHomeWorldData
         {
-            public string Playfield { get; set; }
+            public string FromPlayfield { get; set; }
+
+            public string ToPlayfield { get; set; }
 
             public List<WarpLocation> WarpLocations { get; set; }
 

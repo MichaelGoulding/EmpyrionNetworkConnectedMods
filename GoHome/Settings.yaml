@@ -6,9 +6,11 @@ TeleportCommand: "/gohome"
 
 # key is the faction id (or player id if not in a faction)
 # -1 means any player that doesn't match any other entry.
+# FromPlayfield can be left out to let people go from any playfield
 FactionHomeWorlds:
- 102:
-  Playfield: "Akua2"
+ 103:
+  FromPlayfield: "Akua Orbit"
+  ToPlayfield: "Akua2"
   WarpLocations:
    - Position:
       X: 0.0
@@ -27,7 +29,7 @@ FactionHomeWorlds:
       Y: 0.0
       Z: 0.0
  -1:
-  Playfield: "Omicron"
+  ToPlayfield: "Omicron"
   WarpLocations:
    - Position:
       X: 0.0
