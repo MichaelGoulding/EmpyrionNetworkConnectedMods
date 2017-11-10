@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlanetOwnership", "PlanetOw
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoHome", "GoHome\GoHome.csproj", "{E936179F-CFC8-45F5-9B1C-EE699EE76EA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPMConnector", "..\sample-empyrion-mod\EPMConnector\EPMConnector.csproj", "{AE40B2D3-69EF-4D5E-B1FB-38EECE976811}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPMConnector", "sample-empyrion-mod\EPMConnector\EPMConnector.csproj", "{AE40B2D3-69EF-4D5E-B1FB-38EECE976811}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

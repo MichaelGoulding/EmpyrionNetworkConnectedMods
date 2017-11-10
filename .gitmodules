@@ -1,0 +1,3 @@
+[submodule "sample-empyrion-mod"]
+	path = sample-empyrion-mod
+	url = https://github.com/MichaelGoulding/sample-empyrion-mod

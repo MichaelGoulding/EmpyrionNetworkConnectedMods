@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>GoHome</RootNamespace>
     <AssemblyName>GoHome</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,16 +32,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Empyrion - Galactic Survival\Empyrion_Data\Managed\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\Dependencies\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Mif">
-      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Empyrion - Galactic Survival\Empyrion_Data\Managed\Mif.dll</HintPath>
+      <HintPath>..\Dependencies\Mif.dll</HintPath>
     </Reference>
     <Reference Include="protobuf-net">
-      <HintPath>..\Empyrion Mod\protobuf-net.dll</HintPath>
+      <HintPath>..\Dependencies\protobuf-net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -61,7 +63,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\sample-empyrion-mod\EPMConnector\EPMConnector.csproj">
+    <ProjectReference Include="..\sample-empyrion-mod\EPMConnector\EPMConnector.csproj">
       <Project>{ae40b2d3-69ef-4d5e-b1fb-38eece976811}</Project>
       <Name>EPMConnector</Name>
     </ProjectReference>
