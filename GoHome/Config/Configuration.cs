@@ -10,6 +10,8 @@ namespace GoHome.Config
         public string GameServerIp { get; set; }
         public int GameServerApiPort { get; set; }
 
+        public string TeleportCommand { get; set; }
+
         public class Vector3
         {
             public float X { get; set; }
@@ -44,7 +46,7 @@ namespace GoHome.Config
             {
                 var nextLocation = WarpLocations[_currentLocationIndex];
 
-                if (++_currentLocationIndex > WarpLocations.Count)
+                if (++_currentLocationIndex >= WarpLocations.Count)
                 {
                     _currentLocationIndex = 0;
                 }
@@ -59,8 +61,10 @@ namespace GoHome.Config
 
         public Configuration()
         {
+            // set defaults
             GameServerIp = "127.0.0.1";
             GameServerApiPort = 12345;
+            TeleportCommand = "/gohome";
         }
 
         public static Configuration GetConfiguration(String filePath)

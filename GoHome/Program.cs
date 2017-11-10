@@ -301,17 +301,25 @@ namespace GoHome
                                 ChatMessage(k_versionString);
                             }
 
-                            if (obj.msg == "/gohome" || obj.msg == "s! /gohome")
+                            if (obj.msg ==config.TeleportCommand || obj.msg == string.Format("s! {0}", config.TeleportCommand))
                             {
                                 lock (playerInfoById)
                                 {
+                                    Config.Configuration.FactionHomeWorldData homeworldData = null;
+
                                     if (config.FactionHomeWorlds.ContainsKey(playerInfoById[obj.playerId].factionId))
                                     {
-                                        var homeworldData = config.FactionHomeWorlds[playerInfoById[obj.playerId].factionId];
+                                        homeworldData = config.FactionHomeWorlds[playerInfoById[obj.playerId].factionId];
+                                    }
+                                    else if(config.FactionHomeWorlds.ContainsKey(-1))
+                                    {
+                                        // everyone else goes to the default
+                                        homeworldData = config.FactionHomeWorlds[-1];
+                                    }
+
+                                    if (homeworldData != null)
+                                    {
                                         var location = homeworldData.GetNextLocation();
-                                        //string playfield = ;
-                                        //Eleon.Modding.PVector3 co = new Eleon.Modding.PVector3(0, 150, 0);
-                                        //Eleon.Modding.PVector3 rot = new Eleon.Modding.PVector3(0, 0, 0);
                                         SendRequest(
                                             Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
                                             Eleon.Modding.CmdId.Request_Player_ChangePlayerfield
