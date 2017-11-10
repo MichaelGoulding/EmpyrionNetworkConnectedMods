@@ -317,13 +317,24 @@ namespace GoHome
                                         homeworldData = config.FactionHomeWorlds[-1];
                                     }
 
-                                    if (homeworldData != null && ((homeworldData.FromPlayfield == null) || homeworldData.FromPlayfield == playerInfoById[obj.playerId].playfield))
+                                    if (homeworldData != null)
                                     {
-                                        var location = homeworldData.GetNextLocation();
-                                        SendRequest(
-                                            Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
-                                            Eleon.Modding.CmdId.Request_Player_ChangePlayerfield
-                                            , new Eleon.Modding.IdPlayfieldPositionRotation(obj.playerId, homeworldData.ToPlayfield, location.Position, location.Rotation));
+                                        if((homeworldData.FromPlayfield == null) || homeworldData.FromPlayfield == playerInfoById[obj.playerId].playfield)
+                                        {
+                                            var location = homeworldData.GetNextLocation();
+                                            SendRequest(
+                                                Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
+                                                Eleon.Modding.CmdId.Request_Player_ChangePlayerfield
+                                                , new Eleon.Modding.IdPlayfieldPositionRotation(obj.playerId, homeworldData.ToPlayfield, location.Position, location.Rotation));
+                                        }
+                                        else
+                                        {
+                                            // TODO: send failure message to player
+                                        }
+                                    }
+                                    else
+                                    {
+                                        // TODO: send failure message to player
                                     }
                                 }
 
