@@ -3,8 +3,6 @@
 ################################################################################
 
 /.vs
-/GoHome/bin
-/GoHome/obj
 /packages
-/PlanetOwnership/bin
-/PlanetOwnership/obj
+/**/bin
+/**/obj

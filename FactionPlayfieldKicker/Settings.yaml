@@ -1,0 +1,11 @@
+﻿---
+GameServerIp: "127.0.0.1"
+GameServerApiPort: 22345
+
+BootMessage: "You are not allowed to enter this faction's playfield."
+
+# key is the faction id (or player id if not in a faction)
+# -1 means any player that doesn't match any other entry.
+# FromPlayfield can be left out to let people go from any playfield
+FactionHomeWorlds:
+  "Akua Orbit": 712
