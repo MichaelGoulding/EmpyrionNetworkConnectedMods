@@ -22,9 +22,71 @@ namespace SharedCode
 
         BaseConfiguration _config;
 
+        class RequestTracker
+        {
+            private ushort _nextAvailableId = 0;
+            private Dictionary<ushort, (Type, object/*TaskCompletionSource<T>*/)> _taskCompletionSourcesById = new Dictionary<ushort, (Type, object)>();
+
+            public (ushort, TaskCompletionSource<T>) GetNewTaskCompletionSource<T>()
+            {
+                if (_nextAvailableId == ushort.MaxValue)
+                {
+                    _nextAvailableId = 0;
+                }
+
+                var newId = _nextAvailableId++;
+
+                var taskCompletionSource = new TaskCompletionSource<T>();
+                _taskCompletionSourcesById[newId] = (typeof(T), taskCompletionSource);
+
+                return (newId, taskCompletionSource);
+            }
+
+            // Remove it from the list
+            public TaskCompletionSource<T> GetTaskCompletionSourceForId<T>(ushort trackingId)
+            {
+                System.Diagnostics.Debug.Assert(_taskCompletionSourcesById.ContainsKey(trackingId));
+
+                (Type type, object tcs) = _taskCompletionSourcesById[trackingId];
+
+                var taskCompletionSource = tcs as TaskCompletionSource<T>;
+                _taskCompletionSourcesById.Remove(trackingId);
+
+                return taskCompletionSource;
+            }
+
+            public bool TryFailTaskCompletionSourceForId(ushort trackingId, Exception ex)
+            {
+                bool trackingIdFound = _taskCompletionSourcesById.ContainsKey(trackingId);
+
+                if (trackingIdFound)
+                {
+                    (Type type, object tcs) = _taskCompletionSourcesById[trackingId];
+                    _taskCompletionSourcesById.Remove(trackingId);
+
+                    dynamic taskCompletionSource = Convert.ChangeType(tcs, type);
+
+                    taskCompletionSource.SetException(ex);
+                }
+
+                return trackingIdFound;
+            }
+
+        }
+
+        private RequestTracker _requestTracker = new RequestTracker();
+
         #endregion
 
+        #region Public Events
+
         public event Action<Eleon.Modding.IdPlayfield, PlayerInfo> Event_Player_ChangedPlayfield;
+
+        public event Action<Eleon.Modding.ChatInfo, PlayerInfo> Event_ChatMessage;
+
+        #endregion
+
+        #region Public Methods
 
         public GameServerConnection( string versionString, BaseConfiguration config )
         {
@@ -56,6 +118,11 @@ namespace SharedCode
 
         public void SendRequest(Eleon.Modding.CmdId cmdID, Eleon.Modding.CmdId seqNr, object data)
         {
+            SendRequest(cmdID, (ushort)seqNr, data);
+        }
+
+        public void SendRequest(Eleon.Modding.CmdId cmdID, ushort seqNr, object data)
+        {
             DebugOutput("SendRequest: Command {0} SeqNr: {1}", cmdID, seqNr);
             _client.Send(cmdID, (ushort)seqNr, data);
         }
@@ -75,13 +142,35 @@ namespace SharedCode
             }
         }
 
+        public async Task<Eleon.Modding.ItemExchangeInfo> GetItemsFromPlayer(int entityId, string title, string description, string buttonText)
+        {
+            (var trackingId, var taskCompletionSource) = _requestTracker.GetNewTaskCompletionSource<Eleon.Modding.ItemExchangeInfo>();
+
+            var data = new Eleon.Modding.ItemExchangeInfo();
+            data.id = entityId;
+            data.title = title;
+            data.desc = description;
+            data.buttonText = buttonText;
+
+            SendRequest(
+                Eleon.Modding.CmdId.Request_Player_ItemExchange,
+                trackingId,
+                data);
+
+            return await taskCompletionSource.Task;
+        }
+
+        #endregion
+
+        #region Private Helper Methods
+
         private void Client_GameEventReceived(EPMConnector.ModProtocol.Package p)
         {
             try
             {
                 if (p.data == null)
                 {
-                    DebugOutput("Empty Package id rec: {0}", p.cmd);
+                    DebugOutput("Empty Package cmd:{0}, seqnr:{1}", p.cmd, p.seqNr);
                     return;
                 }
 
@@ -184,6 +273,53 @@ namespace SharedCode
                             {
                                 ChatMessage(k_versionString);
                             }
+                            else
+                            {
+                                PlayerInfo playerInfo;
+                                lock(_playerInfoById)
+                                {
+                                    playerInfo = _playerInfoById[obj.playerId];
+                                }
+
+                                Event_ChatMessage?.Invoke(obj, playerInfo);
+                            }
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_ConsoleCommand:
+                        {
+                            Eleon.Modding.ConsoleCommandInfo obj = (Eleon.Modding.ConsoleCommandInfo)p.data;
+                            DebugOutput("Player {0}; Console command: {1} Allowed: {2}", obj.playerEntityId, obj.command, obj.allowed);
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Ok:
+                        {
+                            DebugOutput("Event Ok seqnr {0}", p.seqNr);
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Error:
+                        {
+                            Eleon.Modding.ErrorInfo eInfo = (Eleon.Modding.ErrorInfo)p.data;
+
+                            if (!_requestTracker.TryFailTaskCompletionSourceForId(p.seqNr, new Exception(eInfo.ToString())))
+                            {
+                                Eleon.Modding.CmdId cmdId = (Eleon.Modding.CmdId)p.seqNr;
+                                DebugOutput("Event Error {0}, CmdId {1}", eInfo.errorType, cmdId);
+                            }
+                        }
+                        break;
+
+                    case Eleon.Modding.CmdId.Event_Player_ItemExchange:
+                        {
+                            var obj = (Eleon.Modding.ItemExchangeInfo)p.data;
+
+                            DebugOutput("Event_Player_ItemExchange: Request: {0}, Player: {1}", p.seqNr, obj.id);
+
+                            var tcs = _requestTracker.GetTaskCompletionSourceForId<Eleon.Modding.ItemExchangeInfo>(p.seqNr);
+
+                            tcs.SetResult(obj);
                         }
                         break;
 
@@ -194,7 +330,7 @@ namespace SharedCode
             }
             catch (Exception ex)
             {
-                DebugOutput("Error: {0}", ex.Message);
+                DebugOutput("Exception: {0}", ex.Message);
             }
         }
 
@@ -208,6 +344,8 @@ namespace SharedCode
                 }
             }
         }
+
+        #endregion
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
