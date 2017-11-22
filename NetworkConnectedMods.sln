@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPMConnector", "sample-empy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FactionPlayfieldKicker", "FactionPlayfieldKicker\FactionPlayfieldKicker.csproj", "{2B0CB797-9959-43B8-97BC-CE506B884524}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedCode", "SharedCode\SharedCode.csproj", "{B563D94F-874F-42CD-A498-7164FEEC86DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{2B0CB797-9959-43B8-97BC-CE506B884524}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2B0CB797-9959-43B8-97BC-CE506B884524}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2B0CB797-9959-43B8-97BC-CE506B884524}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B563D94F-874F-42CD-A498-7164FEEC86DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B563D94F-874F-42CD-A498-7164FEEC86DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B563D94F-874F-42CD-A498-7164FEEC86DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B563D94F-874F-42CD-A498-7164FEEC86DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
