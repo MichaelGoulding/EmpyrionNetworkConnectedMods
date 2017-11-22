@@ -32,10 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\sample-empyrion-mod\DeathMessenger\dependencies\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="Mif">
+    <Reference Include="Mif, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sample-empyrion-mod\Empyrion Mod\dependencies\Mif.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -59,9 +57,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\sample-empyrion-mod\EPMConnector\EPMConnector.csproj">
-      <Project>{ae40b2d3-69ef-4d5e-b1fb-38eece976811}</Project>
-      <Name>EPMConnector</Name>
+    <ProjectReference Include="..\SharedCode\SharedCode.csproj">
+      <Project>{b563d94f-874f-42cd-a498-7164feec86db}</Project>
+      <Name>SharedCode</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
