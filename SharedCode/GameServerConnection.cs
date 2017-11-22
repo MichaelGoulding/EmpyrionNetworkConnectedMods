@@ -24,7 +24,7 @@ namespace SharedCode
 
         class RequestTracker
         {
-            private ushort _nextAvailableId = 0;
+            private ushort _nextAvailableId = 12340;
             private Dictionary<ushort, (Type, object/*TaskCompletionSource<T>*/)> _taskCompletionSourcesById = new Dictionary<ushort, (Type, object)>();
 
             public (ushort, TaskCompletionSource<T>) GetNewTaskCompletionSource<T>()
@@ -142,7 +142,7 @@ namespace SharedCode
             }
         }
 
-        public async Task<Eleon.Modding.ItemExchangeInfo> GetItemsFromPlayer(int entityId, string title, string description, string buttonText)
+        public async Task<Eleon.Modding.ItemExchangeInfo> DoItemExchangeWithPlayer(int entityId, string title, string description, string buttonText, Eleon.Modding.ItemStack[] items = null )
         {
             (var trackingId, var taskCompletionSource) = _requestTracker.GetNewTaskCompletionSource<Eleon.Modding.ItemExchangeInfo>();
 
@@ -151,6 +151,7 @@ namespace SharedCode
             data.title = title;
             data.desc = description;
             data.buttonText = buttonText;
+            data.items = items;
 
             SendRequest(
                 Eleon.Modding.CmdId.Request_Player_ItemExchange,
@@ -208,7 +209,7 @@ namespace SharedCode
                     case Eleon.Modding.CmdId.Event_Player_Info:
                         {
                             Eleon.Modding.PlayerInfo pInfo = (Eleon.Modding.PlayerInfo)p.data;
-                            if (pInfo == null) { break; }
+
                             DebugOutput("Player info (seqnr {0}): cid={1} eid={2} name={3} playfield={4} fac={5}", p.seqNr, pInfo.clientId, pInfo.entityId, pInfo.playerName, pInfo.playfield, pInfo.factionId);
 
                             lock (_playerInfoById)
@@ -247,7 +248,6 @@ namespace SharedCode
                     case Eleon.Modding.CmdId.Event_ChatMessage:
                         {
                             Eleon.Modding.ChatInfo obj = (Eleon.Modding.ChatInfo)p.data;
-                            if (obj == null) { break; }
 
                             string typeName;
                             switch (obj.type)

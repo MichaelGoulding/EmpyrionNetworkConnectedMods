@@ -1,0 +1,9 @@
+﻿---
+GameServerIp: "127.0.0.1"
+GameServerApiPort: 22345
+PlayerUpdateIntervalInSeconds: 20
+
+
+ItemIdToUnitPrice:
+  2415: 1
+  2413: 0.1
