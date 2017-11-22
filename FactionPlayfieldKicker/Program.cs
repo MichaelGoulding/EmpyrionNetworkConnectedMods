@@ -1,11 +1,13 @@
 ﻿using SharedCode.ExtensionMethods;
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace FactionPlayfieldKicker
 {
     class Program
     {
-        static readonly string k_versionString = "FactionPlayfieldKicker 0.1 by Mortlath.";
+        static readonly string k_versionString = (typeof(Program).GetTypeInfo().Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute)).SingleOrDefault() as AssemblyTitleAttribute).Title;
 
         static SharedCode.GameServerConnection _gameServerConnection;
 
