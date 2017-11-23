@@ -81,7 +81,7 @@ namespace SecureTrading
         {
             if( chatInfo.msg == "/sell")
             {
-                var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 1", "Place Items to get a price", "Get Price");
+                var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 1", "Place Items to get a price", "Process"); // BUG: button text can only be set once "Get Price");
 
                 task.ContinueWith(
                     async (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
@@ -101,7 +101,13 @@ namespace SecureTrading
 
                             var message = string.Format("We will pay you {0} credits.", credits);
 
-                            var itemExchangeInfoSold = await _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 2", message, "Sell Items", itemExchangeInfoInQuote.items);
+                            var itemExchangeInfoSold =
+                            await _gameServerConnection.DoItemExchangeWithPlayer(
+                                player,
+                                "Sell Items - Step 2",
+                                message,
+                                "Process", // BUG: button text can only be set once "Sell Items",
+                                itemExchangeInfoInQuote.items);
 
                             if((itemExchangeInfoSold.items != null) && (itemExchangeInfoSold.items.AreTheSame(itemExchangeInfoInQuote.items)))
                             {
