@@ -22,6 +22,11 @@ namespace SharedCode
             this.z = pos.z;
         }
 
+        public override string ToString()
+        {
+            return string.Format("({0},{1},{2})", x, y, z);
+        }
+
         public override bool Equals(object obj)
         {
             if (!(obj is Vector3))

@@ -33,19 +33,19 @@ namespace SharedCode
                 , new Eleon.Modding.IdPlayfieldPositionRotation(_entityId, newWorldPosition.playfield.Name, newWorldPosition.position, newWorldPosition.rotation));
         }
 
-        public void SendNormalMessage(string format, params object[] args)
+        public void SendAlarmMessage(string format, params object[] args)
         {
-            SendMessage(MessagePriority.Normal, 100, format, args);
+            SendMessage(MessagePriority.Alarm, 10, format, args);
         }
 
         public void SendAlertMessage(string format, params object[] args)
         {
-            SendMessage(MessagePriority.Alert, 100, format, args);
+            SendMessage(MessagePriority.Alert, 10, format, args);
         }
 
         public void SendAttentionMessage(string format, params object[] args)
         {
-            SendMessage(MessagePriority.Attention, 100, format, args);
+            SendMessage(MessagePriority.Attention, 10, format, args);
         }
 
         public void SendMessage(MessagePriority priority, float time, string format, params object[] args)

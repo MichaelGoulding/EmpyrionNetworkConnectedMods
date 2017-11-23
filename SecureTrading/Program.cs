@@ -1,4 +1,5 @@
-﻿using SharedCode.ExtensionMethods;
+﻿using SharedCode;
+using SharedCode.ExtensionMethods;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace SecureTrading
     {
         static readonly string k_versionString = (typeof(Program).GetTypeInfo().Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute)).SingleOrDefault() as AssemblyTitleAttribute).Title;
 
-        static SharedCode.GameServerConnection _gameServerConnection;
+        static GameServerConnection _gameServerConnection;
 
         static Configuration config;
 
@@ -50,9 +51,11 @@ namespace SecureTrading
         {
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "Settings.yaml";
 
+            //Configuration.TestFormat(configFilePath + ".yaml");
+
             config = Configuration.GetConfiguration<Configuration>(configFilePath);
 
-            using (_gameServerConnection = new SharedCode.GameServerConnection(k_versionString, config))
+            using (_gameServerConnection = new GameServerConnection(k_versionString, config))
             {
                 _gameServerConnection.Event_ChatMessage += OnEvent_ChatMessage;
 
@@ -77,52 +80,69 @@ namespace SecureTrading
 
         }
 
-        private static void OnEvent_ChatMessage(Eleon.Modding.ChatInfo chatInfo, SharedCode.Player player)
+        private static void OnEvent_ChatMessage(Eleon.Modding.ChatInfo chatInfo, Player player)
         {
-            if( chatInfo.msg == "/sell")
+            if ( chatInfo.msg == "/sell")
             {
-                var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 1", "Place Items to get a price", "Process"); // BUG: button text can only be set once "Get Price");
+                bool found = false;
+                foreach(var sellLocation in config.SellLocations)
+                {
+                    BoundingBox boundingBox = new BoundingBox(sellLocation.BoundingBox);
 
-                task.ContinueWith(
-                    async (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
+                    if (boundingBox.IsInside(player))
                     {
-                        var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
+                        found = true;
+                        var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 1", "Place Items to get a price", "Process"); // BUG: button text can only be set once "Get Price");
 
-                        while (itemExchangeInfoInQuote.items != null)
-                        {
-                            double credits = 0;
-                            foreach (var stack in itemExchangeInfoInQuote.items)
+                        task.ContinueWith(
+                            async (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
                             {
-                                if(config.ItemIdToUnitPrice.TryGetValue( stack.id, out double value))
+                                var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
+
+                                while (itemExchangeInfoInQuote.items != null)
                                 {
-                                    credits += value * stack.count;
+                                    double credits = 0;
+                                    foreach (var stack in itemExchangeInfoInQuote.items)
+                                    {
+                                        if (sellLocation.ItemIdToUnitPrice.TryGetValue(stack.id, out double value))
+                                        {
+                                            credits += value * stack.count;
+                                        }
+                                    }
+
+                                    var message = string.Format("We will pay you {0} credits.", credits);
+
+                                    var itemExchangeInfoSold =
+                                    await _gameServerConnection.DoItemExchangeWithPlayer(
+                                        player,
+                                        "Sell Items - Step 2",
+                                        message,
+                                        "Process", // BUG: button text can only be set once "Sell Items",
+                                        itemExchangeInfoInQuote.items);
+
+                                    if ((itemExchangeInfoSold.items != null) && (itemExchangeInfoSold.items.AreTheSame(itemExchangeInfoInQuote.items)))
+                                    {
+                                        _gameServerConnection.DebugOutput("Player {0} sold items for {1} credits.", player, credits);
+                                        player.AddCredits(credits);
+                                        player.SendAlertMessage("Items sold for {0} credits.", credits);
+                                        break;
+                                    }
+                                    else
+                                    {
+                                    // try again
+                                    _gameServerConnection.DebugOutput("Player {0} changed things.", player);
+                                        itemExchangeInfoInQuote = itemExchangeInfoSold;
+                                    }
                                 }
-                            }
+                            });
+                    }
+                }
 
-                            var message = string.Format("We will pay you {0} credits.", credits);
-
-                            var itemExchangeInfoSold =
-                            await _gameServerConnection.DoItemExchangeWithPlayer(
-                                player,
-                                "Sell Items - Step 2",
-                                message,
-                                "Process", // BUG: button text can only be set once "Sell Items",
-                                itemExchangeInfoInQuote.items);
-
-                            if((itemExchangeInfoSold.items != null) && (itemExchangeInfoSold.items.AreTheSame(itemExchangeInfoInQuote.items)))
-                            {
-                                _gameServerConnection.DebugOutput("Player {0} sold items for {1} credits.", player, credits);
-                                player.AddCredits(credits);
-                                break;
-                            }
-                            else
-                            {
-                                // try again
-                                _gameServerConnection.DebugOutput("Player {0} changed things.", player);
-                                itemExchangeInfoInQuote = itemExchangeInfoSold;
-                            }
-                        }
-                    });
+                if (!found)
+                {
+                    _gameServerConnection.DebugOutput("player not in the right spot: {0}", player.Position);
+                    player.SendAlarmMessage("Not a valid place to sell.");
+                }
             }
         }
     }

@@ -9,7 +9,7 @@ namespace SharedCode
 {
     public enum MessagePriority : byte
     {
-        Normal = 0,
+        Alarm = 0,
         Alert = 1,
         Attention = 2,
     }
@@ -162,9 +162,9 @@ namespace SharedCode
             return await taskCompletionSource.Task;
         }
 
-        public void SendNormalMessageToAll(string format, params object[] args)
+        public void SendAlarmlMessageToAll(string format, params object[] args)
         {
-            SendMessageToAll(MessagePriority.Normal, 100, format, args);
+            SendMessageToAll(MessagePriority.Alarm, 100, format, args);
         }
 
         public void SendAlertMessageToAll(string format, params object[] args)
