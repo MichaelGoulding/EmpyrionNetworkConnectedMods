@@ -32,7 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mif">
+    <Reference Include="Mif, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\sample-empyrion-mod\Empyrion Mod\dependencies\Mif.dll</HintPath>
     </Reference>
     <Reference Include="System" />

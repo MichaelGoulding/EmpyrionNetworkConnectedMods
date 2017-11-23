@@ -8,11 +8,7 @@ namespace SharedCode.ExtensionMethods
 {
     public static class Extensions
     {
-        public static bool GetIsPrivileged(this Eleon.Modding.PlayerInfo playerInfo)
-        {
-            // Player = 0, GameMaster = 3, Moderator = 6, Admin = 9 
-            return (playerInfo.permission >= 3) && (playerInfo.permission <= 9);
-        }
+
 
         public static bool AreTheSame( this Eleon.Modding.ItemStack[] lhs, Eleon.Modding.ItemStack[] rhs )
         {

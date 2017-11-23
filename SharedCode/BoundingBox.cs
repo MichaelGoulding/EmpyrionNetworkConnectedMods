@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PlanetOwnership
+namespace SharedCode
 {
-    class BoundingBox
+    public class BoundingBox
     {
         public class AreaEventArgs : EventArgs
         {
@@ -19,11 +19,11 @@ namespace PlanetOwnership
 
         public List<Player> PlayersInArea { get; private set; }
 
-        public BoundingBox()
+        public BoundingBox(string playfield, Rect3 rect)
         {
             PlayersInArea = new List<Player>();
-            _playfield = new Playfield("Akua2");
-            _rect = new Rect3(new Vector3(0, 0, 0), new Vector3(100, 100, 100));
+            _playfield = new Playfield(playfield);
+            _rect = rect;
         }
 
         public void OnPlayerUpdate(Player player)

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace PlanetOwnership
+namespace SharedCode
 {
-    struct Vector3 : IEquatable<Vector3>
+    public struct Vector3 : IEquatable<Vector3>
     {
         public float x;
         public float y;
@@ -15,7 +15,7 @@ namespace PlanetOwnership
             this.z = z;
         }
 
-        public Vector3(Eleon.Modding.PVector3 pos)
+        internal Vector3(Eleon.Modding.PVector3 pos)
         {
             this.x = pos.x;
             this.y = pos.y;
@@ -69,8 +69,10 @@ namespace PlanetOwnership
         {
             return !(vector1 == vector2);
         }
+
+        public static implicit operator Eleon.Modding.PVector3(Vector3 vector)
+        {
+            return new Eleon.Modding.PVector3(vector.x, vector.y, vector.z);
+        }
     }
-
-    // onPlayerEnteredPlayfield
-
 }

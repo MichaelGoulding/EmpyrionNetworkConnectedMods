@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PlanetOwnership
+namespace SharedCode
 {
-    struct Rect3 : IEquatable<Rect3>
+    public struct Rect3 : IEquatable<Rect3>
     {
         public Vector3 pt0;
         public Vector3 pt1;

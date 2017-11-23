@@ -77,11 +77,11 @@ namespace SecureTrading
 
         }
 
-        private static void OnEvent_ChatMessage(Eleon.Modding.ChatInfo chatInfo, Eleon.Modding.PlayerInfo playerInfo)
+        private static void OnEvent_ChatMessage(Eleon.Modding.ChatInfo chatInfo, SharedCode.Player player)
         {
             if( chatInfo.msg == "/sell")
             {
-                var task = _gameServerConnection.DoItemExchangeWithPlayer(playerInfo.entityId, "Sell Items - Step 1", "Place Items to get a price", "Get Price");
+                var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 1", "Place Items to get a price", "Get Price");
 
                 task.ContinueWith(
                     async (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
@@ -101,18 +101,18 @@ namespace SecureTrading
 
                             var message = string.Format("We will pay you {0} credits.", credits);
 
-                            var itemExchangeInfoSold = await _gameServerConnection.DoItemExchangeWithPlayer(playerInfo.entityId, "Sell Items - Step 2", message, "Sell Items", itemExchangeInfoInQuote.items);
+                            var itemExchangeInfoSold = await _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 2", message, "Sell Items", itemExchangeInfoInQuote.items);
 
                             if((itemExchangeInfoSold.items != null) && (itemExchangeInfoSold.items.AreTheSame(itemExchangeInfoInQuote.items)))
                             {
-                                _gameServerConnection.DebugOutput("Player {0} sold items for {1} credits.", playerInfo.entityId, credits);
-                                _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Player_AddCredits, Eleon.Modding.CmdId.Request_Player_AddCredits, new Eleon.Modding.IdCredits(playerInfo.entityId, credits));
+                                _gameServerConnection.DebugOutput("Player {0} sold items for {1} credits.", player, credits);
+                                player.AddCredits(credits);
                                 break;
                             }
                             else
                             {
                                 // try again
-                                _gameServerConnection.DebugOutput("Player {0} changed things.", playerInfo.entityId);
+                                _gameServerConnection.DebugOutput("Player {0} changed things.", player);
                                 itemExchangeInfoInQuote = itemExchangeInfoSold;
                             }
                         }

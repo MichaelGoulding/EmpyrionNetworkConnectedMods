@@ -49,10 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BoundingBox.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Faction.cs" />
     <Compile Include="GameServerConnection.cs" />
     <Compile Include="Config\BaseConfiguration.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="Playfield.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Rect3.cs" />
+    <Compile Include="Vector3.cs" />
+    <Compile Include="WorldPosition.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\sample-empyrion-mod\EPMConnector\EPMConnector.csproj">

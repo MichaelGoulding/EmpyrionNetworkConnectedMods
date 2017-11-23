@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>PlanetOwnership</RootNamespace>
     <AssemblyName>PlanetOwnership</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <TargetFrameworkProfile />
@@ -22,6 +22,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -31,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass">
@@ -53,20 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BoundingBox.cs" />
     <Compile Include="Config\Configuration.cs" />
     <Compile Include="Config\SaveState.cs" />
-    <Compile Include="Faction.cs" />
     <Compile Include="ItemId.cs" />
     <Compile Include="OwnershipChangeChecker.cs" />
     <Compile Include="OwnershipEnforcer.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="Playfield.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Rect3.cs" />
-    <Compile Include="Vector3.cs" />
-    <Compile Include="WorldPosition.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -78,6 +73,10 @@
     <ProjectReference Include="..\sample-empyrion-mod\EPMConnector\EPMConnector.csproj">
       <Project>{ae40b2d3-69ef-4d5e-b1fb-38eece976811}</Project>
       <Name>EPMConnector</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharedCode\SharedCode.csproj">
+      <Project>{b563d94f-874f-42cd-a498-7164feec86db}</Project>
+      <Name>SharedCode</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

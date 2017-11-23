@@ -30,46 +30,39 @@ namespace FactionPlayfieldKicker
             }
         }
 
-        private static void OnEvent_Player_ChangedPlayfield(Eleon.Modding.IdPlayfield obj, Eleon.Modding.PlayerInfo oldPlayerInfo)
+        private static void OnEvent_Player_ChangedPlayfield(SharedCode.Playfield newPlayfield, SharedCode.Player oldPlayerInfo)
         {
-            bool playfieldIsProtected = config.FactionHomeWorlds.ContainsKey(obj.playfield);
+            bool playfieldIsProtected = config.FactionHomeWorlds.ContainsKey(newPlayfield.Name);
 
             if (playfieldIsProtected)
             {
-                if (oldPlayerInfo.playfield != obj.playfield)
+                if (oldPlayerInfo.Position.playfield != newPlayfield)
                 {
-                    int factionIdAllowed = config.FactionHomeWorlds[obj.playfield];
+                    int factionIdAllowed = config.FactionHomeWorlds[newPlayfield.Name];
 
                     // check if player is allowed
-                    bool playerIsAllowed = (oldPlayerInfo.factionId == factionIdAllowed);
+                    bool playerIsAllowed = (oldPlayerInfo.MemberOfFaction == factionIdAllowed);
 
                     if (!playerIsAllowed)
                     {
-                        if (oldPlayerInfo.GetIsPrivileged())
+                        if (oldPlayerInfo.IsPrivileged)
                         {
-                            _gameServerConnection.DebugOutput("Privileged player {0} not moved out of playfield", oldPlayerInfo.entityId);
+                            _gameServerConnection.DebugOutput("Privileged player {0} not moved out of playfield", oldPlayerInfo);
                         }
                         else
                         {
-                            _gameServerConnection.DebugOutput("Moving player {0} out of new playfield.", oldPlayerInfo.entityId);
+                            _gameServerConnection.DebugOutput("Moving player {0} out of new playfield.", oldPlayerInfo);
 
-                            // send message to player
-                            _gameServerConnection.SendRequest(
-                                Eleon.Modding.CmdId.Request_InGameMessage_SinglePlayer,
-                                Eleon.Modding.CmdId.Request_InGameMessage_SinglePlayer,
-                                new Eleon.Modding.IdMsgPrio(oldPlayerInfo.entityId, config.BootMessage, 1, 100));
+                            oldPlayerInfo.SendAlertMessage(config.BootMessage);
 
                             // teleport them to their last location
-                            _gameServerConnection.SendRequest(
-                                Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
-                                Eleon.Modding.CmdId.Request_Player_ChangePlayerfield
-                                , new Eleon.Modding.IdPlayfieldPositionRotation(oldPlayerInfo.entityId, oldPlayerInfo.playfield, oldPlayerInfo.pos, oldPlayerInfo.rot));
+
                         }
                     }
                 }
                 else
                 {
-                    _gameServerConnection.DebugOutput("Can't move player {0} as last position is the same playfield as this one!", oldPlayerInfo.entityId);
+                    _gameServerConnection.DebugOutput("Can't move player {0} as last position is the same playfield as this one!", oldPlayerInfo);
                 }
             }
         }
