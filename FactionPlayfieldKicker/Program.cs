@@ -53,10 +53,10 @@ namespace FactionPlayfieldKicker
                         {
                             _gameServerConnection.DebugOutput("Moving player {0} out of new playfield.", oldPlayerInfo);
 
-                            oldPlayerInfo.SendAlertMessage(config.BootMessage);
+                            oldPlayerInfo.SendAlarmMessage(config.BootMessage);
 
                             // teleport them to their last location
-
+                            oldPlayerInfo.ChangePlayerfield(oldPlayerInfo.Position);
                         }
                     }
                 }
