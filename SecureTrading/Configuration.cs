@@ -17,6 +17,8 @@ namespace SecureTrading
             public SharedCode.BoundingBoxInfo BoundingBox { get; set; }
 
             public Dictionary<int, double> ItemIdToUnitPrice { get; set; }
+
+            public double DefaultPrice { get; set; }
         }
 
         public List<SellLocation> SellLocations { get; set; }
