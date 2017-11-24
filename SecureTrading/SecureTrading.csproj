@@ -60,6 +60,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SellToServerMod\SellToServerMod.csproj">
+      <Project>{f5bac378-0e04-49ac-ab40-ffbccb35f9e5}</Project>
+      <Name>SellToServerMod</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharedCode\SharedCode.csproj">
       <Project>{b563d94f-874f-42cd-a498-7164feec86db}</Project>
       <Name>SharedCode</Name>

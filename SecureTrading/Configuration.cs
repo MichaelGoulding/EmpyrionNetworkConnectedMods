@@ -12,24 +12,16 @@ namespace SecureTrading
 
     public class Configuration : SharedCode.BaseConfiguration
     {
-        public class SellLocation
-        {
-            public SharedCode.BoundingBoxInfo BoundingBox { get; set; }
-
-            public Dictionary<int, double> ItemIdToUnitPrice { get; set; }
-
-            public double DefaultPrice { get; set; }
-        }
-
-        public List<SellLocation> SellLocations { get; set; }
+        public SellToServerMod.Configuration SellToServerModConfiguration { get; set; }
 
         public static void TestFormat(string filePath)
         {
             Configuration testee = new Configuration();
+            testee.SellToServerModConfiguration = new SellToServerMod.Configuration();
 
-            testee.SellLocations = new List<SellLocation>();
+            testee.SellToServerModConfiguration.SellLocations = new List<SellToServerMod.Configuration.SellLocation>();
 
-            var location1 = new SellLocation();
+            var location1 = new SellToServerMod.Configuration.SellLocation();
             {
                 var rect = new SharedCode.BoundingBoxInfo.Rect3() { pt0 = new SharedCode.BoundingBoxInfo.Vector3 { x = 0, y = 6, z = 9 }, pt1 = new SharedCode.BoundingBoxInfo.Vector3 { x = 1, y = 2.6F, z = 5 } };
                 location1.BoundingBox = new SharedCode.BoundingBoxInfo { Playfield = "Akua2", Rect = rect };
@@ -37,9 +29,9 @@ namespace SecureTrading
                 location1.ItemIdToUnitPrice.Add(2415, 1);
                 location1.ItemIdToUnitPrice.Add(2413, 0.1);
             }
-            testee.SellLocations.Add(location1);
+            testee.SellToServerModConfiguration.SellLocations.Add(location1);
 
-            var location2 = new SellLocation();
+            var location2 = new SellToServerMod.Configuration.SellLocation();
             {
                 var rect = new SharedCode.BoundingBoxInfo.Rect3() { pt0 = new SharedCode.BoundingBoxInfo.Vector3 { x = 0, y = 6, z = 9 }, pt1 = new SharedCode.BoundingBoxInfo.Vector3 { x = 1, y = 2.6F, z = 5 } };
                 location2.BoundingBox = new SharedCode.BoundingBoxInfo { Playfield = "Akua2", Rect = rect };
@@ -47,7 +39,7 @@ namespace SecureTrading
                 location2.ItemIdToUnitPrice.Add(2415, 1);
                 location2.ItemIdToUnitPrice.Add(2413, 0.1);
             }
-            testee.SellLocations.Add(location2);
+            testee.SellToServerModConfiguration.SellLocations.Add(location2);
 
             using (var writer = System.IO.File.CreateText(filePath))
             {
@@ -55,11 +47,6 @@ namespace SecureTrading
 
                 serializer.Serialize(writer, testee);
             }
-        }
-
-        public Configuration()
-        {
-            //ItemIdToUnitPrice = new Dictionary<int, double>();
         }
     }
 }

@@ -55,9 +55,9 @@ namespace SecureTrading
 
             config = Configuration.GetConfiguration<Configuration>(configFilePath);
 
-            using (_gameServerConnection = new GameServerConnection(k_versionString, config))
+            using (_gameServerConnection = new GameServerConnection(config))
             {
-                _gameServerConnection.Event_ChatMessage += OnEvent_ChatMessage;
+                var sellToServerMod = new SellToServerMod.SellToServerMod(_gameServerConnection, config.SellToServerModConfiguration);
 
                 _gameServerConnection.Connect();
 
@@ -72,79 +72,12 @@ namespace SecureTrading
         {
             switch (chatInfo.msg)
             {
-                case "/sell":
-                    ProcessSellCommand(player);
-                    break;
                 case "/trade":
+                    ProcessTradeCommand(player);
                     break;
             }
         }
 
-        private static void ProcessSellCommand(Player player)
-        {
-            bool found = false;
-            foreach (var sellLocation in config.SellLocations)
-            {
-                BoundingBox boundingBox = new BoundingBox(sellLocation.BoundingBox);
-
-                if (boundingBox.IsInside(player))
-                {
-                    found = true;
-                    var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 1", "Place Items to get a price", "Process"); // BUG: button text can only be set once "Get Price");
-
-                    task.ContinueWith(
-                        async (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
-                        {
-                            var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
-
-                            while (itemExchangeInfoInQuote.items != null)
-                            {
-                                double credits = 0;
-                                foreach (var stack in itemExchangeInfoInQuote.items)
-                                {
-                                    double unitPrice;
-                                    if (! sellLocation.ItemIdToUnitPrice.TryGetValue(stack.id, out unitPrice) )
-                                    {
-                                        unitPrice = sellLocation.DefaultPrice;
-                                    }
-
-                                    credits += unitPrice * stack.count;
-                                }
-
-                                var message = string.Format("We will pay you {0} credits.", credits);
-
-                                var itemExchangeInfoSold =
-                                await _gameServerConnection.DoItemExchangeWithPlayer(
-                                    player,
-                                    "Sell Items - Step 2",
-                                    message,
-                                    "Process", // BUG: button text can only be set once "Sell Items",
-                                    itemExchangeInfoInQuote.items);
-
-                                if ((itemExchangeInfoSold.items != null) && (itemExchangeInfoSold.items.AreTheSame(itemExchangeInfoInQuote.items)))
-                                {
-                                    _gameServerConnection.DebugOutput("Player {0} sold items for {1} credits.", player, credits);
-                                    player.AddCredits(credits);
-                                    player.SendAlertMessage("Items sold for {0} credits.", credits);
-                                    break;
-                                }
-                                else
-                                {
-                                    // try again
-                                    _gameServerConnection.DebugOutput("Player {0} changed things.", player);
-                                    itemExchangeInfoInQuote = itemExchangeInfoSold;
-                                }
-                            }
-                        });
-                }
-            }
-
-            if (!found)
-            {
-                _gameServerConnection.DebugOutput("player not in the right spot: {0}", player.Position);
-                player.SendAlarmMessage("Not a valid place to sell.");
-            }
-        }
 
         private static void ProcessTradeCommand(Player player)
         {

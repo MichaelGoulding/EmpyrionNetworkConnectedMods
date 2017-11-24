@@ -4,7 +4,6 @@ using SharedCode;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Timers;
 
 namespace PlanetOwnership
@@ -17,7 +16,7 @@ namespace PlanetOwnership
 
     class Program
     {
-        static readonly string k_versionString = (typeof(Program).GetTypeInfo().Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute)).SingleOrDefault() as AssemblyTitleAttribute).Title;
+        static readonly string k_versionString = SharedCode.VersionHelper.GetVersionString(typeof(Program));
 
         static SharedCode.GameServerConnection _gameServerConnection;
 
@@ -39,8 +38,9 @@ namespace PlanetOwnership
 
             saveState = Config.SaveState.Load(saveStateFilePath);
 
-            using (_gameServerConnection = new SharedCode.GameServerConnection(k_versionString, config))
+            using (_gameServerConnection = new SharedCode.GameServerConnection(config))
             {
+                _gameServerConnection.AddVersionString(k_versionString);
                 _gameServerConnection.Event_Faction_Changed += OnEvent_Faction_Changed;
 
                 BoundingBox bbox = new BoundingBox("Akua2", new Rect3(new Vector3(0, 0, 0), new Vector3(100, 100, 100)));

@@ -18,7 +18,7 @@ namespace SharedCode
     {
         #region Private Data
 
-        readonly string k_versionString;
+        List<string> _versionStrings = new List<string>();
 
         EPMConnector.Client _client = new EPMConnector.Client();
 
@@ -97,15 +97,19 @@ namespace SharedCode
 
         #region Public Methods
 
-        public GameServerConnection( string versionString, BaseConfiguration config )
+        public GameServerConnection( BaseConfiguration config )
         {
             _config = config;
-            k_versionString = versionString;
             _playerUpdateTimer = new Timer(config.PlayerUpdateIntervalInSeconds * 1000);
             _playerUpdateTimer.Elapsed += OnPlayerUpdateTimer_Elapsed;
 
             _client.GameEventReceived += Client_GameEventReceived;
             _client.ClientMessages += (string s) => { Console.Out.WriteLine("Client_ClientMessages: {0}", s); };
+        }
+
+        public void AddVersionString(string versionString)
+        {
+            _versionStrings.Add(versionString);
         }
 
         public void Connect()
@@ -136,10 +140,14 @@ namespace SharedCode
             _client.Send(cmdID, (ushort)seqNr, data);
         }
 
-        public void ChatMessage(String msg)
+        public void SendChatMessageToAll(string format, params object[] args)
         {
-            String command = "SAY '" + msg + "'";
-            SendRequest(Eleon.Modding.CmdId.Request_ConsoleCommand, Eleon.Modding.CmdId.Request_InGameMessage_AllPlayers, new Eleon.Modding.PString(command));
+            string msg = string.Format(format, args);
+            string command = "SAY '" + msg + "'";
+            SendRequest(
+                Eleon.Modding.CmdId.Request_ConsoleCommand,
+                Eleon.Modding.CmdId.Request_InGameMessage_AllPlayers,
+                new Eleon.Modding.PString(command));
             DebugOutput("ChatMessage(\"{0}\")", msg);
         }
 
@@ -582,7 +590,10 @@ namespace SharedCode
 
                             if (obj.type != 8 && obj.type != 7 && obj.msg == "!MODS")
                             {
-                                ChatMessage(k_versionString);
+                                foreach( var versionString in _versionStrings)
+                                {
+                                    SendChatMessageToAll(versionString);
+                                }
                             }
                             else
                             {

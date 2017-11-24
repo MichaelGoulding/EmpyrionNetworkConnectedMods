@@ -1,13 +1,12 @@
 ﻿using SharedCode.ExtensionMethods;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace FactionPlayfieldKicker
 {
     class Program
     {
-        static readonly string k_versionString = (typeof(Program).GetTypeInfo().Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute)).SingleOrDefault() as AssemblyTitleAttribute).Title;
+        static readonly string k_versionString = SharedCode.VersionHelper.GetVersionString(typeof(Program));
 
         static SharedCode.GameServerConnection _gameServerConnection;
 
@@ -19,8 +18,9 @@ namespace FactionPlayfieldKicker
 
             config = Configuration.GetConfiguration<Configuration>(configFilePath);
 
-            using (_gameServerConnection = new SharedCode.GameServerConnection(k_versionString, config))
+            using (_gameServerConnection = new SharedCode.GameServerConnection(config))
             {
+                _gameServerConnection.AddVersionString(k_versionString);
                 _gameServerConnection.Event_Player_ChangedPlayfield += OnEvent_Player_ChangedPlayfield;
 
                 _gameServerConnection.Connect();

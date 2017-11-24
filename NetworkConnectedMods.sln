@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedCode", "SharedCode\Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureTrading", "SecureTrading\SecureTrading.csproj", "{782DB7B5-406C-4493-B32A-8D3C09C7EB76}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SellToServerMod", "SellToServerMod\SellToServerMod.csproj", "{F5BAC378-0E04-49AC-AB40-FFBCCB35F9E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{782DB7B5-406C-4493-B32A-8D3C09C7EB76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{782DB7B5-406C-4493-B32A-8D3C09C7EB76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{782DB7B5-406C-4493-B32A-8D3C09C7EB76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5BAC378-0E04-49AC-AB40-FFBCCB35F9E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5BAC378-0E04-49AC-AB40-FFBCCB35F9E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5BAC378-0E04-49AC-AB40-FFBCCB35F9E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5BAC378-0E04-49AC-AB40-FFBCCB35F9E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
