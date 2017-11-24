@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace FactionPlayfieldKicker
+namespace FactionPlayfieldKickerMod
 {
-    public class Configuration : SharedCode.BaseConfiguration
+    public class Configuration
     {
         public string BootMessage { get; set; }
 

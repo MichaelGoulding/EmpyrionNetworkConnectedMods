@@ -110,6 +110,7 @@ namespace SharedCode
         public void AddVersionString(string versionString)
         {
             _versionStrings.Add(versionString);
+            DebugOutput("Adding Mod: \"{0}\"", versionString);
         }
 
         public void Connect()

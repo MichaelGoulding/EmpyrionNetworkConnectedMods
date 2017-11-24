@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FactionPlayfieldKicker 0.2 by Mortlath")]
+[assembly: AssemblyTitle("FactionPlayfieldKickerMod 0.4 by Mortlath")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FactionPlayfieldKicker")]
+[assembly: AssemblyProduct("FactionPlayfieldKickerMod")]
 [assembly: AssemblyCopyright("Copyright ©  2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("2b0cb797-9959-43b8-97bc-ce506b884524")]
+[assembly: Guid("7e7da794-412d-4557-ac8c-fb511e8c28d7")]
 
 // Version information for an assembly consists of the following four values:
 //

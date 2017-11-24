@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2B0CB797-9959-43B8-97BC-CE506B884524}</ProjectGuid>
+    <ProjectGuid>{7942BF39-29F4-424C-904E-62C244DC8A2A}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>FactionPlayfieldKicker</RootNamespace>
-    <AssemblyName>FactionPlayfieldKicker</AssemblyName>
+    <RootNamespace>NetworkConnectedModRunner</RootNamespace>
+    <AssemblyName>NetworkConnectedModRunner</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -53,6 +53,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\FactionPlayfieldKickerMod\FactionPlayfieldKickerMod.csproj">
+      <Project>{7e7da794-412d-4557-ac8c-fb511e8c28d7}</Project>
+      <Name>FactionPlayfieldKickerMod</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SellToServerMod\SellToServerMod.csproj">
+      <Project>{f5bac378-0e04-49ac-ab40-ffbccb35f9e5}</Project>
+      <Name>SellToServerMod</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharedCode\SharedCode.csproj">
       <Project>{b563d94f-874f-42cd-a498-7164feec86db}</Project>
       <Name>SharedCode</Name>
