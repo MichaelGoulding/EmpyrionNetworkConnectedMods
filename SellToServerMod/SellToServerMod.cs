@@ -6,7 +6,7 @@ namespace SellToServerMod
 {
     public class SellToServerMod
     {
-        static readonly string k_versionString = SharedCode.VersionHelper.GetVersionString(typeof(SellToServerMod));
+        static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(SellToServerMod));
 
         public SellToServerMod(GameServerConnection gameServerConnection, Configuration config)
         {

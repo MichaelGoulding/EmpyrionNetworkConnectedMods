@@ -9,7 +9,7 @@ namespace FactionPlayfieldKickerMod
 {
     public class FactionPlayfieldKickerMod
     {
-        static readonly string k_versionString = VersionHelper.GetVersionString(typeof(FactionPlayfieldKickerMod));
+        static readonly string k_versionString = Helpers.GetVersionString(typeof(FactionPlayfieldKickerMod));
 
         public FactionPlayfieldKickerMod(GameServerConnection gameServerConnection, Configuration config)
         {

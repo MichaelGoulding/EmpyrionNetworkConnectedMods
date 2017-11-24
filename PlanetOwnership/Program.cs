@@ -16,7 +16,7 @@ namespace PlanetOwnership
 
     class Program
     {
-        static readonly string k_versionString = SharedCode.VersionHelper.GetVersionString(typeof(Program));
+        static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(Program));
 
         static SharedCode.GameServerConnection _gameServerConnection;
 

@@ -41,12 +41,7 @@ namespace SecureTrading
             }
             testee.SellToServerModConfiguration.SellLocations.Add(location2);
 
-            using (var writer = System.IO.File.CreateText(filePath))
-            {
-                var serializer = new YamlDotNet.Serialization.Serializer();
-
-                serializer.Serialize(writer, testee);
-            }
+            SharedCode.Helpers.SaveAsYaml(filePath, testee);
         }
     }
 }
