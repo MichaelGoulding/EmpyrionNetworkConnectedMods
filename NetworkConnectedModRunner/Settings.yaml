@@ -12,6 +12,18 @@ FactionPlayfieldKickerMod:
   FactionHomeWorlds:
     "Akua Orbit": 712
 
+
+StructureOwnershipMod:
+  CaptureRewardMinutes: 0.1
+  EntityCaptureItems:
+  - EntityId: 120001
+    CaptureRewardMinutes: 0.5
+    RewardItemStacks:
+    - Id: 2274
+      Amount: 1
+    - Id: 2276
+      Amount: 2
+
 SellToServerMod:
   SellLocations:
   - BoundingBox:

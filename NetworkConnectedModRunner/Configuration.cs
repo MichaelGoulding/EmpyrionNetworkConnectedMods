@@ -6,6 +6,8 @@ namespace NetworkConnectedModRunner
     {
         public FactionPlayfieldKickerMod.Configuration FactionPlayfieldKickerMod { get; set; }
 
+        public StructureOwnershipMod.Configuration StructureOwnershipMod { get; set; }
+
         public SellToServerMod.Configuration SellToServerMod { get; set; }
 
         public static void TestFormat(string filePath)

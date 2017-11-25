@@ -22,7 +22,7 @@ namespace SharedCode
 
         EPMConnector.Client _client = new EPMConnector.Client();
 
-        Dictionary<int, Player> _playerInfoById = new Dictionary<int, Player>();
+        Dictionary<int, Player> _onlinePlayersInfoById = new Dictionary<int, Player>();
         Timer _playerUpdateTimer;
 
         List<BoundingBox> _bboxes = new List<BoundingBox>();
@@ -203,6 +203,11 @@ namespace SharedCode
             }
         }
 
+        public Dictionary<int, Player> GetOnlinePlayers()
+        {
+            return _onlinePlayersInfoById;
+        }
+
         #endregion
 
         #region Private Helper Methods
@@ -369,9 +374,9 @@ namespace SharedCode
 
                             DebugOutput("Event_Player_Disconnected - Player with id {0} disconnected", entityId);
 
-                            lock (_playerInfoById)
+                            lock (_onlinePlayersInfoById)
                             {
-                                _playerInfoById.Remove(entityId);
+                                _onlinePlayersInfoById.Remove(entityId);
                             }
                         }
                         break;
@@ -382,11 +387,11 @@ namespace SharedCode
 
                             DebugOutput("Event_Player_ChangedPlayfield - Player with id {0} changes to playfield {1}", obj.id, obj.playfield);
 
-                            lock (_playerInfoById)
+                            lock (_onlinePlayersInfoById)
                             {
-                                if (_playerInfoById.ContainsKey(obj.id))
+                                if (_onlinePlayersInfoById.ContainsKey(obj.id))
                                 {
-                                    var player = _playerInfoById[obj.id];
+                                    var player = _onlinePlayersInfoById[obj.id];
 
                                     // TODO: look up playfield object by name
                                     var newPlayfield = new Playfield(obj.playfield);
@@ -599,9 +604,9 @@ namespace SharedCode
                             else
                             {
                                 Player player;
-                                lock (_playerInfoById)
+                                lock (_onlinePlayersInfoById)
                                 {
-                                    player = _playerInfoById[obj.playerId];
+                                    player = _onlinePlayersInfoById[obj.playerId];
                                 }
 
                                 Event_ChatMessage?.Invoke(obj, player);
@@ -734,22 +739,22 @@ namespace SharedCode
 
         private void Process_Event_Player_Info(EPMConnector.ModProtocol.Package p, Eleon.Modding.PlayerInfo pInfo)
         {
-            lock (_playerInfoById)
+            lock (_onlinePlayersInfoById)
             {
-                if (_playerInfoById.ContainsKey(pInfo.entityId))
+                if (_onlinePlayersInfoById.ContainsKey(pInfo.entityId))
                 {
-                    _playerInfoById[pInfo.entityId].UpdateInfo(pInfo);
+                    _onlinePlayersInfoById[pInfo.entityId].UpdateInfo(pInfo);
                 }
                 else
                 {
-                    _playerInfoById[pInfo.entityId] = new Player(this, pInfo);
+                    _onlinePlayersInfoById[pInfo.entityId] = new Player(this, pInfo);
                 }
 
                 lock (_bboxes)
                 {
                     foreach (var bbox in _bboxes)
                     {
-                        bbox.OnPlayerUpdate(_playerInfoById[pInfo.entityId]);
+                        bbox.OnPlayerUpdate(_onlinePlayersInfoById[pInfo.entityId]);
                     }
                 }
             }
@@ -764,9 +769,9 @@ namespace SharedCode
 
         private void OnPlayerUpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            lock (_playerInfoById)
+            lock (_onlinePlayersInfoById)
             {
-                foreach (var entityId in _playerInfoById.Keys)
+                foreach (var entityId in _onlinePlayersInfoById.Keys)
                 {
                     SendRequest(Eleon.Modding.CmdId.Request_Player_Info, Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(entityId));
                 }
