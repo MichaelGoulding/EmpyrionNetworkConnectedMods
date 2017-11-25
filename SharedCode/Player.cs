@@ -109,13 +109,13 @@ namespace SharedCode
         {
             _entityId = pInfo.entityId;
             _gameServerConnection = gameServerConnection;
-            this.UpdateInfo(pInfo);
+            UpdateInfo(pInfo, _gameServerConnection.GetPlayfield(pInfo.playfield));
         }
 
-        internal void UpdateInfo(Eleon.Modding.PlayerInfo pInfo)
+        internal void UpdateInfo(Eleon.Modding.PlayerInfo pInfo, Playfield playfield)
         {
             System.Diagnostics.Debug.Assert(_entityId == pInfo.entityId);
-            this.Position = new WorldPosition { playfield = new Playfield(pInfo.playfield), position = new Vector3(pInfo.pos) };
+            this.Position = new WorldPosition { playfield = playfield, position = new Vector3(pInfo.pos) };
             this.MemberOfFaction = new Faction(pInfo.factionId);
             this.BpResourcesInFactory = pInfo.bpResourcesInFactory;
             _permission = pInfo.permission;

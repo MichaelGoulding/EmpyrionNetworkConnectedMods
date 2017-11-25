@@ -43,7 +43,7 @@ namespace PlanetOwnership
                 _gameServerConnection.AddVersionString(k_versionString);
                 _gameServerConnection.Event_Faction_Changed += OnEvent_Faction_Changed;
 
-                BoundingBox bbox = new BoundingBox("Akua2", new Rect3(new Vector3(0, 0, 0), new Vector3(100, 100, 100)));
+                BoundingBox bbox = new BoundingBox(_gameServerConnection.GetPlayfield("Akua2"), new Rect3(new Vector3(0, 0, 0), new Vector3(100, 100, 100)));
 
                 _gameServerConnection.AddBoundingBox(bbox);
 

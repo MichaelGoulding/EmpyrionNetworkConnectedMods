@@ -7,6 +7,17 @@ namespace SharedCode
     {
         public string Name { get; private set; }
 
+        public void RegenerateStructure(int entityId)
+        {
+            _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_ConsoleCommand,
+                Eleon.Modding.CmdId.Request_ConsoleCommand,
+                new Eleon.Modding.PString(string.Format("remoteex pf={0} 'regenerate {1}'", ProcessId, entityId)));
+        }
+
+
+
+        internal int ProcessId { get; private set; }
 
         #region Common overloads
 
@@ -67,10 +78,25 @@ namespace SharedCode
 
         #endregion
 
-        internal Playfield(string name)
+        internal Playfield(GameServerConnection gameServerConnection, string name)
         {
+            _gameServerConnection = gameServerConnection;
             Name = name;
         }
+
+        internal void UpdateInfo(Eleon.Modding.PlayfieldLoad playfieldLoadData)
+        {
+            Name = playfieldLoadData.playfield;
+            ProcessId = playfieldLoadData.processId;
+        }
+
+        internal void UpdateInfo(Eleon.Modding.PlayfieldStats playfieldStats)
+        {
+            Name = playfieldStats.playfield;
+            ProcessId = playfieldStats.processId;
+        }
+
+        private GameServerConnection _gameServerConnection;
     }
 
     // onPlayerEnteredPlayfield

@@ -3,6 +3,14 @@ GameServerIp: "127.0.0.1"
 GameServerApiPort: 22345
 PlayerUpdateIntervalInSeconds: 1
 
+
+PlayfieldStructureRegenMod:
+  PlayfieldsToRegenerate:
+   "Akua Orbit":
+    StructuresIds:
+     - 72003
+     - 72004
+
 FactionPlayfieldKickerMod:
   BootMessage: "You are not allowed to enter this faction's playfield."
   

@@ -23,6 +23,7 @@ namespace SharedCode
         EPMConnector.Client _client = new EPMConnector.Client();
 
         Dictionary<int, Player> _onlinePlayersInfoById = new Dictionary<int, Player>();
+        Dictionary<string, Playfield> _playfieldsByName = new Dictionary<string, Playfield>();
         Timer _playerUpdateTimer;
 
         List<BoundingBox> _bboxes = new List<BoundingBox>();
@@ -87,6 +88,8 @@ namespace SharedCode
 
         #region Public Events
 
+        public event Action<Playfield> Event_Playfield_Loaded;
+
         public event Action<Playfield, Player> Event_Player_ChangedPlayfield;
 
         public event Action<Eleon.Modding.ChatInfo, Player> Event_ChatMessage;
@@ -118,8 +121,9 @@ namespace SharedCode
             // connect to server
             _client.OnConnected += () =>
             {
-                // Request player list to start off
+                // Request various lists to start off
                 SendRequest(Eleon.Modding.CmdId.Request_Player_List, Eleon.Modding.CmdId.Request_Player_List, null);
+                SendRequest(Eleon.Modding.CmdId.Request_Playfield_List, Eleon.Modding.CmdId.Request_Playfield_List, null);
             };
 
             _client.Connect(_config.GameServerIp, _config.GameServerApiPort);
@@ -208,6 +212,19 @@ namespace SharedCode
             return _onlinePlayersInfoById;
         }
 
+        public Playfield GetPlayfield(string playfieldName)
+        {
+            lock(_playfieldsByName)
+            {
+                if (!_playfieldsByName.ContainsKey(playfieldName))
+                {
+                    _playfieldsByName[playfieldName] = new Playfield(this, playfieldName);
+                }
+
+                return _playfieldsByName[playfieldName];
+            }
+        }
+
         #endregion
 
         #region Private Helper Methods
@@ -251,12 +268,17 @@ namespace SharedCode
                 {
                     case Eleon.Modding.CmdId.Event_Playfield_Loaded:
                         {
-                            Eleon.Modding.PlayfieldLoad obj = (Eleon.Modding.PlayfieldLoad)p.data;
+                            Eleon.Modding.PlayfieldLoad playfieldLoadData = (Eleon.Modding.PlayfieldLoad)p.data;
+                            DebugOutput("Event_Playfield_Loaded - Playfield {0} loaded pid={1}", playfieldLoadData.playfield, playfieldLoadData.processId);
 
-                            DebugOutput("Event_Playfield_Loaded - Playfield {0} loaded pid={1}", obj.playfield, obj.processId);
+                            lock (_playfieldsByName)
+                            {
+                                var playfield = GetPlayfield(playfieldLoadData.playfield);
+                                playfield.UpdateInfo(playfieldLoadData);
 
-                            // TODO: update playfields with info
-                        }
+                                Event_Playfield_Loaded?.Invoke(playfield);
+                            }
+                       }
                         break;
 
                     case Eleon.Modding.CmdId.Event_Playfield_Unloaded:
@@ -265,7 +287,10 @@ namespace SharedCode
 
                             DebugOutput("Event_Playfield_Unloaded - Playfield {0} unloaded pid={1}", obj.playfield, obj.processId);
 
-                            // TODO: update playfields with info
+                            lock (_playfieldsByName)
+                            {
+                                // TODO: update playfields with info
+                            }
                         }
                         break;
 
@@ -276,18 +301,17 @@ namespace SharedCode
                             //if (obj.playfields == null) { break; }
                             DebugOutput("Event_Playfield_List - Playfield list count: {0}", obj.playfields != null ? obj.playfields.Count : 0);
 
-                            //System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.onlinePlayfields.Clear()));
-
-                            //lock (playfields)
-                            //{
-                            //    playfields.Clear();
-                            foreach (string s in obj.playfields)
+                            lock (_playfieldsByName)
                             {
-                                //System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.onlinePlayfields.Add(s)));
-                                DebugOutput("  {0}", s);
-                                //playfields.Add(s);
+                                foreach (string s in obj.playfields)
+                                {
+                                    DebugOutput("  {0}", s);
+                                    SendRequest(
+                                        Eleon.Modding.CmdId.Request_Playfield_Stats,
+                                        Eleon.Modding.CmdId.Request_Playfield_Stats,
+                                        new Eleon.Modding.PString(s));
+                                }
                             }
-                            //}
                         }
                         break;
 
@@ -295,10 +319,13 @@ namespace SharedCode
                         {
                             // from Request_Playfield_Stats
 
-                            Eleon.Modding.PlayfieldStats obj = (Eleon.Modding.PlayfieldStats)p.data;
-                            DebugOutput("Event_Playfield_Stats - {0}: fps={1} heap={2} procid={3}", obj.playfield, obj.fps, obj.mem, obj.processId);
+                            Eleon.Modding.PlayfieldStats playfieldStats = (Eleon.Modding.PlayfieldStats)p.data;
+                            DebugOutput("Event_Playfield_Stats - {0}: fps={1} heap={2} procid={3}", playfieldStats.playfield, playfieldStats.fps, playfieldStats.mem, playfieldStats.processId);
 
-                            // TODO: update playfields with info
+                            lock (_playfieldsByName)
+                            {
+                                GetPlayfield(playfieldStats.playfield).UpdateInfo(playfieldStats);
+                            }
                         }
                         break;
 
@@ -393,8 +420,7 @@ namespace SharedCode
                                 {
                                     var player = _onlinePlayersInfoById[obj.id];
 
-                                    // TODO: look up playfield object by name
-                                    var newPlayfield = new Playfield(obj.playfield);
+                                    var newPlayfield = GetPlayfield(obj.playfield);
 
                                     Event_Player_ChangedPlayfield?.Invoke(newPlayfield, player);
 
@@ -574,43 +600,7 @@ namespace SharedCode
                         {
                             Eleon.Modding.ChatInfo obj = (Eleon.Modding.ChatInfo)p.data;
 
-                            string typeName;
-                            switch (obj.type)
-                            {
-                                case 5: //?
-                                case 7:
-                                    typeName = "to faction";
-                                    break;
-                                case 8:
-                                    typeName = "to player";
-                                    break;
-                                case 9:
-                                    typeName = "to server";
-                                    break;
-                                default:
-                                    typeName = "";
-                                    break;
-                            }
-
-                            DebugOutput("Event_ChatMessage: Player: {0}, Recepient: {1}, Recepient Faction: {2}, {3}, Message: '{4}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, typeName, obj.msg);
-
-                            if (obj.type != 8 && obj.type != 7 && obj.msg == "!MODS")
-                            {
-                                foreach( var versionString in _versionStrings)
-                                {
-                                    SendChatMessageToAll(versionString);
-                                }
-                            }
-                            else
-                            {
-                                Player player;
-                                lock (_onlinePlayersInfoById)
-                                {
-                                    player = _onlinePlayersInfoById[obj.playerId];
-                                }
-
-                                Event_ChatMessage?.Invoke(obj, player);
-                            }
+                            ProcessEvent_ChatMessage(obj);
                         }
                         break;
 
@@ -737,17 +727,59 @@ namespace SharedCode
             }
         }
 
+        private void ProcessEvent_ChatMessage(Eleon.Modding.ChatInfo obj)
+        {
+            string typeName;
+            switch (obj.type)
+            {
+                case 5: //?
+                case 7:
+                    typeName = "to faction";
+                    break;
+                case 8:
+                    typeName = "to player";
+                    break;
+                case 9:
+                    typeName = "to server";
+                    break;
+                default:
+                    typeName = "";
+                    break;
+            }
+
+            DebugOutput("Event_ChatMessage: Player: {0}, Recepient: {1}, Recepient Faction: {2}, {3}, Message: '{4}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, typeName, obj.msg);
+
+            if (obj.type != 8 && obj.type != 7 && obj.msg == "!MODS")
+            {
+                foreach (var versionString in _versionStrings)
+                {
+                    SendChatMessageToAll(versionString);
+                }
+            }
+            else
+            {
+                Player player;
+                lock (_onlinePlayersInfoById)
+                {
+                    player = _onlinePlayersInfoById[obj.playerId];
+                }
+
+                Event_ChatMessage?.Invoke(obj, player);
+            }
+        }
+
         private void Process_Event_Player_Info(EPMConnector.ModProtocol.Package p, Eleon.Modding.PlayerInfo pInfo)
         {
             lock (_onlinePlayersInfoById)
             {
                 if (_onlinePlayersInfoById.ContainsKey(pInfo.entityId))
                 {
-                    _onlinePlayersInfoById[pInfo.entityId].UpdateInfo(pInfo);
+                    _onlinePlayersInfoById[pInfo.entityId].UpdateInfo(pInfo, GetPlayfield(pInfo.playfield));
                 }
                 else
                 {
                     _onlinePlayersInfoById[pInfo.entityId] = new Player(this, pInfo);
+
                 }
 
                 lock (_bboxes)

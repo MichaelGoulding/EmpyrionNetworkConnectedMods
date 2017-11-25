@@ -32,7 +32,7 @@ namespace SellToServerMod
             bool found = false;
             foreach (var sellLocation in _config.SellLocations)
             {
-                BoundingBox boundingBox = new BoundingBox(sellLocation.BoundingBox);
+                BoundingBox boundingBox = new BoundingBox(_gameServerConnection, sellLocation.BoundingBox);
 
                 if (boundingBox.IsInside(player))
                 {

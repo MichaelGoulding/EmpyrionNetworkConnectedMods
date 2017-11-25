@@ -38,17 +38,17 @@ namespace SharedCode
 
         public List<Player> PlayersInArea { get; private set; }
 
-        public BoundingBox(string playfield, Rect3 rect)
+        public BoundingBox(Playfield playfield, Rect3 rect)
         {
             PlayersInArea = new List<Player>();
-            _playfield = new Playfield(playfield);
+            _playfield = playfield;
             _rect = rect;
         }
 
-        public BoundingBox(BoundingBoxInfo boundingBoxInfo)
+        public BoundingBox(GameServerConnection gameServerConnection, BoundingBoxInfo boundingBoxInfo)
         {
             PlayersInArea = new List<Player>();
-            _playfield = new Playfield(boundingBoxInfo.Playfield);
+            _playfield = gameServerConnection.GetPlayfield(boundingBoxInfo.Playfield);
             _rect = new Rect3(
                 new Vector3(boundingBoxInfo.Rect.pt0.x, boundingBoxInfo.Rect.pt0.y, boundingBoxInfo.Rect.pt0.z),
                 new Vector3(boundingBoxInfo.Rect.pt1.x, boundingBoxInfo.Rect.pt1.y, boundingBoxInfo.Rect.pt1.z));

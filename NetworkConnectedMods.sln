@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetworkConnectedModRunner",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StructureOwnershipMod", "StructureOwnershipMod\StructureOwnershipMod.csproj", "{43D4612B-2C5D-4524-A2D0-F7E32CE8DD0E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlayfieldStructureRegenMod", "PlayfieldStructureRegenMod\PlayfieldStructureRegenMod.csproj", "{EAABC420-7EEC-4DDC-824A-CADCD83AADA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{43D4612B-2C5D-4524-A2D0-F7E32CE8DD0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{43D4612B-2C5D-4524-A2D0-F7E32CE8DD0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{43D4612B-2C5D-4524-A2D0-F7E32CE8DD0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EAABC420-7EEC-4DDC-824A-CADCD83AADA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EAABC420-7EEC-4DDC-824A-CADCD83AADA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EAABC420-7EEC-4DDC-824A-CADCD83AADA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EAABC420-7EEC-4DDC-824A-CADCD83AADA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

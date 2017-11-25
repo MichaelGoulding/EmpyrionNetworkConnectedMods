@@ -4,6 +4,8 @@ namespace NetworkConnectedModRunner
 {
     public class Configuration : SharedCode.BaseConfiguration
     {
+        public PlayfieldStructureRegenMod.Configuration PlayfieldStructureRegenMod { get; set; }
+
         public FactionPlayfieldKickerMod.Configuration FactionPlayfieldKickerMod { get; set; }
 
         public StructureOwnershipMod.Configuration StructureOwnershipMod { get; set; }

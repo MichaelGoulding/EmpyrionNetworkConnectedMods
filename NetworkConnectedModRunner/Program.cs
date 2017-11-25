@@ -26,7 +26,7 @@ namespace NetworkConnectedModRunner
                 var sellToServerMod = new SellToServerMod.SellToServerMod(_gameServerConnection, config.SellToServerMod);
                 var factionPlayfieldKickerMod = new FactionPlayfieldKickerMod.FactionPlayfieldKickerMod(_gameServerConnection, config.FactionPlayfieldKickerMod);
                 var structureOwnershipMod = new StructureOwnershipMod.StructureOwnershipMod(_gameServerConnection, config.StructureOwnershipMod);
-
+                var playfieldStructureRegenMod = new PlayfieldStructureRegenMod.PlayfieldStructureRegenMod(_gameServerConnection, config.PlayfieldStructureRegenMod);
                 _gameServerConnection.Connect();
 
                 // wait until the user presses Enter.

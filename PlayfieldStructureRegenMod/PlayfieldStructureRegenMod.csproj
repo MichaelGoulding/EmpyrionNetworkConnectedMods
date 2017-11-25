@@ -4,16 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7942BF39-29F4-424C-904E-62C244DC8A2A}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>NetworkConnectedModRunner</RootNamespace>
-    <AssemblyName>NetworkConnectedModRunner</AssemblyName>
+    <ProjectGuid>{EAABC420-7EEC-4DDC-824A-CADCD83AADA0}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PlayfieldStructureRegenMod</RootNamespace>
+    <AssemblyName>PlayfieldStructureRegenMod</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,36 +41,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="PlayfieldStructureRegenMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-    <None Include="Settings.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\FactionPlayfieldKickerMod\FactionPlayfieldKickerMod.csproj">
-      <Project>{7e7da794-412d-4557-ac8c-fb511e8c28d7}</Project>
-      <Name>FactionPlayfieldKickerMod</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlayfieldStructureRegenMod\PlayfieldStructureRegenMod.csproj">
-      <Project>{eaabc420-7eec-4ddc-824a-cadcd83aada0}</Project>
-      <Name>PlayfieldStructureRegenMod</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SellToServerMod\SellToServerMod.csproj">
-      <Project>{f5bac378-0e04-49ac-ab40-ffbccb35f9e5}</Project>
-      <Name>SellToServerMod</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharedCode\SharedCode.csproj">
       <Project>{b563d94f-874f-42cd-a498-7164feec86db}</Project>
       <Name>SharedCode</Name>
     </ProjectReference>
-    <ProjectReference Include="..\StructureOwnershipMod\StructureOwnershipMod.csproj">
-      <Project>{43d4612b-2c5d-4524-a2d0-f7e32ce8dd0e}</Project>
-      <Name>StructureOwnershipMod</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Settings.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
