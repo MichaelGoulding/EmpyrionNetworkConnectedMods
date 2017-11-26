@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SharedCode
 {
@@ -7,15 +8,12 @@ namespace SharedCode
     {
         public string Name { get; private set; }
 
-        public void RegenerateStructure(int entityId)
+        public Task RegenerateStructure(int entityId)
         {
-            _gameServerConnection.SendRequest(
-                Eleon.Modding.CmdId.Request_ConsoleCommand,
+            return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_ConsoleCommand,
                 new Eleon.Modding.PString(string.Format("remoteex pf={0} 'regenerate {1}'", ProcessId, entityId)));
         }
-
-
 
         internal int ProcessId { get; private set; }
 

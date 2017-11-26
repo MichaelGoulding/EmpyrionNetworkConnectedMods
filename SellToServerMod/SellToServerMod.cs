@@ -71,8 +71,8 @@ namespace SellToServerMod
                                 if ((itemExchangeInfoSold.items != null) && (itemExchangeInfoSold.items.AreTheSame(itemExchangeInfoInQuote.items)))
                                 {
                                     _gameServerConnection.DebugOutput("Player {0} sold items for {1} credits.", player, credits);
-                                    player.AddCredits(credits);
-                                    player.SendAlertMessage("Items sold for {0} credits.", credits);
+                                    await player.AddCredits(credits);
+                                    await player.SendAlertMessage("Items sold for {0} credits.", credits);
                                     break;
                                 }
                                 else

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SharedCode
 {
@@ -20,39 +21,39 @@ namespace SharedCode
             }
         }
 
-        public void AddCredits(double amount)
+        public Task AddCredits(double amount)
         {
-            _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Player_AddCredits, Eleon.Modding.CmdId.Request_Player_AddCredits, new Eleon.Modding.IdCredits(_entityId, amount));
+            return _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_Player_AddCredits,
+                new Eleon.Modding.IdCredits(_entityId, amount));
         }
 
-        public void ChangePlayerfield( WorldPosition newWorldPosition)
+        public Task ChangePlayerfield( WorldPosition newWorldPosition)
         {
-            _gameServerConnection.SendRequest(
+            return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
-                Eleon.Modding.CmdId.Request_Player_ChangePlayerfield
-                , new Eleon.Modding.IdPlayfieldPositionRotation(_entityId, newWorldPosition.playfield.Name, newWorldPosition.position, newWorldPosition.rotation));
+                new Eleon.Modding.IdPlayfieldPositionRotation(_entityId, newWorldPosition.playfield.Name, newWorldPosition.position, newWorldPosition.rotation));
         }
 
-        public void SendAlarmMessage(string format, params object[] args)
+        public Task SendAlarmMessage(string format, params object[] args)
         {
-            SendMessage(MessagePriority.Alarm, 10, format, args);
+            return SendMessage(MessagePriority.Alarm, 10, format, args);
         }
 
-        public void SendAlertMessage(string format, params object[] args)
+        public Task SendAlertMessage(string format, params object[] args)
         {
-            SendMessage(MessagePriority.Alert, 10, format, args);
+            return SendMessage(MessagePriority.Alert, 10, format, args);
         }
 
-        public void SendAttentionMessage(string format, params object[] args)
+        public Task SendAttentionMessage(string format, params object[] args)
         {
-            SendMessage(MessagePriority.Attention, 10, format, args);
+            return SendMessage(MessagePriority.Attention, 10, format, args);
         }
 
-        public void SendMessage(MessagePriority priority, float time, string format, params object[] args)
+        public Task SendMessage(MessagePriority priority, float time, string format, params object[] args)
         {
             string msg = string.Format(format, args);
-            _gameServerConnection.SendRequest(
-                Eleon.Modding.CmdId.Request_InGameMessage_SinglePlayer,
+            return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_InGameMessage_SinglePlayer,
                 new Eleon.Modding.IdMsgPrio(_entityId, msg, (byte)priority, time));
         }

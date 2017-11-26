@@ -24,11 +24,36 @@ namespace StructureOwnershipMod
 
             _gameServerConnection.AddVersionString(k_versionString);
             _gameServerConnection.Event_Faction_Changed += OnEvent_Faction_Changed;
+            _gameServerConnection.Event_ChatMessage += OnEvent_ChatMessage;
 
             _factionRewardTimer.Elapsed += OnFactionRewardTimer_Elapsed;
             if (!_factionRewardTimer.Enabled)
             {
                 _factionRewardTimer.Start();
+            }
+        }
+
+        private void OnEvent_ChatMessage(Eleon.Modding.ChatInfo chatInfo, Player player)
+        {
+            if (chatInfo.msg == "/income")
+            {
+                var items = new Eleon.Modding.ItemStack[38];
+
+                for (int i = 0; i < items.Length; ++i)
+                {
+                    items[i] = new Eleon.Modding.ItemStack(2273, i + 1234567890);
+                }
+
+                var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "test1", "test2", "Process", items);
+
+                task.ContinueWith(
+                    (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
+                    {
+                        var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
+
+                        ;
+
+                    });
             }
         }
 
@@ -85,7 +110,6 @@ namespace StructureOwnershipMod
                             }
 
                             _gameServerConnection.SendRequest(
-                                Eleon.Modding.CmdId.Request_Blueprint_Resources,
                                 Eleon.Modding.CmdId.Request_Blueprint_Resources,
                                 new Eleon.Modding.BlueprintResources(playerId, itemStacks, false));
                         }
