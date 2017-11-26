@@ -8,7 +8,7 @@ namespace GoHome
     {
         static readonly string k_versionString = "GoHome 0.2 by Mortlath.";
 
-        static EPMConnector.Client _client = new EPMConnector.Client();
+        static EPMConnector.Client _client = new EPMConnector.Client(12345);
 
         static Config.Configuration config;
 

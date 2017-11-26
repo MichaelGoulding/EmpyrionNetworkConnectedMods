@@ -22,7 +22,7 @@ namespace SharedCode
 
         List<string> _versionStrings = new List<string>();
 
-        EPMConnector.Client _client = new EPMConnector.Client();
+        EPMConnector.Client _client = new EPMConnector.Client(12345);
 
         Dictionary<int, Player> _onlinePlayersInfoById = new Dictionary<int, Player>();
         Dictionary<string, Playfield> _playfieldsByName = new Dictionary<string, Playfield>();
