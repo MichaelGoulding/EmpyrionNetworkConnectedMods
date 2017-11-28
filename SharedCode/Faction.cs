@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SharedCode
 {
     public class Faction : IEquatable<Faction>
     {
-        public int Id
+        public int Id { get; private set; }
+
+        public Task SendMessage(MessagePriority priority, float time, string format, params object[] args)
         {
-            get
-            {
-                return _factionId;
-            }
+            string msg = string.Format(format, args);
+            return _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_InGameMessage_Faction,
+                new Eleon.Modding.IdMsgPrio(Id, msg, (byte)priority, time));
         }
 
         #region Common overloads
@@ -47,7 +50,7 @@ namespace SharedCode
 
         public override int GetHashCode()
         {
-            return 1075102471 + _factionId.GetHashCode();
+            return 1075102471 + Id.GetHashCode();
         }
 
         public static bool operator ==(Faction lhs, Faction rhs)
@@ -72,11 +75,12 @@ namespace SharedCode
 
         #endregion
 
-        internal Faction(int factionId)
+        internal Faction(GameServerConnection gameServerConnection, int factionId)
         {
-            this._factionId = factionId;
+            _gameServerConnection = gameServerConnection;
+            Id = factionId;
         }
 
-        private int _factionId;
+        private GameServerConnection _gameServerConnection;
     }
 }

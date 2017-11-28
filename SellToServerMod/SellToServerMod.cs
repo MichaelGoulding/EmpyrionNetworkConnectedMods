@@ -37,7 +37,7 @@ namespace SellToServerMod
                 if (boundingBox.IsInside(player))
                 {
                     found = true;
-                    var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "Sell Items - Step 1", "Place Items to get a price", "Process"); // BUG: button text can only be set once "Get Price");
+                    var task = player.DoItemExchange("Sell Items - Step 1", "Place Items to get a price", "Process"); // BUG: button text can only be set once "Get Price");
 
                     task.ContinueWith(
                         async (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
@@ -60,9 +60,7 @@ namespace SellToServerMod
 
                                 var message = string.Format("We will pay you {0} credits.", credits);
 
-                                var itemExchangeInfoSold =
-                                await _gameServerConnection.DoItemExchangeWithPlayer(
-                                    player,
+                                var itemExchangeInfoSold = await player.DoItemExchange(
                                     "Sell Items - Step 2",
                                     message,
                                     "Process", // BUG: button text can only be set once "Sell Items",

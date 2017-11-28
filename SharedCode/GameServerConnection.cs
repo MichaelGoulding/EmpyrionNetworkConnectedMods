@@ -102,7 +102,7 @@ namespace SharedCode
             _playerUpdateTimer = new Timer(config.PlayerUpdateIntervalInSeconds * 1000);
             _playerUpdateTimer.Elapsed += OnPlayerUpdateTimer_Elapsed;
 
-            _client.GameEventReceived += Client_GameEventReceived;
+            _client.GameEventReceived += OnClient_GameEventReceived;
             _client.ClientMessages += (string s) => { Console.Out.WriteLine("Client_ClientMessages: {0}", s); };
         }
 
@@ -121,7 +121,7 @@ namespace SharedCode
                 SendRequest<Eleon.Modding.IdList>(Eleon.Modding.CmdId.Request_Player_List, null)
                     .ContinueWith((task) => this.ProcessEvent_Player_List(task.Result));
 
-                SendRequest< Eleon.Modding.PlayfieldList>(Eleon.Modding.CmdId.Request_Playfield_List,  null)
+                SendRequest<Eleon.Modding.PlayfieldList>(Eleon.Modding.CmdId.Request_Playfield_List,  null)
                     .ContinueWith((task) => this.ProcessEvent_Playfield_List(task.Result));
             };
 
@@ -151,11 +151,6 @@ namespace SharedCode
             return task;
         }
 
-        //public void SendRequest(Eleon.Modding.CmdId cmdID, Eleon.Modding.CmdId seqNr, object data)
-        //{
-        //    SendRequest(cmdID, (ushort)seqNr, data);
-        //}
-
         private void SendRequest(Eleon.Modding.CmdId cmdID, ushort seqNr, object data)
         {
             DebugOutput("SendRequest: Command {0} SeqNr: {1}", cmdID, seqNr);
@@ -170,19 +165,6 @@ namespace SharedCode
                 Eleon.Modding.CmdId.Request_ConsoleCommand,
                 new Eleon.Modding.PString(command));
             DebugOutput("ChatMessage(\"{0}\")", msg);
-        }
-
-        public Task<Eleon.Modding.ItemExchangeInfo> DoItemExchangeWithPlayer(Player player, string title, string description, string buttonText, Eleon.Modding.ItemStack[] items = null )
-        {
-
-            var data = new Eleon.Modding.ItemExchangeInfo();
-            data.id = player.EntityId;
-            data.title = title;
-            data.desc = description;
-            data.buttonText = buttonText;
-            data.items = items;
-
-            return SendRequest<Eleon.Modding.ItemExchangeInfo>(Eleon.Modding.CmdId.Request_Player_ItemExchange, data);
         }
 
         public Task SendAlarmMessageToAll(string format, params object[] args)
@@ -206,6 +188,22 @@ namespace SharedCode
             return SendRequest(
                 Eleon.Modding.CmdId.Request_InGameMessage_AllPlayers,
                 new Eleon.Modding.IdMsgPrio(0, msg, (byte)priority, time));
+        }
+
+        public Task RequestEntitySpawn(EntitySpawnInfo entitySpawnInfo)
+        {
+            return SendRequest(Eleon.Modding.CmdId.Request_Entity_Spawn, entitySpawnInfo);
+        }
+
+        public Task RequestEntitySpawn(PlayfieldLoad playfieldLoad)
+        {
+            // PlayfieldLoad (sec = empty playfield hold time, processId not used)
+            return SendRequest(Eleon.Modding.CmdId.Request_Load_Playfield, playfieldLoad);
+        }
+
+        public Task RequestEntitySpawn(string commandString)
+        {
+            return SendRequest(Eleon.Modding.CmdId.Request_ConsoleCommand, new PString(commandString));
         }
 
         public void AddBoundingBox( BoundingBox boundingBox)
@@ -238,33 +236,12 @@ namespace SharedCode
 
         #region Private Helper Methods
 
-        private void Client_GameEventReceived(EPMConnector.ModProtocol.Package p)
+        private void OnClient_GameEventReceived(EPMConnector.ModProtocol.Package p)
         {
-            //Request_Structure_Touch = 11,
-            //Request_Player_AddItem = 24,
-            //Request_Player_Credits = 25,
-            //Request_Player_SetCredits = 26,
-            //Request_Player_AddCredits = 27,
-            //Request_Blueprint_Finish = 29,
-            //Request_Blueprint_Resources = 30,
-            //Request_Player_ChangePlayerfield = 31,
-            //Request_Player_SetPlayerInfo = 34,
-            //Request_Entity_Teleport = 36,
-            //Request_Entity_ChangePlayfield = 37,
-            //Request_Entity_Destroy = 38,
-            //Request_Entity_Spawn = 42,
-            //Request_Load_Playfield = 52,
-            //Request_ConsoleCommand = 54,
-            //Request_InGameMessage_SinglePlayer = 57,
-            //Request_InGameMessage_AllPlayers = 58,
-            //Request_InGameMessage_Faction = 59,
-            //Request_ShowDialog_SinglePlayer = 60,
-            //Request_Entity_Destroy2 = 68,
-            //Request_Entity_Export = 69,
-            //Request_Entity_SetName = 71,
-
             try
             {
+                DebugOutput("OnClient_GameEventReceived: Command {0} SeqNr: {1}", p.cmd, p.seqNr);
+
                 if (!_requestTracker.TryHandleEvent(p))
                 {
                     if (p.data == null)
@@ -285,6 +262,9 @@ namespace SharedCode
                                 {
                                     var playfield = GetPlayfield(playfieldLoadData.playfield);
                                     playfield.UpdateInfo(playfieldLoadData);
+
+                                    SendRequest<Eleon.Modding.GlobalStructureList>(Eleon.Modding.CmdId.Request_GlobalStructure_Update, new Eleon.Modding.PString(playfieldLoadData.playfield))
+                                        .ContinueWith((task) => playfield.UpdateInfo(task.Result));
 
                                     Event_Playfield_Loaded?.Invoke(playfield);
                                 }
@@ -313,14 +293,7 @@ namespace SharedCode
                         case Eleon.Modding.CmdId.Event_Playfield_Stats:
                             {
                                 // from Request_Playfield_Stats
-
-                                Eleon.Modding.PlayfieldStats playfieldStats = (Eleon.Modding.PlayfieldStats)p.data;
-                                DebugOutput("Event_Playfield_Stats - {0}: fps={1} heap={2} procid={3}", playfieldStats.playfield, playfieldStats.fps, playfieldStats.mem, playfieldStats.processId);
-
-                                lock (_playfieldsByName)
-                                {
-                                    GetPlayfield(playfieldStats.playfield).UpdateInfo(playfieldStats);
-                                }
+                                ProcessEvent_Playfield_Stats((Eleon.Modding.PlayfieldStats)p.data);
                             }
                             break;
 
@@ -710,33 +683,57 @@ namespace SharedCode
             }
         }
 
-        private void ProcessEvent_Playfield_List(PlayfieldList obj)
+        private void ProcessEvent_Playfield_Stats(Eleon.Modding.PlayfieldStats playfieldStats)
         {
-            //if (obj.playfields == null) { break; }
-            DebugOutput("Event_Playfield_List - Playfield list count: {0}", obj.playfields != null ? obj.playfields.Count : 0);
+            DebugOutput("Event_Playfield_Stats - {0}: fps={1} heap={2} procid={3}", playfieldStats.playfield, playfieldStats.fps, playfieldStats.mem, playfieldStats.processId);
 
             lock (_playfieldsByName)
             {
-                foreach (string s in obj.playfields)
+                var playfield = GetPlayfield(playfieldStats.playfield);
+                playfield.UpdateInfo(playfieldStats);
+                SendRequest<Eleon.Modding.PlayfieldEntityList>(Eleon.Modding.CmdId.Request_Playfield_Entity_List, new Eleon.Modding.PString(playfieldStats.playfield))
+                    .ContinueWith((task) => playfield.UpdateInfo(task.Result));
+                SendRequest<Eleon.Modding.GlobalStructureList>(Eleon.Modding.CmdId.Request_GlobalStructure_Update, new Eleon.Modding.PString(playfieldStats.playfield))
+                    .ContinueWith((task) => playfield.UpdateInfo(task.Result));
+            }
+        }
+
+        private void ProcessEvent_Playfield_List(PlayfieldList playfieldList)
+        {
+            DebugOutput("Event_Playfield_List - Playfield list count: {0}", (playfieldList != null) ? playfieldList.playfields.Count : 0);
+
+            if (playfieldList != null)
+            {
+                lock (_playfieldsByName)
                 {
-                    DebugOutput("  {0}", s);
-                    SendRequest(
-                        Eleon.Modding.CmdId.Request_Playfield_Stats,
-                        new Eleon.Modding.PString(s));
+                    foreach (string s in playfieldList.playfields)
+                    {
+                        DebugOutput("  {0}", s);
+                        SendRequest<Eleon.Modding.PlayfieldStats>(Eleon.Modding.CmdId.Request_Playfield_Stats, new Eleon.Modding.PString(s))
+                             .ContinueWith((task) => this.ProcessEvent_Playfield_Stats(task.Result));
+                    }
                 }
             }
         }
 
         private void ProcessEvent_Player_List(Eleon.Modding.IdList idList)
         {
-            DebugOutput("Event_Player_List");
-            var playerIds = idList.list;
-
-            for (int i = 0; i < playerIds.Count; i++)
+            if( idList != null )
             {
-                DebugOutput("{0} Player with id {1}", i + 1, playerIds[i]);
-                SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(playerIds[i]))
-                    .ContinueWith((task) => this.Process_Event_Player_Info(task.Result));
+                var playerIds = idList.list;
+
+                DebugOutput("Event_Player_List - Count: {0}", playerIds.Count);
+
+                for (int i = 0; i < playerIds.Count; i++)
+                {
+                    DebugOutput("{0} Player with id {1}", i + 1, playerIds[i]);
+                    SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(playerIds[i]))
+                        .ContinueWith((task) => this.Process_Event_Player_Info(task.Result));
+                }
+            }
+            else
+            {
+                DebugOutput("Event_Player_List - no players");
             }
         }
 

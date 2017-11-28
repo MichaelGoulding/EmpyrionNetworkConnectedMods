@@ -44,7 +44,7 @@ namespace StructureOwnershipMod
                     items[i] = new Eleon.Modding.ItemStack(2273, i + 1234567890);
                 }
 
-                var task = _gameServerConnection.DoItemExchangeWithPlayer(player, "test1", "test2", "Process", items);
+                var task = player.DoItemExchange("test1", "test2", "Process", items);
 
                 task.ContinueWith(
                     (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>

@@ -4,14 +4,8 @@ using System.Threading.Tasks;
 
 namespace SharedCode
 {
-    public class Player : IEquatable<Player>
+    public class Player : Entity
     {
-        public WorldPosition Position { get; private set; }
-
-        public Faction MemberOfFaction { get; private set; }
-
-        public Dictionary<int, float> BpResourcesInFactory { get; private set; }
-
         public bool IsPrivileged
         {
             get
@@ -21,18 +15,34 @@ namespace SharedCode
             }
         }
 
+        public Dictionary<int, float> BpResourcesInFactory { get; protected set; }
+
         public Task AddCredits(double amount)
         {
             return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_Player_AddCredits,
-                new Eleon.Modding.IdCredits(_entityId, amount));
+                new Eleon.Modding.IdCredits(EntityId, amount));
+        }
+
+        //Request_Player_Credits = 25,
+        //Request_Player_SetCredits = 26,
+
+        //Request_Player_AddItem = 24,
+        //Request_Blueprint_Resources = 30,
+        //Request_Player_ChangePlayerfield = 31,
+        //Request_Player_SetPlayerInfo = 34,
+        //Request_ShowDialog_SinglePlayer = 60,
+
+        public Task FinishBlueprint()
+        {
+            return _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Blueprint_Finish, new Eleon.Modding.Id(EntityId));
         }
 
         public Task ChangePlayerfield( WorldPosition newWorldPosition)
         {
             return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
-                new Eleon.Modding.IdPlayfieldPositionRotation(_entityId, newWorldPosition.playfield.Name, newWorldPosition.position, newWorldPosition.rotation));
+                new Eleon.Modding.IdPlayfieldPositionRotation(EntityId, newWorldPosition.playfield.Name, newWorldPosition.position, newWorldPosition.rotation));
         }
 
         public Task SendAlarmMessage(string format, params object[] args)
@@ -55,84 +65,37 @@ namespace SharedCode
             string msg = string.Format(format, args);
             return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_InGameMessage_SinglePlayer,
-                new Eleon.Modding.IdMsgPrio(_entityId, msg, (byte)priority, time));
+                new Eleon.Modding.IdMsgPrio(EntityId, msg, (byte)priority, time));
         }
 
-        #region Common overloads
-
-        public override string ToString()
+        public Task<Eleon.Modding.ItemExchangeInfo> DoItemExchange(string title, string description, string buttonText, Eleon.Modding.ItemStack[] items = null)
         {
-            return _entityId.ToString();
+
+            var data = new Eleon.Modding.ItemExchangeInfo();
+            data.id = EntityId;
+            data.title = title;
+            data.desc = description;
+            data.buttonText = buttonText;
+            data.items = items;
+
+            return _gameServerConnection.SendRequest<Eleon.Modding.ItemExchangeInfo>(Eleon.Modding.CmdId.Request_Player_ItemExchange, data);
         }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-
-            Player p = obj as Player;
-            if (p == null)
-            {
-                return false;
-            }
-
-            return (_entityId == p._entityId);
-        }
-
-        public bool Equals(Player other)
-        {
-            return other != null &&
-                   _entityId == other._entityId;
-        }
-
-        public override int GetHashCode()
-        {
-            return -1485059848 + _entityId.GetHashCode();
-        }
-
-        public static bool operator ==(Player player1, Player player2)
-        {
-            return EqualityComparer<Player>.Default.Equals(player1, player2);
-        }
-
-        public static bool operator !=(Player player1, Player player2)
-        {
-            return !(player1 == player2);
-        }
-
-        #endregion
 
         #region Internal Methods
 
         internal Player(GameServerConnection gameServerConnection, Eleon.Modding.PlayerInfo pInfo)
+            : base(gameServerConnection, pInfo.entityId, pInfo.playerName)
         {
-            _entityId = pInfo.entityId;
-            _gameServerConnection = gameServerConnection;
             UpdateInfo(pInfo, _gameServerConnection.GetPlayfield(pInfo.playfield));
         }
 
         internal void UpdateInfo(Eleon.Modding.PlayerInfo pInfo, Playfield playfield)
         {
-            System.Diagnostics.Debug.Assert(_entityId == pInfo.entityId);
+            System.Diagnostics.Debug.Assert(EntityId == pInfo.entityId);
             this.Position = new WorldPosition { playfield = playfield, position = new Vector3(pInfo.pos) };
-            this.MemberOfFaction = new Faction(pInfo.factionId);
+            this.MemberOfFaction = new Faction(_gameServerConnection, pInfo.factionId);
             this.BpResourcesInFactory = pInfo.bpResourcesInFactory;
             _permission = pInfo.permission;
-        }
-
-        internal void UpdateInfo(Playfield playfield)
-        {
-            this.Position = new WorldPosition(playfield, this.Position.position, this.Position.rotation);
-        }
-
-        internal int EntityId
-        {
-            get
-            {
-                return _entityId;
-            }
         }
 
         #endregion
@@ -143,8 +106,6 @@ namespace SharedCode
 
         #region Private Data
 
-        private GameServerConnection _gameServerConnection;
-        private int _entityId;
         private int _permission;
 
         #endregion
