@@ -88,7 +88,7 @@ namespace SharedCode
 
         public event Action<Playfield, Player> Event_Player_ChangedPlayfield;
 
-        public event Action<Eleon.Modding.ChatInfo, Player> Event_ChatMessage;
+        public event Action<string, Player> Event_ChatMessage;
 
         public event Action<Eleon.Modding.FactionChangeInfo> Event_Faction_Changed;
 
@@ -317,20 +317,13 @@ namespace SharedCode
 
                                 if (obj.globalStructures != null)
                                 {
-                                    //System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.structures.Clear()));
-
                                     foreach (KeyValuePair<string, List<Eleon.Modding.GlobalStructureInfo>> kvp in obj.globalStructures)
                                     {
                                         DebugOutput("Playfield {0}", kvp.Key);
 
                                         foreach (Eleon.Modding.GlobalStructureInfo g in kvp.Value)
                                         {
-                                            //StructureInfo stI = new StructureInfo();
-                                            //stI.FromStructureInfo(g, kvp.Key);
-
                                             DebugOutput("  id={0} name={1} type={2} #blocks={3} #devices={4} playfield={5} pos={6}/{7}/{8}", g.id, g.name, g.type, g.cntBlocks, g.cntDevices, kvp.Key, g.pos.x, g.pos.y, g.pos.z);
-
-                                            //System.Windows.Application.Current.Dispatcher.Invoke((Action)(() => mainWindowDataContext.structures.Add(stI)));
                                         }
                                     }
                                 }
@@ -774,7 +767,7 @@ namespace SharedCode
                     player = _onlinePlayersInfoById[obj.playerId];
                 }
 
-                Event_ChatMessage?.Invoke(obj, player);
+                Event_ChatMessage?.Invoke(obj.msg, player);
             }
         }
 

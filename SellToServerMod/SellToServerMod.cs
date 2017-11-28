@@ -17,9 +17,9 @@ namespace SellToServerMod
             _gameServerConnection.Event_ChatMessage += OnEvent_ChatMessage;
         }
 
-        private void OnEvent_ChatMessage(Eleon.Modding.ChatInfo chatInfo, Player player)
+        private void OnEvent_ChatMessage(string msg, Player player)
         {
-            switch (chatInfo.msg)
+            switch (msg)
             {
                 case "/sell":
                     ProcessSellCommand(player);

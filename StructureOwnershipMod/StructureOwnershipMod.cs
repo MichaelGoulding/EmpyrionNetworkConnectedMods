@@ -33,9 +33,9 @@ namespace StructureOwnershipMod
             }
         }
 
-        private void OnEvent_ChatMessage(Eleon.Modding.ChatInfo chatInfo, Player player)
+        private void OnEvent_ChatMessage(string msg, Player player)
         {
-            if (chatInfo.msg == "/income")
+            if (msg == "/income")
             {
                 var items = new Eleon.Modding.ItemStack[38];
 
