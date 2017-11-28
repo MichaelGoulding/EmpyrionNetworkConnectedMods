@@ -58,6 +58,8 @@ namespace SellToServerMod
                                     credits += unitPrice * stack.count;
                                 }
 
+                                credits = System.Math.Round(credits, 2);
+
                                 var message = string.Format("We will pay you {0} credits.", credits);
 
                                 var itemExchangeInfoSold = await player.DoItemExchange(
