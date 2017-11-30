@@ -7,17 +7,24 @@ using System.Threading.Tasks;
 
 namespace FactionPlayfieldKickerMod
 {
-    public class FactionPlayfieldKickerMod
+    [System.ComponentModel.Composition.Export(typeof(IGameMod))]
+    public class FactionPlayfieldKickerMod: IGameMod
     {
         static readonly string k_versionString = Helpers.GetVersionString(typeof(FactionPlayfieldKickerMod));
 
-        public FactionPlayfieldKickerMod(GameServerConnection gameServerConnection, Configuration config)
+        public void Start(GameServerConnection gameServerConnection)
         {
+            var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "FactionPlayfieldKickerMod_Settings.yaml";
+
             _gameServerConnection = gameServerConnection;
-            _config = config;
+            _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
             _gameServerConnection.AddVersionString(k_versionString);
             _gameServerConnection.Event_Player_ChangedPlayfield += OnEvent_Player_ChangedPlayfield;
+        }
+
+        public void Stop()
+        {
         }
 
         private void OnEvent_Player_ChangedPlayfield(SharedCode.Playfield newPlayfield, SharedCode.Player oldPlayerInfo)

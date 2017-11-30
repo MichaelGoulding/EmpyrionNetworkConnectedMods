@@ -4,17 +4,24 @@ using System.Threading.Tasks;
 
 namespace SellToServerMod
 {
-    public class SellToServerMod
+    [System.ComponentModel.Composition.Export(typeof(IGameMod))]
+    public class SellToServerMod : IGameMod
     {
         static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(SellToServerMod));
 
-        public SellToServerMod(GameServerConnection gameServerConnection, Configuration config)
+        public void Start(GameServerConnection gameServerConnection)
         {
+            var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "SellToServerMod_Settings.yaml";
+
             _gameServerConnection = gameServerConnection;
-            _config = config;
+            _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
             _gameServerConnection.AddVersionString(k_versionString);
             _gameServerConnection.Event_ChatMessage += OnEvent_ChatMessage;
+        }
+
+        public void Stop()
+        {
         }
 
         private void OnEvent_ChatMessage(string msg, Player player)

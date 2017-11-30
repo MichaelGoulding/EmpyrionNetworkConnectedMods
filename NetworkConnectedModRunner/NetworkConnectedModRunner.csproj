@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -53,25 +54,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FactionPlayfieldKickerMod\FactionPlayfieldKickerMod.csproj">
-      <Project>{7e7da794-412d-4557-ac8c-fb511e8c28d7}</Project>
-      <Name>FactionPlayfieldKickerMod</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PlayfieldStructureRegenMod\PlayfieldStructureRegenMod.csproj">
-      <Project>{eaabc420-7eec-4ddc-824a-cadcd83aada0}</Project>
-      <Name>PlayfieldStructureRegenMod</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SellToServerMod\SellToServerMod.csproj">
-      <Project>{f5bac378-0e04-49ac-ab40-ffbccb35f9e5}</Project>
-      <Name>SellToServerMod</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharedCode\SharedCode.csproj">
       <Project>{b563d94f-874f-42cd-a498-7164feec86db}</Project>
       <Name>SharedCode</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\StructureOwnershipMod\StructureOwnershipMod.csproj">
-      <Project>{43d4612b-2c5d-4524-a2d0-f7e32ce8dd0e}</Project>
-      <Name>StructureOwnershipMod</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

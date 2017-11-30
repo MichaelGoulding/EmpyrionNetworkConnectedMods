@@ -8,17 +8,20 @@ using System.Timers;
 
 namespace StructureOwnershipMod
 {
-    public class StructureOwnershipMod
+    [System.ComponentModel.Composition.Export(typeof(IGameMod))]
+    public class StructureOwnershipMod : IGameMod
     {
         static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(StructureOwnershipMod));
 
-        public StructureOwnershipMod(GameServerConnection gameServerConnection, Configuration config)
+        public void Start(GameServerConnection gameServerConnection)
         {
+            var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "StructureOwnershipMod_Settings.yaml";
+
             _gameServerConnection = gameServerConnection;
-            _config = config;
+            _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
             var saveStateFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "SaveState.yaml";
-            _factionRewardTimer = new Timer(config.CaptureRewardMinutes * 1000.0 * 60.0);
+            _factionRewardTimer = new Timer(_config.CaptureRewardMinutes * 1000.0 * 60.0);
 
             _saveState = SaveState.Load(saveStateFilePath);
 
@@ -31,6 +34,10 @@ namespace StructureOwnershipMod
             {
                 _factionRewardTimer.Start();
             }
+        }
+
+        public void Stop()
+        {
         }
 
         private void OnEvent_ChatMessage(string msg, Player player)

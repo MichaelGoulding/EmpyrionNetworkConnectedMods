@@ -18,7 +18,7 @@ namespace SharedCode
             PlayerUpdateIntervalInSeconds = 5;
         }
 
-        public static T GetConfiguration<T>(String filePath) where T : BaseConfiguration
+        public static T GetConfiguration<T>(String filePath)
         {
             using (var input = File.OpenText(filePath))
             {
