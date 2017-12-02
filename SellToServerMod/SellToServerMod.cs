@@ -61,55 +61,7 @@ namespace SellToServerMod
                 {
                     found = true;
 
-                    // This returns a task that, when completed, has the selection from the player.
-                    var task = player.DoItemExchange("Sell Items - Step 1", "Place Items to get a price", "Process"); // BUG: button text can only be set once "Get Price");
-
-                    // This continues the operation later when the server returns the response.
-                    task.ContinueWith(
-                        async (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
-                        {
-                            var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
-
-                            while (itemExchangeInfoInQuote.items != null)
-                            {
-                                double credits = 0;
-                                foreach (var stack in itemExchangeInfoInQuote.items)
-                                {
-                                    double unitPrice;
-                                    if (!sellLocation.ItemIdToUnitPrice.TryGetValue(stack.id, out unitPrice))
-                                    {
-                                        unitPrice = sellLocation.DefaultPrice;
-                                    }
-
-                                    credits += unitPrice * stack.count;
-                                }
-
-                                credits = System.Math.Round(credits, 2);
-
-                                var message = string.Format("We will pay you {0} credits.", credits);
-
-                                // Here, instead of using ContinueWith, we just wait here for the response. Execution will resume as soon as we get back an answer.
-                                var itemExchangeInfoSold = await player.DoItemExchange(
-                                    "Sell Items - Step 2",
-                                    message,
-                                    "Process", // BUG: button text can only be set once "Sell Items",
-                                    itemExchangeInfoInQuote.items);
-
-                                if ((itemExchangeInfoSold.items != null) && (itemExchangeInfoSold.items.AreTheSame(itemExchangeInfoInQuote.items)))
-                                {
-                                    _gameServerConnection.DebugOutput("Player {0} sold items for {1} credits.", player, credits);
-                                    await player.AddCredits(credits);
-                                    await player.SendAlertMessage("Items sold for {0} credits.", credits);
-                                    break;
-                                }
-                                else
-                                {
-                                    // try again if the user changed things.
-                                    _gameServerConnection.DebugOutput("Player {0} changed things.", player);
-                                    itemExchangeInfoInQuote = itemExchangeInfoSold;
-                                }
-                            }
-                        });
+                    DoSellTransaction(player, sellLocation);
 
                     break;
                 }
@@ -120,6 +72,64 @@ namespace SellToServerMod
                 _gameServerConnection.DebugOutput("player not in the right spot: {0}", player.Position);
                 player.SendAlarmMessage("Not a valid place to sell.");
             }
+        }
+
+        private async void DoSellTransaction(Player player, Configuration.SellLocation sellLocation)
+        {
+            // await continues the operation later when the server returns the response.
+            var itemExchangeInfoInQuote = await player.DoItemExchange(
+                title: "Sell Items - Step 1",
+                description: "Place Items to get a price",
+                buttonText: "Process"); // BUG: button text can only be set once, otherwise I would put "Get Price"
+
+            // If the player ever removes all items from the item exchange window, stop the transaction.
+            while (itemExchangeInfoInQuote.items != null)
+            {
+                // calculate the worth of the items the player put in the item exchange window
+                double credits = GetSellValueOfItems(sellLocation, itemExchangeInfoInQuote);
+
+                var message = string.Format("We will pay you {0} credits.", credits);
+
+                // Show the price with the same items he put in, in case he wants to adjust his order.
+                var itemExchangeInfoSold = await player.DoItemExchange(
+                    "Sell Items - Step 2",
+                    message,
+                    "Process", // BUG: button text can only be set once "Sell Items",
+                    itemExchangeInfoInQuote.items);
+
+                if ((itemExchangeInfoSold.items != null) && (itemExchangeInfoSold.items.AreTheSame(itemExchangeInfoInQuote.items)))
+                {
+                    // the player didn't change his items, complete the purchase
+                    _gameServerConnection.DebugOutput("Player {0} sold items for {1} credits.", player, credits);
+                    await player.AddCredits(credits);
+                    await player.SendAlertMessage("Items sold for {0} credits.", credits);
+                    break;
+                }
+                else
+                {
+                    // if the items changed, continue the while loop with the new items returned.
+                    _gameServerConnection.DebugOutput("Player {0} changed things.", player);
+                    itemExchangeInfoInQuote = itemExchangeInfoSold;
+                }
+            }
+        }
+
+        private static double GetSellValueOfItems(Configuration.SellLocation sellLocation, Eleon.Modding.ItemExchangeInfo itemExchangeInfoInQuote)
+        {
+            double credits = 0;
+
+            foreach (var stack in itemExchangeInfoInQuote.items)
+            {
+                double unitPrice;
+                if (!sellLocation.ItemIdToUnitPrice.TryGetValue(stack.id, out unitPrice))
+                {
+                    unitPrice = sellLocation.DefaultPrice;
+                }
+
+                credits += unitPrice * stack.count;
+            }
+
+            return System.Math.Round(credits, 2);
         }
 
         private IGameServerConnection _gameServerConnection;
