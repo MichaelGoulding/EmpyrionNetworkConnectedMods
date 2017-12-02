@@ -56,6 +56,7 @@
     <Compile Include="GameServerConnection.cs" />
     <Compile Include="Config\BaseConfiguration.cs" />
     <Compile Include="IGameMod.cs" />
+    <Compile Include="IGameServerConnection.cs" />
     <Compile Include="ItemIds.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Playfield.cs" />

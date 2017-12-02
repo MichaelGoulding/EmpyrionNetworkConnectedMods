@@ -12,7 +12,7 @@ namespace FactionPlayfieldKickerMod
     {
         static readonly string k_versionString = Helpers.GetVersionString(typeof(FactionPlayfieldKickerMod));
 
-        public void Start(GameServerConnection gameServerConnection)
+        public void Start(IGameServerConnection gameServerConnection)
         {
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "FactionPlayfieldKickerMod_Settings.yaml";
 
@@ -64,7 +64,7 @@ namespace FactionPlayfieldKickerMod
             }
         }
 
-        private GameServerConnection _gameServerConnection;
+        private IGameServerConnection _gameServerConnection;
         private Configuration _config;
     }
 }

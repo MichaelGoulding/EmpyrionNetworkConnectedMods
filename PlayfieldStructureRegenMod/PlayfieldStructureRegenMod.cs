@@ -12,7 +12,7 @@ namespace PlayfieldStructureRegenMod
     {
         static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(PlayfieldStructureRegenMod));
 
-        public void Start(GameServerConnection gameServerConnection)
+        public void Start(IGameServerConnection gameServerConnection)
         {
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "PlayfieldStructureRegenMod_Settings.yaml";
 
@@ -53,7 +53,7 @@ namespace PlayfieldStructureRegenMod
             }
         }
 
-        private GameServerConnection _gameServerConnection;
+        private IGameServerConnection _gameServerConnection;
         private Configuration _config;
     }
 }

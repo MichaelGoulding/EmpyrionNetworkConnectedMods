@@ -16,7 +16,7 @@ namespace SharedCode
         Attention = 2,
     }
 
-    public class GameServerConnection : IDisposable
+    public class GameServerConnection : IGameServerConnection
     {
         #region Private Data
 

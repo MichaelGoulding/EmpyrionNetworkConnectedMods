@@ -9,7 +9,7 @@ namespace SellToServerMod
     {
         static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(SellToServerMod));
 
-        public void Start(GameServerConnection gameServerConnection)
+        public void Start(IGameServerConnection gameServerConnection)
         {
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "SellToServerMod_Settings.yaml";
 
@@ -100,7 +100,7 @@ namespace SellToServerMod
             }
         }
 
-        private GameServerConnection _gameServerConnection;
+        private IGameServerConnection _gameServerConnection;
         private Configuration _config;
     }
 }

@@ -18,7 +18,7 @@ namespace PlanetOwnership
     {
         static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(Program));
 
-        static SharedCode.GameServerConnection _gameServerConnection;
+        static SharedCode.IGameServerConnection _gameServerConnection;
 
         static Config.Configuration config;
 
@@ -38,7 +38,7 @@ namespace PlanetOwnership
 
             saveState = Config.SaveState.Load(saveStateFilePath);
 
-            using (_gameServerConnection = new SharedCode.GameServerConnection(config))
+            //using (_gameServerConnection = new SharedCode.GameServerConnection(config))
             {
                 _gameServerConnection.AddVersionString(k_versionString);
                 _gameServerConnection.Event_Faction_Changed += OnEvent_Faction_Changed;

@@ -72,7 +72,7 @@ namespace SharedCode
 
         #region Protected methods
 
-        protected Entity(GameServerConnection gameServerConnection, int entityId, string name)
+        protected Entity(IGameServerConnection gameServerConnection, int entityId, string name)
         {
             _gameServerConnection = gameServerConnection;
             _entityId = entityId;
@@ -83,7 +83,7 @@ namespace SharedCode
 
         #region Protected Data
 
-        protected GameServerConnection _gameServerConnection;
+        protected IGameServerConnection _gameServerConnection;
 
         #endregion
 

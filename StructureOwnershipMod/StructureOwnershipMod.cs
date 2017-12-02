@@ -13,7 +13,7 @@ namespace StructureOwnershipMod
     {
         static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(StructureOwnershipMod));
 
-        public void Start(GameServerConnection gameServerConnection)
+        public void Start(IGameServerConnection gameServerConnection)
         {
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "StructureOwnershipMod_Settings.yaml";
 
@@ -125,7 +125,7 @@ namespace StructureOwnershipMod
             }
         }
 
-        private GameServerConnection _gameServerConnection;
+        private IGameServerConnection _gameServerConnection;
         private Configuration _config;
         private SaveState _saveState;
         private Timer _factionRewardTimer;

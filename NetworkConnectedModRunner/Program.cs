@@ -10,7 +10,7 @@ namespace NetworkConnectedModRunner
     {
         CompositionContainer _container;
 
-        GameServerConnection _gameServerConnection;
+        IGameServerConnection _gameServerConnection;
 
         #pragma warning disable 0649
         [ImportMany]

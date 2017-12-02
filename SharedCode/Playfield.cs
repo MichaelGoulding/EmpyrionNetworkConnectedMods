@@ -76,7 +76,7 @@ namespace SharedCode
 
         #endregion
 
-        internal Playfield(GameServerConnection gameServerConnection, string name)
+        internal Playfield(IGameServerConnection gameServerConnection, string name)
         {
             _gameServerConnection = gameServerConnection;
             Name = name;
@@ -117,7 +117,7 @@ namespace SharedCode
             }
         }
 
-        private GameServerConnection _gameServerConnection;
+        private IGameServerConnection _gameServerConnection;
 
         private Dictionary<int, Structure> _structuresById = new Dictionary<int, Structure>();
     }

@@ -45,7 +45,7 @@ namespace SharedCode
             _rect = rect;
         }
 
-        public BoundingBox(GameServerConnection gameServerConnection, BoundingBoxInfo boundingBoxInfo)
+        public BoundingBox(IGameServerConnection gameServerConnection, BoundingBoxInfo boundingBoxInfo)
         {
             PlayersInArea = new List<Player>();
             _playfield = gameServerConnection.GetPlayfield(boundingBoxInfo.Playfield);

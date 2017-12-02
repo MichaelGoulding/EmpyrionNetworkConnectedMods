@@ -8,7 +8,7 @@ namespace SharedCode
 {
     public interface IGameMod
     {
-        void Start(GameServerConnection gameServerConnection);
+        void Start(IGameServerConnection gameServerConnection);
 
         void Stop();
     }

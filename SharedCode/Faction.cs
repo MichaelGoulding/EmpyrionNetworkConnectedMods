@@ -75,12 +75,12 @@ namespace SharedCode
 
         #endregion
 
-        internal Faction(GameServerConnection gameServerConnection, int factionId)
+        internal Faction(IGameServerConnection gameServerConnection, int factionId)
         {
             _gameServerConnection = gameServerConnection;
             Id = factionId;
         }
 
-        private GameServerConnection _gameServerConnection;
+        private IGameServerConnection _gameServerConnection;
     }
 }
