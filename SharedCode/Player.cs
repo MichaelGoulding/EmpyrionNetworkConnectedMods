@@ -28,14 +28,25 @@ namespace SharedCode
         //Request_Player_SetCredits = 26,
 
         //Request_Player_AddItem = 24,
-        //Request_Blueprint_Resources = 30,
-        //Request_Player_ChangePlayerfield = 31,
-        //Request_Player_SetPlayerInfo = 34,
-        //Request_ShowDialog_SinglePlayer = 60,
 
         public Task FinishBlueprint()
         {
             return _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Blueprint_Finish, new Eleon.Modding.Id(EntityId));
+        }
+
+
+        public Task AddBlueprintResources(List<Eleon.Modding.ItemStack> itemStacks)
+        {
+            return _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_Blueprint_Resources,
+                new Eleon.Modding.BlueprintResources(EntityId, itemStacks, false));
+        }
+
+        public Task SetBlueprintResources(List<Eleon.Modding.ItemStack> itemStacks)
+        {
+            return _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_Blueprint_Resources,
+                new Eleon.Modding.BlueprintResources(EntityId, itemStacks, true));
         }
 
         public Task ChangePlayerfield( WorldPosition newWorldPosition)
@@ -44,6 +55,9 @@ namespace SharedCode
                 Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
                 new Eleon.Modding.IdPlayfieldPositionRotation(EntityId, newWorldPosition.playfield.Name, newWorldPosition.position, newWorldPosition.rotation));
         }
+
+        //Request_Player_SetPlayerInfo = 34,
+        //Request_ShowDialog_SinglePlayer = 60,
 
         public Task SendAlarmMessage(string format, params object[] args)
         {
