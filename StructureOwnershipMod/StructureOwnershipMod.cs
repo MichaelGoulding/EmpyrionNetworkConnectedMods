@@ -13,6 +13,8 @@ namespace StructureOwnershipMod
     {
         static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(StructureOwnershipMod));
 
+        static readonly string k_saveStateFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "SaveState.yaml";
+
         public void Start(IGameServerConnection gameServerConnection)
         {
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "StructureOwnershipMod_Settings.yaml";
@@ -20,10 +22,9 @@ namespace StructureOwnershipMod
             _gameServerConnection = gameServerConnection;
             _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
-            var saveStateFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "SaveState.yaml";
             _factionRewardTimer = new Timer(_config.CaptureRewardMinutes * 1000.0 * 60.0);
 
-            _saveState = SaveState.Load(saveStateFilePath);
+            _saveState = SaveState.Load(k_saveStateFilePath);
 
             _gameServerConnection.AddVersionString(k_versionString);
             _gameServerConnection.Event_Faction_Changed += OnEvent_Faction_Changed;
@@ -38,6 +39,7 @@ namespace StructureOwnershipMod
 
         public void Stop()
         {
+            _saveState.Save(k_saveStateFilePath);
         }
 
         private void OnEvent_ChatMessage(string msg, Player player)
@@ -57,9 +59,6 @@ namespace StructureOwnershipMod
                     (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
                     {
                         var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
-
-                        ;
-
                     });
             }
         }
@@ -101,9 +100,11 @@ namespace StructureOwnershipMod
                 {
                     foreach (var playerId in onlinePlayersById.Keys)
                     {
-                        if (_saveState.FactionIdToEntityIds.ContainsKey(onlinePlayersById[playerId].MemberOfFaction.Id))// _players[entityId].MemberOfFaction.Id == saveState.OwningFactionId)
+                        var player = onlinePlayersById[playerId];
+
+                        if (_saveState.FactionIdToEntityIds.ContainsKey(player.MemberOfFaction.Id))// _players[entityId].MemberOfFaction.Id == saveState.OwningFactionId)
                         {
-                            var factoryContents = onlinePlayersById[playerId].BpResourcesInFactory;
+                            var factoryContents = player.BpResourcesInFactory;
                             var itemStacks = new List<Eleon.Modding.ItemStack>();
 
                             foreach (var entityId in _saveState.FactionIdToEntityIds[onlinePlayersById[playerId].MemberOfFaction.Id])
@@ -116,9 +117,7 @@ namespace StructureOwnershipMod
                                 itemStacks.Add(new Eleon.Modding.ItemStack(2274, 2000));
                             }
 
-                            _gameServerConnection.SendRequest(
-                                Eleon.Modding.CmdId.Request_Blueprint_Resources,
-                                new Eleon.Modding.BlueprintResources(playerId, itemStacks, false));
+                            player.AddBlueprintResources(itemStacks).ContinueWith((task) => { player.SendAttentionMessage("Added blueprint resources!"); });
                         }
                     }
                 }
