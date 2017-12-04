@@ -82,6 +82,14 @@ namespace SharedCode
                 });
         }
 
+
+        public Task Regenerate()
+        {
+            return _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_ConsoleCommand,
+                new Eleon.Modding.PString(string.Format("remoteex pf={0} 'regenerate {1}'", Position.playfield.ProcessId, EntityId)));
+        }
+
         #region Internal Methods
 
         internal void UpdateInfo(Playfield playfield)
