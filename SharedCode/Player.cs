@@ -107,7 +107,7 @@ namespace SharedCode
         {
             System.Diagnostics.Debug.Assert(EntityId == pInfo.entityId);
             this.Position = new WorldPosition { playfield = playfield, position = new Vector3(pInfo.pos) };
-            this.MemberOfFaction = new Faction(_gameServerConnection, pInfo.factionId);
+            this.MemberOfFaction = new Faction(_gameServerConnection, pInfo.factionGroup, pInfo.factionId);
             this.BpResourcesInFactory = pInfo.bpResourcesInFactory;
             _permission = pInfo.permission;
         }

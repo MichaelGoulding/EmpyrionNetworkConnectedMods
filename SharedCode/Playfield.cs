@@ -15,6 +15,25 @@ namespace SharedCode
                 new Eleon.Modding.PString(string.Format("remoteex pf={0} 'regenerate {1}'", ProcessId, entityId)));
         }
 
+        public async Task SpawnEntity(string name, Entity.Type type, string prefabName, Vector3 position, Faction faction)
+        {
+            var newId = await _gameServerConnection.SendRequest<Eleon.Modding.Id>(Eleon.Modding.CmdId.Request_NewEntityId, null);
+
+            var spawnInfo = new Eleon.Modding.EntitySpawnInfo();
+            spawnInfo.forceEntityId = newId.id;
+            spawnInfo.playfield = this.Name;
+            spawnInfo.pos = position;
+            spawnInfo.rot = new Vector3();
+            spawnInfo.name = name;
+            spawnInfo.type = (byte)type;
+            spawnInfo.prefabName = prefabName;
+            spawnInfo.factionGroup = faction.Group;
+            spawnInfo.factionId = faction.Id;
+            //spawnInfo.exportedEntityDat = exportFile;
+
+            await _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Entity_Spawn, spawnInfo);
+        }
+
         internal int ProcessId { get; private set; }
 
         #region Common overloads
@@ -97,9 +116,6 @@ namespace SharedCode
         internal void UpdateInfo(Eleon.Modding.PlayfieldEntityList playfieldEntityList)
         {
             System.Diagnostics.Debug.Assert(playfieldEntityList.playfield == Name);
-
-        //public int type;    // Unknown = 0,Player = 1,BA = 2,CV = 3,SV = 4,HV = 5,AstRes = 6,AstVoxel = 7,EscapePod = 8,Animal = 9,Turret = 10,Item = 11,PlayerDrone = 12,Trader = 13,UndergroundRes=14,
-                            // EnemyDrone = 15, PlayerBackpack = 16, DropContainer = 17, ExplosiveDevice = 18, PlayerBike = 19, PlayerBikeFolded = 20, Asteroid = 21, Civilian = 22, Cyborg = 23, TroopTransport = 24
         }
 
         internal void UpdateInfo(Eleon.Modding.GlobalStructureList globalStructureList)

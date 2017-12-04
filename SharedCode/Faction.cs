@@ -8,6 +8,8 @@ namespace SharedCode
     {
         public int Id { get; private set; }
 
+        public byte Group { get; private set; }
+
         public Task SendMessage(MessagePriority priority, float time, string format, params object[] args)
         {
             string msg = string.Format(format, args);
@@ -75,9 +77,10 @@ namespace SharedCode
 
         #endregion
 
-        internal Faction(IGameServerConnection gameServerConnection, int factionId)
+        internal Faction(IGameServerConnection gameServerConnection, byte factionGroup, int factionId)
         {
             _gameServerConnection = gameServerConnection;
+            Group = factionGroup;
             Id = factionId;
         }
 
