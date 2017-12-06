@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2010
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBotMod", "DiscordBotMod.csproj", "{5D260F95-8FCF-4222-8EA8-12013C8B7860}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedCode", "..\SharedCode\SharedCode.csproj", "{B563D94F-874F-42CD-A498-7164FEEC86DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5D260F95-8FCF-4222-8EA8-12013C8B7860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D260F95-8FCF-4222-8EA8-12013C8B7860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D260F95-8FCF-4222-8EA8-12013C8B7860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D260F95-8FCF-4222-8EA8-12013C8B7860}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B563D94F-874F-42CD-A498-7164FEEC86DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B563D94F-874F-42CD-A498-7164FEEC86DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B563D94F-874F-42CD-A498-7164FEEC86DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B563D94F-874F-42CD-A498-7164FEEC86DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F8AE0B8-6D9A-41F2-B8DE-2A52FDA03569}
+	EndGlobalSection
+EndGlobal
