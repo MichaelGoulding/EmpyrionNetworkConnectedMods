@@ -88,12 +88,10 @@ namespace SellToServerMod
                 // calculate the worth of the items the player put in the item exchange window
                 double credits = GetSellValueOfItems(sellLocation, itemExchangeInfoInQuote);
 
-                var message = string.Format("We will pay you {0} credits.", credits);
-
                 // Show the price with the same items he put in, in case he wants to adjust his order.
                 var itemExchangeInfoSold = await player.DoItemExchange(
                     "Sell Items - Step 2",
-                    message,
+                    $"We will pay you {credits} credits.",
                     "Process", // BUG: button text can only be set once "Sell Items",
                     itemExchangeInfoInQuote.items);
 
