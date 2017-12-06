@@ -37,6 +37,15 @@ namespace SharedCode
             TroopTransport = 24
         }
 
+        public int EntityId
+        {
+            get
+            {
+                return _entityId;
+            }
+        }
+
+
         public string Name { get; protected set; }
 
         public WorldPosition Position { get; protected set; }
@@ -94,14 +103,6 @@ namespace SharedCode
         internal void UpdateInfo(Playfield playfield)
         {
             this.Position = new WorldPosition(playfield, this.Position.position, this.Position.rotation);
-        }
-
-        internal int EntityId
-        {
-            get
-            {
-                return _entityId;
-            }
         }
 
         #endregion

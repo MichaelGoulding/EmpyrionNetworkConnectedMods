@@ -22,7 +22,7 @@ namespace StructureOwnershipMod
             _gameServerConnection = gameServerConnection;
             _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
-            _factionRewardTimer = new Timer(_config.CaptureRewardMinutes * 1000.0 * 60.0);
+            _factionRewardTimer = new Timer(_config.CaptureRewardPeriodInMinutes * 1000.0 * 60.0);
 
             _saveState = SaveState.Load(k_saveStateFilePath);
 
@@ -44,49 +44,91 @@ namespace StructureOwnershipMod
 
         private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
-            if (msg == "/income")
+            switch(msg)
             {
-                var items = new Eleon.Modding.ItemStack[38];
-
-                for (int i = 0; i < items.Length; ++i)
-                {
-                    items[i] = new Eleon.Modding.ItemStack(2273, i + 1234567890);
-                }
-
-                var task = player.DoItemExchange("test1", "test2", "Process", items);
-
-                task.ContinueWith(
-                    (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
+                case "/income":
                     {
-                        var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
-                    });
+                        int ownerId = GetOwnerIdForReward(player);
+
+                        if ((ownerId != 0) && _saveState.FactionIdToRewards.ContainsKey(ownerId))
+                        {
+                            lock (_saveState)
+                            {
+                                var rewards = _saveState.FactionIdToRewards[ownerId];
+
+                                var task = player.DoItemExchange("test1", "test2", "Process", rewards.ExtractOutForItemExchange());
+
+                                task.ContinueWith(
+                                    (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
+                                    {
+                                        lock (_saveState)
+                                        {
+                                            var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
+                                            rewards.AddStacks(new ItemStacks(itemExchangeInfoInQuote.items));
+                                        }
+                                    });
+                            }
+
+                        }
+                        else
+                        {
+                            player.SendAlarmMessage("No income available.");
+                        }
+                    }
+                    break;
+
+                case "/test":
+                    {
+                        //TestMethod(player);
+                        var items = new Eleon.Modding.ItemStack[38];
+
+                        for (int i = 0; i < items.Length; ++i)
+                        {
+                            items[i] = new Eleon.Modding.ItemStack(2273, i );
+                        }
+
+                        var task = player.DoItemExchange("test1", "test2", "Process", items);
+
+                        task.ContinueWith(
+                            (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
+                            {
+                                var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
+                            });
+                    }
+                    break;
             }
+        }
+
+        private async void TestMethod(Player player)
+        {
+            await player.Position.playfield.SpawnEntity(
+                string.Format("cool item for {0}", player.Name),
+                Entity.Type.CV,
+                "Dalos Surveyor Class I",
+                player.Position.position + new Vector3(0, 50, 0),
+                player.MemberOfFaction);
         }
 
         private void OnEvent_Faction_Changed(Eleon.Modding.FactionChangeInfo obj)
         {
             lock (_saveState)
             {
-                foreach (var o in _config.EntityCaptureItems)
+                if (_config.EntityIdToRewards.ContainsKey(obj.id))
                 {
-                    if (obj.id == o.EntityId)
+                    if(!_saveState.FactionIdToEntityIds.ContainsKey(obj.factionId))
                     {
-                        if(!_saveState.FactionIdToEntityIds.ContainsKey(obj.factionId))
-                        {
-                            _saveState.FactionIdToEntityIds.Add(obj.factionId, new HashSet<int>());
-                        }
-
-                        _saveState.FactionIdToEntityIds[obj.factionId].Add(obj.id);
-
-                        if (_saveState.EntityIdToFactionId.ContainsKey(obj.id))
-                        {
-                            // remove entity id from old faction
-                            _saveState.FactionIdToEntityIds[_saveState.EntityIdToFactionId[obj.id]].Remove(obj.id);
-                        }
-
-                        _saveState.EntityIdToFactionId[obj.id] = obj.factionId;
-                        break;
+                        _saveState.FactionIdToEntityIds.Add(obj.factionId, new HashSet<int>());
                     }
+
+                    _saveState.FactionIdToEntityIds[obj.factionId].Add(obj.id);
+
+                    if (_saveState.EntityIdToFactionId.ContainsKey(obj.id))
+                    {
+                        // remove entity id from old faction
+                        _saveState.FactionIdToEntityIds[_saveState.EntityIdToFactionId[obj.id]].Remove(obj.id);
+                    }
+
+                    _saveState.EntityIdToFactionId[obj.id] = obj.factionId;
                 }
             }
         }
@@ -102,26 +144,47 @@ namespace StructureOwnershipMod
                     {
                         var player = onlinePlayersById[playerId];
 
-                        if (_saveState.FactionIdToEntityIds.ContainsKey(player.MemberOfFaction.Id))// _players[entityId].MemberOfFaction.Id == saveState.OwningFactionId)
+                        int ownerId = GetOwnerIdForReward(player);
+
+                        if (ownerId != 0)
                         {
                             var factoryContents = player.BpResourcesInFactory;
-                            var itemStacks = new List<Eleon.Modding.ItemStack>();
+                            var itemStacks = new ItemStacks();
 
-                            foreach (var entityId in _saveState.FactionIdToEntityIds[onlinePlayersById[playerId].MemberOfFaction.Id])
+                            foreach (var entityId in _saveState.FactionIdToEntityIds[ownerId])
                             {
-                                //var oldCobaltAmount = factoryContents.ContainsKey(ItemId.Ingot_Cobalt) ? (int)factoryContents[ItemId.Ingot_Cobalt] : 0;
-                                //var oldSiliconAmount = factoryContents.ContainsKey(ItemId.Ingot_Silicon) ? (int)factoryContents[ItemId.Ingot_Silicon] : 0;
-                                //itemStacks.Add(new ItemStack(2273, oldCobaltAmount + 2000));
-                                //itemStacks.Add(new ItemStack(2274, oldSiliconAmount + 2000));
-                                itemStacks.Add(new Eleon.Modding.ItemStack(2273, 2000));
-                                itemStacks.Add(new Eleon.Modding.ItemStack(2274, 2000));
+                                itemStacks.AddStacks(_config.EntityIdToRewards[entityId]);
                             }
 
-                            player.AddBlueprintResources(itemStacks).ContinueWith((task) => { player.SendAttentionMessage("Added blueprint resources!"); });
+                            if (!_saveState.FactionIdToRewards.ContainsKey(ownerId))
+                            {
+                                _saveState.FactionIdToRewards[ownerId] = new ItemStacks();
+                            }
+                            _saveState.FactionIdToRewards[ownerId].AddStacks(itemStacks);
+
+                            player.SendAttentionMessage("Added resources!");
+
+                            //player.AddBlueprintResources(itemStacks.ToEleonList()).ContinueWith((task) => { player.SendAttentionMessage("Added blueprint resources!"); });
                         }
                     }
                 }
             }
+        }
+
+        private int GetOwnerIdForReward(Player player)
+        {
+            int ownerId = 0;
+
+            if (_saveState.FactionIdToEntityIds.ContainsKey(player.MemberOfFaction.Id))
+            {
+                ownerId = player.MemberOfFaction.Id;
+            }
+            else if (_saveState.FactionIdToEntityIds.ContainsKey(player.EntityId))
+            {
+                ownerId = player.EntityId;
+            }
+
+            return ownerId;
         }
 
         private IGameServerConnection _gameServerConnection;

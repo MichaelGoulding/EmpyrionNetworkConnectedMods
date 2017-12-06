@@ -1,10 +1,10 @@
 ﻿---
-CaptureRewardMinutes: 0.1
-EntityCaptureItems:
-- EntityId: 120001
-  CaptureRewardMinutes: 0.5
-  RewardItemStacks:
-  - Id: 2274
-    Amount: 1
-  - Id: 2276
-    Amount: 2
+CaptureRewardPeriodInMinutes: 0.5
+EntityIdToRewards:
+  120001:
+    - Id: 2274
+      Amount: 1
+    - Id: 2276
+      Amount: 2
+    - Id: 1232
+      Amount: 1000

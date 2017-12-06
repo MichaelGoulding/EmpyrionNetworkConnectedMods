@@ -58,6 +58,7 @@
     <Compile Include="IGameMod.cs" />
     <Compile Include="IGameServerConnection.cs" />
     <Compile Include="ItemIds.cs" />
+    <Compile Include="ItemStack.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Playfield.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
