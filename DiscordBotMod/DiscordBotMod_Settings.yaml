@@ -1,4 +1,5 @@
 ﻿---
+# Follow these instructions to get a token: https://dsharpplus.emzi0767.com/articles/getting_started.html
 DiscordToken: GetYourOwn
 # To get the channel id, enable "Developer Mode" in the User Settings->Appearance page.
 ChannelId: 0
