@@ -43,7 +43,13 @@ namespace DiscordBotMod
 
             _discordClient.MessageCreated += async e =>
             {
-                if (e.Author != _discordClient.CurrentUser)
+                DSharpPlus.Entities.DiscordChannel discordChannel;
+                lock (_discordClient)
+                {
+                    discordChannel = _discordChannel;
+                }
+
+                if (e.Author != _discordClient.CurrentUser && e.Channel == discordChannel)
                 {
                     await _gameServerConnection.SendChatMessageToAll($"From Discord ({e.Author.Username}): \"{e.Message.Content}\"");
                 }
