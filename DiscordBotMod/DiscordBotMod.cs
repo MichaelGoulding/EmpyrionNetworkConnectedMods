@@ -43,19 +43,21 @@ namespace DiscordBotMod
 
             _discordClient.MessageCreated += async e =>
             {
-                
-                if (e.Message.Content.ToLower().StartsWith("ping"))
+                if (e.Author != _discordClient.CurrentUser)
                 {
-                    lock (_discordClient)
-                    {
-                        _discordChannel = e.Channel;
-                    }
-                    await e.Message.RespondAsync("pong!");
+                    await _gameServerConnection.SendChatMessageToAll($"From Discord ({e.Author.Username}): \"{e.Message.Content}\"");
                 }
-                    
             };
 
-            _discordClient.ConnectAsync();
+            _discordClient.ConnectAsync()
+                .ContinueWith(async t =>
+                {
+                    var channel = await _discordClient.GetChannelAsync(_config.ChannelId);
+                    lock (_discordClient)
+                    {
+                        _discordChannel = channel;
+                    }
+                });
         }
 
 
@@ -67,13 +69,16 @@ namespace DiscordBotMod
 
 
         // Event handler for when chat message are received from players.
-        private void OnEvent_ChatMessage(string msg, Player player)
+        private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
-            lock (_discordClient)
+            if (chatType == ChatType.ToAll)
             {
-                if (_discordChannel != null)
+                lock (_discordClient)
                 {
-                    _discordClient.SendMessageAsync(_discordChannel, $"From {player.Name}: \"{msg}\"");
+                    if (_discordChannel != null)
+                    {
+                        _discordClient.SendMessageAsync(_discordChannel, $"From {player.Name}: \"{msg}\"");
+                    }
                 }
             }
         }

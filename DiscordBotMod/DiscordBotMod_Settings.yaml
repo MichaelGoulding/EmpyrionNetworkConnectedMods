@@ -1,2 +1,4 @@
 ﻿---
 DiscordToken: GetYourOwn
+# To get the channel id, enable "Developer Mode" in the User Settings->Appearance page.
+ChannelId: 0

@@ -67,7 +67,6 @@ namespace SharedCode
         //Request_Entity_SetName,             // IdPlayfieldName (if playfield == null we try to find the corresponding playfield, playfield must be loaded)
 
 
-
         public Task GetCurrentPosition()
         {
             return _gameServerConnection.SendRequest<Eleon.Modding.IdPositionRotation>(Eleon.Modding.CmdId.Request_Entity_PosAndRot, new Eleon.Modding.Id(EntityId))

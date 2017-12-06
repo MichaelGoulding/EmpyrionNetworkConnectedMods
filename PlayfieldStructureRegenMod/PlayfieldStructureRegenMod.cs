@@ -28,7 +28,7 @@ namespace PlayfieldStructureRegenMod
         {
         }
 
-        private void OnEvent_ChatMessage(string msg, Player player)
+        private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
             //if (msg.StartsWith("/reg"))
             //{

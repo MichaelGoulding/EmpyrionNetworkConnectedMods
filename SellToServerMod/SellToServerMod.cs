@@ -40,7 +40,7 @@ namespace SellToServerMod
 
 
         // Event handler for when chat message are received from players.
-        private void OnEvent_ChatMessage(string msg, Player player)
+        private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
             switch (msg)
             {

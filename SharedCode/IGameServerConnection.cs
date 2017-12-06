@@ -5,9 +5,17 @@ using Eleon.Modding;
 
 namespace SharedCode
 {
+    public enum ChatType
+    {
+        ToAll = 3,
+        ToFaction = 5,
+        ToPlayer = 8,
+        PlayerToServer = 9
+    }
+
     public interface IGameServerConnection : IDisposable
     {
-        event Action<string, Player> Event_ChatMessage;
+        event Action<ChatType, string, Player> Event_ChatMessage;
         event Action<FactionChangeInfo> Event_Faction_Changed;
         event Action<Playfield, Player> Event_Player_ChangedPlayfield;
         event Action<Playfield> Event_Playfield_Loaded;
@@ -24,7 +32,7 @@ namespace SharedCode
         Task SendAlarmMessageToAll(string format, params object[] args);
         Task SendAlertMessageToAll(string format, params object[] args);
         Task SendAttentionMessageToAll(string format, params object[] args);
-        void SendChatMessageToAll(string format, params object[] args);
+        Task SendChatMessageToAll(string format, params object[] args);
         Task SendMessageToAll(MessagePriority priority, float time, string format, params object[] args);
         Task SendRequest(CmdId cmdID, object data);
         Task<T> SendRequest<T>(CmdId cmdID, object data);

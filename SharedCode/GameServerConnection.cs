@@ -88,7 +88,7 @@ namespace SharedCode
 
         public event Action<Playfield, Player> Event_Player_ChangedPlayfield;
 
-        public event Action<string, Player> Event_ChatMessage;
+        public event Action<ChatType, string, Player> Event_ChatMessage;
 
         public event Action<Eleon.Modding.FactionChangeInfo> Event_Faction_Changed;
 
@@ -157,14 +157,14 @@ namespace SharedCode
             _client.Send(cmdID, (ushort)seqNr, data);
         }
 
-        public void SendChatMessageToAll(string format, params object[] args)
+        public Task SendChatMessageToAll(string format, params object[] args)
         {
             string msg = string.Format(format, args);
-            string command = "SAY '" + msg + "'";
-            SendRequest(
+            string command = $"SAY '{msg}'";
+            DebugOutput("ChatMessage(\"{0}\")", msg);
+            return SendRequest(
                 Eleon.Modding.CmdId.Request_ConsoleCommand,
                 new Eleon.Modding.PString(command));
-            DebugOutput("ChatMessage(\"{0}\")", msg);
         }
 
         public Task SendAlarmMessageToAll(string format, params object[] args)
@@ -767,7 +767,7 @@ namespace SharedCode
                     player = _onlinePlayersInfoById[obj.playerId];
                 }
 
-                Event_ChatMessage?.Invoke(obj.msg, player);
+                Event_ChatMessage?.Invoke((ChatType)obj.type, obj.msg, player);
             }
         }
 
