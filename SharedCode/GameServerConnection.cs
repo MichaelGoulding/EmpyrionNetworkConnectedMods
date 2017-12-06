@@ -452,7 +452,6 @@ namespace SharedCode
 
                                 var itemExchangeInfo = (Eleon.Modding.ItemExchangeInfo)p.data;
                                 DebugOutput("Event_Player_ItemExchange - Request: {0}, Player: {1}", p.seqNr, itemExchangeInfo.id);
-                                System.Diagnostics.Debugger.Break();
                             }
                             break;
 
@@ -581,7 +580,7 @@ namespace SharedCode
                                 Eleon.Modding.ErrorInfo eInfo = (Eleon.Modding.ErrorInfo)p.data;
                                 Eleon.Modding.CmdId cmdId = (Eleon.Modding.CmdId)p.seqNr;
                                 DebugOutput("Event_Error - ErrorType {0}, CmdId {1}", eInfo.errorType, cmdId);
-                                System.Diagnostics.Debugger.Break();
+                                //System.Diagnostics.Debugger.Break();
                             }
                             break;
 
@@ -664,7 +663,7 @@ namespace SharedCode
 
                         default:
                             DebugOutput("(1) Unknown package cmd {0}", p.cmd);
-                            System.Diagnostics.Debugger.Break();
+                            //System.Diagnostics.Debugger.Break();
                             break;
                     }
                 }
@@ -672,7 +671,7 @@ namespace SharedCode
             catch (Exception ex)
             {
                 DebugOutput("Exception: {0}", ex.Message);
-                System.Diagnostics.Debugger.Break();
+                //System.Diagnostics.Debugger.Break();
             }
         }
 
