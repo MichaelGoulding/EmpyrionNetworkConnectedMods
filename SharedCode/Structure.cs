@@ -17,13 +17,6 @@ namespace SharedCode
             return _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Structure_Touch, new Eleon.Modding.Id(EntityId));
         }
 
-        public Task Regenerate()
-        {
-            return _gameServerConnection.SendRequest(
-                Eleon.Modding.CmdId.Request_ConsoleCommand,
-                new Eleon.Modding.PString(string.Format("remoteex pf={0} 'regenerate {1}'", Playfield.ProcessId, EntityId)));
-        }
-
         internal Structure(IGameServerConnection gameServerConnection, Playfield playfield, Eleon.Modding.GlobalStructureInfo info)
             : base(gameServerConnection, info.id, info.name)
         {
