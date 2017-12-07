@@ -1,0 +1,7 @@
+﻿---
+VotingApiServerKey: "Get yours from https://empyrion-servers.com/"
+VotingRewards:
+  - Id: 1318
+    Amount: 1
+  - Id: 1313
+    Amount: 2

@@ -17,6 +17,8 @@ namespace SharedCode
 
         public Dictionary<int, float> BpResourcesInFactory { get; protected set; }
 
+        public string SteamId { get; private set; }
+
         public Task AddCredits(double amount)
         {
             return _gameServerConnection.SendRequest(
@@ -106,6 +108,7 @@ namespace SharedCode
         internal void UpdateInfo(Eleon.Modding.PlayerInfo pInfo, Playfield playfield)
         {
             System.Diagnostics.Debug.Assert(EntityId == pInfo.entityId);
+            this.SteamId = pInfo.steamId;
             this.Position = new WorldPosition { playfield = playfield, position = new Vector3(pInfo.pos) };
             this.MemberOfFaction = new Faction(_gameServerConnection, pInfo.factionGroup, pInfo.factionId);
             this.BpResourcesInFactory = pInfo.bpResourcesInFactory;
