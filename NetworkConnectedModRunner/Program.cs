@@ -28,6 +28,12 @@ namespace NetworkConnectedModRunner
                 new AssemblyCatalog(typeof(Program).Assembly),
                 new DirectoryCatalog(modPath, "*Mod.dll")))
             {
+                // iterate over all directories in .\Plugins dir and add all Plugin* dirs to catalogs
+                foreach (var path in System.IO.Directory.EnumerateDirectories(modPath, "*", System.IO.SearchOption.TopDirectoryOnly))
+                {
+                    catalog.Catalogs.Add(new DirectoryCatalog(path, "*Mod.dll"));
+                }
+
                 _container = new CompositionContainer(catalog);
 
                 try
