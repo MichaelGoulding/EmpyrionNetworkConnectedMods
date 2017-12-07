@@ -135,6 +135,7 @@ namespace StructureOwnershipMod
 
         private void OnFactionRewardTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            // TODO: don't do this only for online players
             var onlinePlayersById = _gameServerConnection.GetOnlinePlayers();
             lock (onlinePlayersById)
             {
@@ -156,15 +157,17 @@ namespace StructureOwnershipMod
                                 itemStacks.AddStacks(_config.EntityIdToRewards[entityId]);
                             }
 
-                            if (!_saveState.FactionIdToRewards.ContainsKey(ownerId))
+                            if (itemStacks.Count != 0)
                             {
-                                _saveState.FactionIdToRewards[ownerId] = new ItemStacks();
+
+                                if (!_saveState.FactionIdToRewards.ContainsKey(ownerId))
+                                {
+                                    _saveState.FactionIdToRewards[ownerId] = new ItemStacks();
+                                }
+                                _saveState.FactionIdToRewards[ownerId].AddStacks(itemStacks);
+
+                                player.SendAttentionMessage("Added resources!");
                             }
-                            _saveState.FactionIdToRewards[ownerId].AddStacks(itemStacks);
-
-                            player.SendAttentionMessage("Added resources!");
-
-                            //player.AddBlueprintResources(itemStacks.ToEleonList()).ContinueWith((task) => { player.SendAttentionMessage("Added blueprint resources!"); });
                         }
                     }
                 }
