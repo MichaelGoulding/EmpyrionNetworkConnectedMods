@@ -34,6 +34,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBotMod", "DiscordBot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingRewardMod", "VotingRewardMod\VotingRewardMod.csproj", "{16833700-A18C-480F-98B3-A35AD66E2BB9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmpyrionModdingApiTests", "EmpyrionModdingApiTests\EmpyrionModdingApiTests.csproj", "{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -84,6 +86,10 @@ Global
 		{16833700-A18C-480F-98B3-A35AD66E2BB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16833700-A18C-480F-98B3-A35AD66E2BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16833700-A18C-480F-98B3-A35AD66E2BB9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
