@@ -15,6 +15,12 @@ namespace SharedCode
         {
         }
 
+        public ItemStack(int id, int amount)
+        {
+            this.Id = id;
+            this.Amount = amount;
+        }
+
         public ItemStack(Eleon.Modding.ItemStack itemStack)
         {
             this.Id = itemStack.id;
@@ -45,7 +51,16 @@ namespace SharedCode
             {
                 if( itemStack.Id == newItemStack.Id)
                 {
-                    itemStack.Amount += newItemStack.Amount;
+                    var newTotal = (long)itemStack.Amount + newItemStack.Amount;
+                    if (newTotal > int.MaxValue)
+                    {
+                        itemStack.Amount = int.MaxValue;
+                        Add(new ItemStack(newItemStack.Id, (int)(newTotal-int.MaxValue)));
+                    }
+                    else
+                    {
+                        itemStack.Amount = (int)newTotal;
+                    }
                     return;
                 }
             }

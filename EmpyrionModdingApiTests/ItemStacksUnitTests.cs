@@ -12,8 +12,8 @@ namespace EmpyrionModdingApiTests
             var testee = new SharedCode.ItemStacks();
 
             // test overflow on adding stacks
-            testee.AddStack(new SharedCode.ItemStack() { Id = 1, Amount = (int.MaxValue - 10) });
-            testee.AddStack(new SharedCode.ItemStack() { Id = 1, Amount = (20) });
+            testee.AddStack(new SharedCode.ItemStack(1, (int.MaxValue - 10)));
+            testee.AddStack(new SharedCode.ItemStack(1, 20));
 
             Assert.AreEqual(2, testee.Count);
             Assert.AreEqual(int.MaxValue, testee[0].Amount);
