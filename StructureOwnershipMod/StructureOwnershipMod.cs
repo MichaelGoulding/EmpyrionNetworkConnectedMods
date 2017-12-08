@@ -76,37 +76,7 @@ namespace StructureOwnershipMod
                         }
                     }
                     break;
-
-                case "/test":
-                    {
-                        //TestMethod(player);
-                        var items = new Eleon.Modding.ItemStack[38];
-
-                        for (int i = 0; i < items.Length; ++i)
-                        {
-                            items[i] = new Eleon.Modding.ItemStack(2273, i );
-                        }
-
-                        var task = player.DoItemExchange("test1", "test2", "Process", items);
-
-                        task.ContinueWith(
-                            (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
-                            {
-                                var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
-                            });
-                    }
-                    break;
             }
-        }
-
-        private async void TestMethod(Player player)
-        {
-            await player.Position.playfield.SpawnEntity(
-                string.Format("cool item for {0}", player.Name),
-                Entity.Type.CV,
-                "Dalos Surveyor Class I",
-                player.Position.position + new Vector3(0, 50, 0),
-                player.MemberOfFaction);
         }
 
         private void OnEvent_Faction_Changed(Eleon.Modding.FactionChangeInfo obj)
@@ -135,7 +105,38 @@ namespace StructureOwnershipMod
 
         private void OnFactionRewardTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            // TODO: don't do this only for online players
+            var ownersWhoGotSomething = new HashSet<int>();
+
+            lock (_saveState)
+            {
+                foreach (var factionEntitySet in _saveState.FactionIdToEntityIds)
+                {
+                    var ownerId = factionEntitySet.Key;
+
+                    var itemStacks = new ItemStacks();
+
+                    foreach (var entityId in factionEntitySet.Value)
+                    {
+                        itemStacks.AddStacks(_config.EntityIdToRewards[entityId]);
+                    }
+
+                    if (itemStacks.Count != 0)
+                    {
+                        if (!_saveState.FactionIdToRewards.ContainsKey(ownerId))
+                        {
+                            _saveState.FactionIdToRewards[ownerId] = itemStacks;
+                        }
+                        else
+                        {
+                            _saveState.FactionIdToRewards[ownerId].AddStacks(itemStacks);
+                        }
+
+                        ownersWhoGotSomething.Add(ownerId);
+                    }
+                }
+            }
+
+            // Tell online players about it
             var onlinePlayersById = _gameServerConnection.GetOnlinePlayers();
             lock (onlinePlayersById)
             {
@@ -147,27 +148,9 @@ namespace StructureOwnershipMod
 
                         int ownerId = GetOwnerIdForReward(player);
 
-                        if (ownerId != 0)
+                        if (ownerId != 0 && ownersWhoGotSomething.Contains(ownerId))
                         {
-                            var factoryContents = player.BpResourcesInFactory;
-                            var itemStacks = new ItemStacks();
-
-                            foreach (var entityId in _saveState.FactionIdToEntityIds[ownerId])
-                            {
-                                itemStacks.AddStacks(_config.EntityIdToRewards[entityId]);
-                            }
-
-                            if (itemStacks.Count != 0)
-                            {
-
-                                if (!_saveState.FactionIdToRewards.ContainsKey(ownerId))
-                                {
-                                    _saveState.FactionIdToRewards[ownerId] = new ItemStacks();
-                                }
-                                _saveState.FactionIdToRewards[ownerId].AddStacks(itemStacks);
-
-                                player.SendAttentionMessage("Added resources!");
-                            }
+                            player.SendAttentionMessage("Added income!");
                         }
                     }
                 }
