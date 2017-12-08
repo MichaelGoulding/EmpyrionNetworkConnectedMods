@@ -1,5 +1,5 @@
 # Introduction
-This is a wrapper for the Empryion Mod API and a system to run mods without having to restart the game server.  It uses the existing TCP port used by EAH to connect to the game server.
+This is a wrapper for the Empyrion Mod API and a system to run mods without having to restart the game server.  It uses the existing TCP port used by EAH to connect to the game server.
 
 # Getting Started
 
