@@ -7,5 +7,9 @@ namespace DiscordBotMod
         public string DiscordToken { get; set; }
 
         public ulong ChannelId { get; set; }
+
+        public string FromGameFormattingString { get; set; }
+
+        public string FromDiscordFormattingString { get; set; }
     }
 }

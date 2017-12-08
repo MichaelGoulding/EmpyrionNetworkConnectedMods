@@ -3,3 +3,6 @@
 DiscordToken: GetYourOwn
 # To get the channel id, enable "Developer Mode" in the User Settings->Appearance page.
 ChannelId: 0
+
+FromGameFormattingString: "From {0}: \"{1}\""
+FromDiscordFormattingString: "[FFFFFF]From Discord ({0}): \"{1}\"[-]"

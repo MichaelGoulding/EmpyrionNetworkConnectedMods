@@ -51,7 +51,7 @@ namespace DiscordBotMod
 
                 if (e.Author != _discordClient.CurrentUser && e.Channel == discordChannel)
                 {
-                    await _gameServerConnection.SendChatMessageToAll($"From Discord ({e.Author.Username}): \"{e.Message.Content}\"");
+                    await _gameServerConnection.SendChatMessageToAll(string.Format(_config.FromDiscordFormattingString, e.Author.Username, e.Message.Content));
                 }
             };
 
@@ -70,7 +70,7 @@ namespace DiscordBotMod
         // This is called right before the program ends.  Mods should save anything they need here.
         public void Stop()
         {
-            _discordClient.DisconnectAsync().Wait();
+            _discordClient.DisconnectAsync().Wait(2 * 1000);
         }
 
 
@@ -83,7 +83,7 @@ namespace DiscordBotMod
                 {
                     if (_discordChannel != null)
                     {
-                        _discordClient.SendMessageAsync(_discordChannel, $"From {player.Name}: \"{msg}\"");
+                        _discordClient.SendMessageAsync(_discordChannel, string.Format(_config.FromGameFormattingString, player.Name, msg));
                     }
                 }
             }
