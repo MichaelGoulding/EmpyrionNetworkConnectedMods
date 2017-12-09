@@ -1,10 +1,7 @@
 ﻿using SharedCode;
-using System;
-using System.Collections.Generic;
+using SharedCode.ExtensionMethods;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace VotingRewardMod
@@ -37,9 +34,13 @@ namespace VotingRewardMod
                     {
                         if (await DoesPlayerHaveReward(player))
                         {
-                            var itemExchangeInfo = await player.DoItemExchange("Voting Reward", "Remember to vote everyday. Enjoy!", "Close", _config.VotingRewards.ToEleonArray());
+                            var rewardItems = _config.VotingRewards.ToEleonArray();
+                            var itemExchangeInfo = await player.DoItemExchange("Voting Reward", "Remember to vote everyday. Enjoy!", "Close", rewardItems);
 
-                            await MarkRewardClaimed(player);
+                            if (!rewardItems.AreTheSame(itemExchangeInfo.items))
+                            {
+                                await MarkRewardClaimed(player);
+                            }
                         }
                         else
                         {

@@ -12,6 +12,15 @@ namespace SharedCode.ExtensionMethods
 
         public static bool AreTheSame( this Eleon.Modding.ItemStack[] lhs, Eleon.Modding.ItemStack[] rhs )
         {
+            if(lhs == null)
+            {
+                return (rhs == null);
+            }
+            else if (rhs == null)
+            {
+                return false;
+            }
+
             if (lhs.Length != rhs.Length)
             {
                 return false;
