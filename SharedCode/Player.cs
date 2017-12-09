@@ -84,7 +84,12 @@ namespace SharedCode
                 new Eleon.Modding.IdMsgPrio(EntityId, msg, (byte)priority, time));
         }
 
-        public Task<Eleon.Modding.ItemExchangeInfo> DoItemExchange(string title, string description, string buttonText, Eleon.Modding.ItemStack[] items = null)
+        public Task<Eleon.Modding.ItemExchangeInfo> DoItemExchange(string title, string description, string buttonText,ItemStacks items = null)
+        {
+            return DoItemExchange(title, description, buttonText, items?.ToEleonArray());
+        }
+
+        public Task<Eleon.Modding.ItemExchangeInfo> DoItemExchange(string title, string description, string buttonText, Eleon.Modding.ItemStack[] items)
         {
 
             var data = new Eleon.Modding.ItemExchangeInfo();
