@@ -30,63 +30,63 @@ Send bugs or send pull requests with any improvements, modules, or documentation
 
 ## DiscordBotMod
 
--img 1
+![1](Images/1.png)
 
 1) Navigate to [https://discordapp.com/developers/applications/me](https://discordapp.com/developers/applications/me)
 2) Select and create a new App
 
--img 2
+![2](Images/2.png)
 
 3) Enter in the application name for your mod
 4) Enter in a description
 5) Select Create App
 
--img 3
+![3](Images/3.png)
 
 6) After your application has been created you will see the settings screen for your application,
    scroll down and in the Bot section click on `Create a Bot User`
    
--img 4
+![4](Images/4.png)
 
 7) You will get a warning message stating that your bot will be visible after it's created.
    Go ahead and click `Yes, do it`.
    
--img 5
+![5](Images/5.png)
 
 8) After your bot has been created you need to aquire your token.  Click on reveal token.
 
--img 6
+![6](Images/6.png)
 
 9) Copy your token to the clipboard
 
--img 7
+![7](Images/7.png)
 
 10) Paste it in your DiscordBotMod_Settings.yaml file in the DiscordToken property.
 
--img 8
+![8](Images/8.png)
 
 11) Back in discord go into the user settings and select the `Appearance` category.  Scroll down
     to where it says advanced and tick the `Developer Mode` option on.
     
--img 9
+![9](Images/9.png)
 
 12) With the channel that you want the bot to be in, right click it and select `Copy ID`
 
--img 10
+![10](Images/10.png)
 
 13) Paste the ID in the ChannelId property in DiscordBotMod_settings.yaml
 
--img 11
+![11](Images/11.png)
 
 14) In visual studio right make sure your build configuration is set to `Release`
 15) Right click on your DiscordBotMod project and select build.
 
--img 12
+![12](Images/12.png)
 
 16) in the Build directory `EmpyrionNetworkConnectedMods\NetworkConnectedModRunner\bin\Release\Extensions`
     you will see a `DiscordBotMod` folder.  Copy that to your clipboard.
     
--img 13
+![13](Images/13.png)
 
 17 in the Mod directory of Empyrion `Empyrion\Content\Mods` paste the built directory you've copied from the previous
    step
