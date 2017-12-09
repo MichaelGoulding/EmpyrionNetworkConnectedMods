@@ -49,9 +49,21 @@ namespace DiscordBotMod
                     discordChannel = _discordChannel;
                 }
 
-                if (e.Author != _discordClient.CurrentUser && e.Channel == discordChannel)
+                if (e.Author != _discordClient.CurrentUser)
                 {
-                    await _gameServerConnection.SendChatMessageToAll(string.Format(_config.FromDiscordFormattingString, e.Author.Username, e.Message.Content));
+                    if(e.Message.Content == "cb:get_online_users")
+                    {
+                        // build list of online players:
+                        string onlinePlayers = string.Join("\n", from player in _gameServerConnection.GetOnlinePlayers().Values select player.Name);
+
+                        var dmUserChannel = await _discordClient.CreateDmAsync(e.Author);
+
+                        await _discordClient.SendMessageAsync(dmUserChannel, $"Online Players:\n{onlinePlayers}");
+                    }
+                    else if (e.Channel == discordChannel)
+                    {
+                        await _gameServerConnection.SendChatMessageToAll(string.Format(_config.FromDiscordFormattingString, e.Author.Username, e.Message.Content));
+                    }
                 }
             };
 
@@ -66,11 +78,11 @@ namespace DiscordBotMod
                 });
         }
 
-
         // This is called right before the program ends.  Mods should save anything they need here.
         public void Stop()
         {
             _discordClient.DisconnectAsync().Wait(2 * 1000);
+            _discordClient.Dispose();
         }
 
 
