@@ -115,6 +115,5 @@ namespace VirtualBackpackMod
 
         private string _fileStoragePath;
         private IGameServerConnection _gameServerConnection;
-        private Dictionary<int, ItemStacks> _playerIdToBackpack = new Dictionary<int, ItemStacks>();
     }
 }
