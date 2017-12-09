@@ -686,27 +686,20 @@ namespace SharedCode
 
         private void ProcessEvent_ChatMessage(Eleon.Modding.ChatInfo obj)
         {
-            string typeName;
-            switch (obj.type)
+            var chatType = (ChatType)obj.type;
+            var msg = obj.msg;
+
+            if (chatType == ChatType.PlayerToServer)
             {
-                case 5: //?
-                case 7:
-                    typeName = "to faction";
-                    break;
-                case 8:
-                    typeName = "to player";
-                    break;
-                case 9:
-                    typeName = "to server";
-                    break;
-                default:
-                    typeName = "";
-                    break;
+                if(msg.StartsWith("s! "))
+                {
+                    msg = msg.Substring(3);
+                }
             }
 
-            DebugOutput("Event_ChatMessage: Player: {0}, Recepient: {1}, Recepient Faction: {2}, {3}, Message: '{4}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, typeName, obj.msg);
+            DebugOutput("Event_ChatMessage: Player: {0}, Recepient: {1}, Recepient Faction: {2}, {3}, Message: '{4}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, chatType, obj.msg);
 
-            if (obj.type != 8 && obj.type != 7 && obj.msg == "!MODS")
+            if (obj.type != 8 && obj.type != 7 && msg == "!MODS")
             {
                 foreach (var versionString in _versionStrings)
                 {
@@ -721,7 +714,7 @@ namespace SharedCode
                     player = _onlinePlayersInfoById[obj.playerId];
                 }
 
-                Event_ChatMessage?.Invoke((ChatType)obj.type, obj.msg, player);
+                Event_ChatMessage?.Invoke(chatType, msg, player);
             }
         }
 
