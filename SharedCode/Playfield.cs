@@ -8,6 +8,8 @@ namespace SharedCode
     {
         public string Name { get; private set; }
 
+        public Dictionary<int, Structure> StructuresById { get { return _structuresById; } }
+
         public Task RegenerateStructure(int entityId)
         {
             return _gameServerConnection.SendRequest(
@@ -15,7 +17,7 @@ namespace SharedCode
                 new Eleon.Modding.PString(string.Format("remoteex pf={0} 'regenerate {1}'", ProcessId, entityId)));
         }
 
-        public async Task SpawnEntity(string name, Entity.Type type, string prefabName, Vector3 position, Faction faction)
+        public async Task SpawnEntity(string name, Entity.EntityType type, string prefabName, Vector3 position, Faction faction)
         {
             var newId = await _gameServerConnection.SendRequest<Eleon.Modding.Id>(Eleon.Modding.CmdId.Request_NewEntityId, null);
 

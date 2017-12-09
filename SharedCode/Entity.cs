@@ -8,7 +8,7 @@ namespace SharedCode
 {
     public class Entity : IEquatable<Entity>
     {
-        public enum Type
+        public enum EntityType
         {
             Unknown = 0,
             Player = 1,
@@ -45,6 +45,7 @@ namespace SharedCode
             }
         }
 
+        public EntityType Type { get; private set; }
 
         public string Name { get; protected set; }
 
@@ -109,10 +110,11 @@ namespace SharedCode
 
         #region Protected methods
 
-        protected Entity(IGameServerConnection gameServerConnection, int entityId, string name)
+        protected Entity(IGameServerConnection gameServerConnection, int entityId, EntityType type, string name)
         {
             _gameServerConnection = gameServerConnection;
             _entityId = entityId;
+            Type = type;
             Name = name;
         }
 

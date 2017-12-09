@@ -7,6 +7,13 @@ namespace PlayfieldStructureRegenMod
         public class PlayfieldEntityRegenData
         {
             public List<int> StructuresIds { get; set; }
+
+            public bool RegenerateAllAsteroids { get; set; }
+
+            public PlayfieldEntityRegenData()
+            {
+                StructuresIds = new List<int>();
+            }
         }
 
         public Dictionary<string, PlayfieldEntityRegenData> PlayfieldsToRegenerate { get; set; }

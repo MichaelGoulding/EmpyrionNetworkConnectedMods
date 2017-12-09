@@ -21,25 +21,10 @@ namespace PlayfieldStructureRegenMod
 
             _gameServerConnection.AddVersionString(k_versionString);
             _gameServerConnection.Event_Playfield_Loaded += OnEvent_Playfield_Loaded;
-            _gameServerConnection.Event_ChatMessage += OnEvent_ChatMessage;
         }
 
         public void Stop()
         {
-        }
-
-        private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
-        {
-            //if (msg.StartsWith("/reg"))
-            //{
-            //    var strings = msg.Split(' ');
-
-            //    int entityId = int.Parse(strings[1]);
-
-            //    _gameServerConnection.SendRequest(
-            //        Eleon.Modding.CmdId.Request_ConsoleCommand,
-            //        new Eleon.Modding.PString(string.Format("remoteex pf={0} 'regenerate {1}'", player.Position.playfield.ProcessId, entityId)));
-            //}
         }
 
         private void OnEvent_Playfield_Loaded(Playfield playfield)
@@ -50,7 +35,20 @@ namespace PlayfieldStructureRegenMod
                 {
                     playfield.RegenerateStructure(entityId);
                 }
+
+                if (_config.PlayfieldsToRegenerate[playfield.Name].RegenerateAllAsteroids)
+                {
+                    RegenerateAllAsteroids(playfield).Start(); // don't wait for these commands to finish
+                }
             }
+        }
+
+        private Task RegenerateAllAsteroids(Playfield playfield)
+        {
+            return Task.WhenAll(
+                from structure in playfield.StructuresById.Values
+                where (structure.Type == Entity.EntityType.AstVoxel)
+                select structure.Regenerate());
         }
 
         private IGameServerConnection _gameServerConnection;

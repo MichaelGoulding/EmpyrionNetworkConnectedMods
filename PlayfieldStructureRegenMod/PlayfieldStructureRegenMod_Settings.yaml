@@ -1,6 +1,8 @@
 ﻿---
 PlayfieldsToRegenerate:
  "Akua Orbit":
+  RegenerateAllAsteroids: true
+ "Omicron Orbit":
   StructuresIds:
    - 72003
    - 72004

@@ -105,7 +105,7 @@ namespace SharedCode
         #region Internal Methods
 
         internal Player(GameServerConnection gameServerConnection, Eleon.Modding.PlayerInfo pInfo)
-            : base(gameServerConnection, pInfo.entityId, pInfo.playerName)
+            : base(gameServerConnection, pInfo.entityId, EntityType.Player, pInfo.playerName)
         {
             UpdateInfo(pInfo, _gameServerConnection.GetPlayfield(pInfo.playfield));
         }

@@ -8,9 +8,9 @@ namespace SharedCode
 {
     public class Structure : Entity
     {
-        public Playfield Playfield { get; private set; }
-
         public int Class { get; private set; }
+
+        public Player Pilot { get; private set; }
 
         public Task FinishBlueprint()
         {
@@ -18,10 +18,12 @@ namespace SharedCode
         }
 
         internal Structure(IGameServerConnection gameServerConnection, Playfield playfield, Eleon.Modding.GlobalStructureInfo info)
-            : base(gameServerConnection, info.id, info.name)
+            : base(gameServerConnection, info.id, (EntityType)info.type, info.name)
         {
-            Playfield = playfield;
             Class = info.classNr;
+            this.Position = new WorldPosition(playfield, new Vector3(info.pos), new Vector3(info.rot));
+            this.MemberOfFaction = new Faction(_gameServerConnection, info.factionGroup, info.factionId);
+            this.Pilot = (info.pilotId == 0) ? null : _gameServerConnection.GetOnlinePlayers()[info.pilotId];
         }
     }
 }

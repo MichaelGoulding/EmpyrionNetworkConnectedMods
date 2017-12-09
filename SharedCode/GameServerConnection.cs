@@ -215,9 +215,13 @@ namespace SharedCode
                                     playfield.UpdateInfo(playfieldLoadData);
 
                                     SendRequest<Eleon.Modding.GlobalStructureList>(Eleon.Modding.CmdId.Request_GlobalStructure_Update, new Eleon.Modding.PString(playfieldLoadData.playfield))
-                                        .ContinueWith((task) => playfield.UpdateInfo(task.Result));
+                                        .ContinueWith((task) =>
+                                        {
+                                            playfield.UpdateInfo(task.Result);
 
-                                    Event_Playfield_Loaded?.Invoke(playfield);
+                                            // call event only after structures have been updated.
+                                            Event_Playfield_Loaded?.Invoke(playfield);
+                                        });
                                 }
                             }
                             break;
