@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Timers;
 using SharedCode;
 
-namespace PlanetOwnership
+namespace SharedCode
 {
     class OwnershipEnforcer
     {
