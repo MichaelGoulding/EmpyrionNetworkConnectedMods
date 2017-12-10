@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShipBuyingMod", "ShipBuying
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VirtualBackpackMod", "VirtualBackpackMod\VirtualBackpackMod.csproj", "{D53C5DCB-6FDA-4716-9D5A-C1EE05AC82BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminPowerToolsMod", "AdminPowerToolsMod\AdminPowerToolsMod.csproj", "{51824EB1-EB9C-43F7-A7E3-781D18B3E2D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +115,10 @@ Global
 		{D53C5DCB-6FDA-4716-9D5A-C1EE05AC82BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D53C5DCB-6FDA-4716-9D5A-C1EE05AC82BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D53C5DCB-6FDA-4716-9D5A-C1EE05AC82BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51824EB1-EB9C-43F7-A7E3-781D18B3E2D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51824EB1-EB9C-43F7-A7E3-781D18B3E2D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51824EB1-EB9C-43F7-A7E3-781D18B3E2D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51824EB1-EB9C-43F7-A7E3-781D18B3E2D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
