@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Eleon.Modding;
 
 namespace EmpyrionModApi
 {
@@ -11,6 +12,8 @@ namespace EmpyrionModApi
         public byte Group { get; private set; }
 
         public string Initials { get; private set; }
+
+        public string Name { get; private set; }
 
         public Task SendMessage(MessagePriority priority, float time, string format, params object[] args)
         {
@@ -79,14 +82,24 @@ namespace EmpyrionModApi
 
         #endregion
 
-        internal Faction(IGameServerConnection gameServerConnection, byte factionGroup, int factionId)
+        internal Faction(IGameServerConnection gameServerConnection, FactionInfo factionInfo)
         {
             _gameServerConnection = gameServerConnection;
-            Group = factionGroup;
-            Id = factionId;
-            Initials = "Not Implemented!!";
+            Group = factionInfo.origin;
+            Id = factionInfo.factionId;
+            Initials = factionInfo.abbrev;
+            Name = factionInfo.name;
+        }
+
+        internal void UpdateInfo(FactionInfo factionInfo)
+        {
+            Group = factionInfo.origin;
+            Id = factionInfo.factionId;
+            Initials = factionInfo.abbrev;
+            Name = factionInfo.name;
         }
 
         private IGameServerConnection _gameServerConnection;
+        private FactionInfo factionInfo;
     }
 }

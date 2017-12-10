@@ -23,6 +23,7 @@ namespace EmpyrionModApi
 
         Dictionary<int, Player> _onlinePlayersInfoById = new Dictionary<int, Player>();
         Dictionary<string, Playfield> _playfieldsByName = new Dictionary<string, Playfield>();
+        Dictionary<int, Faction> _factionsById = new Dictionary<int, Faction>();
         Timer _playerUpdateTimer;
 
         List<BoundingBox> _bboxes = new List<BoundingBox>();
@@ -66,14 +67,21 @@ namespace EmpyrionModApi
         public void Connect()
         {
             // connect to server
-            _client.OnConnected += () =>
+            _client.OnConnected += async () =>
             {
-                // Request various lists to start off
-                SendRequest<Eleon.Modding.IdList>(Eleon.Modding.CmdId.Request_Player_List, null)
-                    .ContinueWith((task) => this.ProcessEvent_Player_List(task.Result));
-
-                SendRequest<Eleon.Modding.PlayfieldList>(Eleon.Modding.CmdId.Request_Playfield_List,  null)
-                    .ContinueWith((task) => this.ProcessEvent_Playfield_List(task.Result));
+                try
+                {
+                    // Request various lists to start off
+                    const int factionFromId = 1;
+                    ProcessEvent_Get_Factions(await SendRequest<Eleon.Modding.FactionInfoList>(Eleon.Modding.CmdId.Request_Get_Factions, new Eleon.Modding.Id(factionFromId)));
+                    ProcessEvent_Player_List(await SendRequest<Eleon.Modding.IdList>(Eleon.Modding.CmdId.Request_Player_List, null));
+                    ProcessEvent_Playfield_List(await SendRequest<Eleon.Modding.PlayfieldList>(Eleon.Modding.CmdId.Request_Playfield_List, null));
+                }
+                catch (Exception ex)
+                {
+                    DebugOutput("OnConnected Exception: {0}", ex.Message);
+                    BreakIfDebugBuild();
+                }
             };
 
             _client.Connect(_config.GameServerIp, _config.GameServerApiPort);
@@ -146,13 +154,13 @@ namespace EmpyrionModApi
             return SendRequest(Eleon.Modding.CmdId.Request_Entity_Spawn, entitySpawnInfo);
         }
 
-        public Task RequestEntitySpawn(PlayfieldLoad playfieldLoad)
+        public Task RequestPlayfieldLoad(PlayfieldLoad playfieldLoad)
         {
             // PlayfieldLoad (sec = empty playfield hold time, processId not used)
             return SendRequest(Eleon.Modding.CmdId.Request_Load_Playfield, playfieldLoad);
         }
 
-        public Task RequestEntitySpawn(string commandString)
+        public Task RequestConsoleCommand(string commandString)
         {
             return SendRequest(Eleon.Modding.CmdId.Request_ConsoleCommand, new PString(commandString));
         }
@@ -180,6 +188,14 @@ namespace EmpyrionModApi
                 }
 
                 return _playfieldsByName[playfieldName];
+            }
+        }
+
+        public Faction GetFaction(int factionId)
+        {
+            lock (_factionsById)
+            {
+                return _factionsById[factionId];
             }
         }
 
@@ -438,14 +454,8 @@ namespace EmpyrionModApi
                         case Eleon.Modding.CmdId.Event_Get_Factions:
                             {
                                 // from Request_Get_Factions
-
                                 Eleon.Modding.FactionInfoList obj = (Eleon.Modding.FactionInfoList)p.data;
-                                //if (obj.factions == null) { break; }
-                                DebugOutput("Event_Get_Factions- Faction list. Count: {0}", obj.factions != null ? obj.factions.Count : 0);
-                                foreach (Eleon.Modding.FactionInfo fI in obj.factions)
-                                {
-                                    DebugOutput("Id: {0}, Abrev: {1}, Name: {2}, Origin: {3}", fI.factionId, fI.abbrev, fI.name, fI.origin);
-                                }
+                                ProcessEvent_Get_Factions(obj);
                             }
                             break;
 
@@ -535,7 +545,7 @@ namespace EmpyrionModApi
                                 Eleon.Modding.ErrorInfo eInfo = (Eleon.Modding.ErrorInfo)p.data;
                                 Eleon.Modding.CmdId cmdId = (Eleon.Modding.CmdId)p.seqNr;
                                 DebugOutput("Event_Error - ErrorType {0}, CmdId {1}", eInfo.errorType, cmdId);
-                                //System.Diagnostics.Debugger.Break();
+                                BreakIfDebugBuild();
                             }
                             break;
 
@@ -618,15 +628,41 @@ namespace EmpyrionModApi
 
                         default:
                             DebugOutput("(1) Unknown package cmd {0}", p.cmd);
-                            //System.Diagnostics.Debugger.Break();
+                            BreakIfDebugBuild();
                             break;
                     }
                 }
             }
             catch (Exception ex)
             {
-                DebugOutput("Exception: {0}", ex.Message);
-                //System.Diagnostics.Debugger.Break();
+                DebugOutput("OnClient_GameEventReceived Exception: {0}", ex.Message);
+                BreakIfDebugBuild();
+                
+            }
+        }
+
+        private void ProcessEvent_Get_Factions(FactionInfoList obj)
+        {
+            DebugOutput("Event_Get_Factions- Faction list. Count: {0}", obj.factions != null ? obj.factions.Count : 0);
+            if (obj.factions != null)
+            {
+                lock (_factionsById)
+                {
+                    // TODO: remove deleted factions
+                    foreach (Eleon.Modding.FactionInfo factionInfo in obj.factions)
+                    {
+                        DebugOutput("Id: {0}, Abrev: {1}, Name: {2}, Origin: {3}", factionInfo.factionId, factionInfo.abbrev, factionInfo.name, factionInfo.origin);
+
+                        if (!_factionsById.ContainsKey(factionInfo.factionId))
+                        {
+                            _factionsById[factionInfo.factionId] = new Faction(this, factionInfo);
+                        }
+                        else
+                        {
+                            _factionsById[factionInfo.factionId].UpdateInfo(factionInfo);
+                        }
+                    }
+                }
             }
         }
 
@@ -755,6 +791,14 @@ namespace EmpyrionModApi
                     SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(entityId))
                         .ContinueWith((task) => this.Process_Event_Player_Info(task.Result));
                 }
+            }
+        }
+
+        private void BreakIfDebugBuild()
+        {
+            if (System.Diagnostics.Debugger.IsAttached)
+            {
+                System.Diagnostics.Debugger.Break();
             }
         }
 

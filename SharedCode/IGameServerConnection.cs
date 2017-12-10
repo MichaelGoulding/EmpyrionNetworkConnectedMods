@@ -24,11 +24,14 @@ namespace EmpyrionModApi
         void AddVersionString(string versionString);
         void Connect();
         void DebugOutput(string format, params object[] args);
+
         Dictionary<int, Player> GetOnlinePlayers();
         Playfield GetPlayfield(string playfieldName);
+        Faction GetFaction(int factionId);
+
         Task RequestEntitySpawn(EntitySpawnInfo entitySpawnInfo);
-        Task RequestEntitySpawn(PlayfieldLoad playfieldLoad);
-        Task RequestEntitySpawn(string commandString);
+        Task RequestPlayfieldLoad(PlayfieldLoad playfieldLoad);
+        Task RequestConsoleCommand(string commandString);
         Task SendAlarmMessageToAll(string format, params object[] args);
         Task SendAlertMessageToAll(string format, params object[] args);
         Task SendAttentionMessageToAll(string format, params object[] args);

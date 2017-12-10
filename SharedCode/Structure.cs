@@ -22,7 +22,7 @@ namespace EmpyrionModApi
         {
             Class = info.classNr;
             this.Position = new WorldPosition(playfield, new Vector3(info.pos), new Vector3(info.rot));
-            this.MemberOfFaction = new Faction(_gameServerConnection, info.factionGroup, info.factionId);
+            this.MemberOfFaction = _gameServerConnection.GetFaction(info.factionId);
             this.Pilot = (info.pilotId == 0) ? null : _gameServerConnection.GetOnlinePlayers()[info.pilotId];
         }
     }

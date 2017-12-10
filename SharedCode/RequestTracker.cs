@@ -37,8 +37,8 @@ namespace EmpyrionModApi
                 if (p.cmd == Eleon.Modding.CmdId.Event_Error)
                 {
                     Eleon.Modding.ErrorInfo eInfo = (Eleon.Modding.ErrorInfo)p.data;
-                    System.Reflection.MethodInfo setException = taskCompletionSource.GetType().GetMethod("SetException");
-                    setException.Invoke(taskCompletionSource, new[] { new Exception(eInfo.ToString()) });
+                    System.Reflection.MethodInfo setException = taskCompletionSource.GetType().GetMethod("SetException", new Type[] { typeof(Exception) });
+                    setException.Invoke(taskCompletionSource, new[] { new Exception(eInfo.errorType.ToString()) });
                 }
                 else
                 {
