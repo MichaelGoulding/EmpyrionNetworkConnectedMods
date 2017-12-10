@@ -36,13 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\Dependencies\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\sample-empyrion-mod\DeathMessenger\dependencies\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Mif">
-      <HintPath>..\Dependencies\Mif.dll</HintPath>
-    </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>..\Dependencies\protobuf-net.dll</HintPath>
+      <HintPath>..\sample-empyrion-mod\Empyrion Mod\dependencies\Mif.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
