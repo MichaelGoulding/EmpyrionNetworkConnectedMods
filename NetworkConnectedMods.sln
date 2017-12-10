@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoHome", "GoHome\GoHome.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EPMConnector", "sample-empyrion-mod\EPMConnector\EPMConnector.csproj", "{AE40B2D3-69EF-4D5E-B1FB-38EECE976811}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedCode", "SharedCode\SharedCode.csproj", "{B563D94F-874F-42CD-A498-7164FEEC86DB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmpyrionModApi", "SharedCode\EmpyrionModApi.csproj", "{B563D94F-874F-42CD-A498-7164FEEC86DB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SellToServerMod", "SellToServerMod\SellToServerMod.csproj", "{F5BAC378-0E04-49AC-AB40-FFBCCB35F9E5}"
 EndProject
@@ -32,7 +32,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordBotMod", "DiscordBot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VotingRewardMod", "VotingRewardMod\VotingRewardMod.csproj", "{16833700-A18C-480F-98B3-A35AD66E2BB9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmpyrionModdingApiTests", "EmpyrionModdingApiTests\EmpyrionModdingApiTests.csproj", "{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmpyrionModApiTests", "EmpyrionModdingApiTests\EmpyrionModApiTests.csproj", "{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{930BEF4E-9378-40F7-AB3F-F4D3C1CD3CD8}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

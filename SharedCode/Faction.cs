@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public class Faction : IEquatable<Faction>
     {
         public int Id { get; private set; }
 
         public byte Group { get; private set; }
+
+        public string Initials { get; private set; }
 
         public Task SendMessage(MessagePriority priority, float time, string format, params object[] args)
         {
@@ -82,6 +84,7 @@ namespace SharedCode
             _gameServerConnection = gameServerConnection;
             Group = factionGroup;
             Id = factionId;
+            Initials = "Not Implemented!!";
         }
 
         private IGameServerConnection _gameServerConnection;

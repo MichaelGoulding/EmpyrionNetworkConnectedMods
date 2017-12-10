@@ -1,5 +1,5 @@
-﻿using SharedCode;
-using SharedCode.ExtensionMethods;
+﻿using EmpyrionModApi;
+using EmpyrionModApi.ExtensionMethods;
 using System.Threading.Tasks;
 
 namespace SellToServerMod
@@ -10,7 +10,7 @@ namespace SellToServerMod
     {
         // This is the string that will be listed when a user types "!MODS".
         // The helper method here uses the AssemblyTitle attribute found in the AssemblyInfo.cs.
-        static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(SellToServerMod));
+        static readonly string k_versionString = EmpyrionModApi.Helpers.GetVersionString(typeof(SellToServerMod));
 
 
         // This is called by the mod runner before connecting to the game server during startup.
@@ -23,7 +23,7 @@ namespace SellToServerMod
             _gameServerConnection = gameServerConnection;
 
             // This deserializes the yaml config file
-            _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
+            _config = BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
             // Tell the string to use for "!MODS" command.
             _gameServerConnection.AddVersionString(k_versionString);

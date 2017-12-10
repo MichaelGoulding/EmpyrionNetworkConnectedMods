@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public struct Vector3 : IEquatable<Vector3>
     {

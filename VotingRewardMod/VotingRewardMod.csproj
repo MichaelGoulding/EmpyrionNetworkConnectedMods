@@ -49,9 +49,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharedCode\SharedCode.csproj">
+    <ProjectReference Include="..\SharedCode\EmpyrionModApi.csproj">
       <Project>{b563d94f-874f-42cd-a498-7164feec86db}</Project>
-      <Name>SharedCode</Name>
+      <Name>EmpyrionModApi</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

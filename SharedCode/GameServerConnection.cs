@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using Eleon.Modding;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public enum MessagePriority : byte
     {

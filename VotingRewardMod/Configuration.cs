@@ -1,4 +1,4 @@
-﻿using SharedCode;
+﻿using EmpyrionModApi;
 using System.Collections.Generic;
 
 namespace VotingRewardMod

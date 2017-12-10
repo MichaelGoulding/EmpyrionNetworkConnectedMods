@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public static class Helpers
     {

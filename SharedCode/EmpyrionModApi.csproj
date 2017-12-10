@@ -7,8 +7,8 @@
     <ProjectGuid>{B563D94F-874F-42CD-A498-7164FEEC86DB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharedCode</RootNamespace>
-    <AssemblyName>SharedCode</AssemblyName>
+    <RootNamespace>EmpyrionModApi</RootNamespace>
+    <AssemblyName>EmpyrionModApi</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -1,10 +1,10 @@
-﻿using SharedCode;
+﻿using EmpyrionModApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     class OwnershipChangeChecker
     {

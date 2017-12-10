@@ -7,8 +7,8 @@
     <ProjectGuid>{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>EmpyrionModdingApiTests</RootNamespace>
-    <AssemblyName>EmpyrionModdingApiTests</AssemblyName>
+    <RootNamespace>EmpyrionModApiTests</RootNamespace>
+    <AssemblyName>EmpyrionModApiTests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -55,9 +55,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharedCode\SharedCode.csproj">
+    <ProjectReference Include="..\SharedCode\EmpyrionModApi.csproj">
       <Project>{b563d94f-874f-42cd-a498-7164feec86db}</Project>
-      <Name>SharedCode</Name>
+      <Name>EmpyrionModApi</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />

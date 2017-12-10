@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public class Player : Entity
     {
@@ -59,7 +59,21 @@ namespace SharedCode
         }
 
         //Request_Player_SetPlayerInfo = 34,
-        //Request_ShowDialog_SinglePlayer = 60,
+
+        public Task ShowDialog(string msg, MessagePriority priority, float time=10)
+        {
+            return _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_ShowDialog_SinglePlayer,
+                new Eleon.Modding.IdMsgPrio(EntityId, msg, (byte)priority, time));
+        }
+
+        public Task SendChatMessage(string format, params object[] args)
+        {
+            string msg = string.Format(format, args);
+            return _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_ConsoleCommand,
+                new Eleon.Modding.PString($"SAY p:{EntityId} '{msg}'"));
+        }
 
         public Task SendAlarmMessage(string format, params object[] args)
         {

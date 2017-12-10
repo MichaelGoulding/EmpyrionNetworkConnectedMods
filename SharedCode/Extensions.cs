@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharedCode.ExtensionMethods
+namespace EmpyrionModApi.ExtensionMethods
 {
     public static class Extensions
     {

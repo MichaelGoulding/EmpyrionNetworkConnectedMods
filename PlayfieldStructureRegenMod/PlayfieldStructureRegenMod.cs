@@ -1,4 +1,4 @@
-﻿using SharedCode;
+﻿using EmpyrionModApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,14 +10,14 @@ namespace PlayfieldStructureRegenMod
     [System.ComponentModel.Composition.Export(typeof(IGameMod))]
     public class PlayfieldStructureRegenMod : IGameMod
     {
-        static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(PlayfieldStructureRegenMod));
+        static readonly string k_versionString = EmpyrionModApi.Helpers.GetVersionString(typeof(PlayfieldStructureRegenMod));
 
         public void Start(IGameServerConnection gameServerConnection)
         {
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "PlayfieldStructureRegenMod_Settings.yaml";
 
             _gameServerConnection = gameServerConnection;
-            _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
+            _config = BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
             _gameServerConnection.AddVersionString(k_versionString);
             _gameServerConnection.Event_Playfield_Loaded += OnEvent_Playfield_Loaded;

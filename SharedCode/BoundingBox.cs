@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public class BoundingBoxInfo
     {

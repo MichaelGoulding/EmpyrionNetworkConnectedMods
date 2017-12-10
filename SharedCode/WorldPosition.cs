@@ -1,4 +1,4 @@
-﻿namespace SharedCode
+﻿namespace EmpyrionModApi
 {
     public struct WorldPosition
     {

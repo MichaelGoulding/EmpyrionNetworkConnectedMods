@@ -6,7 +6,7 @@ namespace SellToServerMod
     {
         public class SellLocation
         {
-            public SharedCode.BoundingBoxInfo BoundingBox { get; set; }
+            public EmpyrionModApi.BoundingBoxInfo BoundingBox { get; set; }
 
             public Dictionary<int, double> ItemIdToUnitPrice { get; set; }
 

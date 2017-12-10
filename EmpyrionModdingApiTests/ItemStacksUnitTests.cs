@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace EmpyrionModdingApiTests
+namespace EmpyrionModApiTests
 {
     [TestClass]
     public class ItemStacksUnitTests
@@ -9,11 +9,11 @@ namespace EmpyrionModdingApiTests
         [TestMethod]
         public void TestAddStack()
         {
-            var testee = new SharedCode.ItemStacks();
+            var testee = new EmpyrionModApi.ItemStacks();
 
             // test overflow on adding stacks
-            testee.AddStack(new SharedCode.ItemStack(1, (int.MaxValue - 10)));
-            testee.AddStack(new SharedCode.ItemStack(1, 20));
+            testee.AddStack(new EmpyrionModApi.ItemStack(1, (int.MaxValue - 10)));
+            testee.AddStack(new EmpyrionModApi.ItemStack(1, 20));
 
             Assert.AreEqual(2, testee.Count);
             Assert.AreEqual(int.MaxValue, testee[0].Amount);

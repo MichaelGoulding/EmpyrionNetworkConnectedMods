@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EPMConnector;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     internal class RequestTracker
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public struct Rect3 : IEquatable<Rect3>
     {

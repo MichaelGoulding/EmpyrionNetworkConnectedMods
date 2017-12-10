@@ -1,4 +1,4 @@
-﻿using SharedCode;
+﻿using EmpyrionModApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace FactionPlayfieldKickerMod
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "FactionPlayfieldKickerMod_Settings.yaml";
 
             _gameServerConnection = gameServerConnection;
-            _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
+            _config = BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
             _gameServerConnection.AddVersionString(k_versionString);
             _gameServerConnection.Event_Player_ChangedPlayfield += OnEvent_Player_ChangedPlayfield;
@@ -27,7 +27,7 @@ namespace FactionPlayfieldKickerMod
         {
         }
 
-        private void OnEvent_Player_ChangedPlayfield(SharedCode.Playfield newPlayfield, SharedCode.Player oldPlayerInfo)
+        private void OnEvent_Player_ChangedPlayfield(Playfield newPlayfield, Player oldPlayerInfo)
         {
             bool playfieldIsProtected = _config.FactionHomeWorlds.ContainsKey(newPlayfield.Name);
 

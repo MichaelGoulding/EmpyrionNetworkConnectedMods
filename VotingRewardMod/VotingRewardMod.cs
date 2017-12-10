@@ -1,5 +1,5 @@
-﻿using SharedCode;
-using SharedCode.ExtensionMethods;
+﻿using EmpyrionModApi;
+using EmpyrionModApi.ExtensionMethods;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,14 +9,14 @@ namespace VotingRewardMod
     [System.ComponentModel.Composition.Export(typeof(IGameMod))]
     public class VotingRewardMod : IGameMod
     {
-        static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(VotingRewardMod));
+        static readonly string k_versionString = EmpyrionModApi.Helpers.GetVersionString(typeof(VotingRewardMod));
 
         public void Start(IGameServerConnection gameServerConnection)
         {
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "VotingRewardMod_Settings.yaml";
 
             _gameServerConnection = gameServerConnection;
-            _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
+            _config = BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
             _gameServerConnection.AddVersionString(k_versionString);
             _gameServerConnection.Event_ChatMessage += OnEvent_ChatMessage;

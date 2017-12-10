@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Eleon.Modding;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public enum ChatType
     {

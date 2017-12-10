@@ -2,7 +2,7 @@
 
 namespace NetworkConnectedModRunner
 {
-    public class Configuration : SharedCode.BaseConfiguration
+    public class Configuration : EmpyrionModApi.BaseConfiguration
     {
         public static void TestFormat(string filePath)
         {

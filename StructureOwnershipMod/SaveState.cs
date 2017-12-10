@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
-using SharedCode;
+using EmpyrionModApi;
 
 namespace StructureOwnershipMod
 {
@@ -22,12 +22,12 @@ namespace StructureOwnershipMod
 
         public static SaveState Load(String filePath)
         {
-            return SharedCode.Helpers.LoadFromYamlOrDefault<SaveState>(filePath);
+            return EmpyrionModApi.Helpers.LoadFromYamlOrDefault<SaveState>(filePath);
         }
 
         public void Save(String filePath)
         {
-            SharedCode.Helpers.SaveAsYaml(filePath, this);
+            EmpyrionModApi.Helpers.SaveAsYaml(filePath, this);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.IO;
 using YamlDotNet.Serialization;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public class BaseConfiguration
     {

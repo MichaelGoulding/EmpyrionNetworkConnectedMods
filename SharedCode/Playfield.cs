@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SharedCode
+namespace EmpyrionModApi
 {
     public class Playfield : IEquatable<Playfield>
     {

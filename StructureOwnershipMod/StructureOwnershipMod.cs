@@ -1,4 +1,4 @@
-﻿using SharedCode;
+﻿using EmpyrionModApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace StructureOwnershipMod
     [System.ComponentModel.Composition.Export(typeof(IGameMod))]
     public class StructureOwnershipMod : IGameMod
     {
-        static readonly string k_versionString = SharedCode.Helpers.GetVersionString(typeof(StructureOwnershipMod));
+        static readonly string k_versionString = EmpyrionModApi.Helpers.GetVersionString(typeof(StructureOwnershipMod));
 
         static readonly string k_saveStateFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "SaveState.yaml";
 
@@ -20,7 +20,7 @@ namespace StructureOwnershipMod
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "StructureOwnershipMod_Settings.yaml";
 
             _gameServerConnection = gameServerConnection;
-            _config = SharedCode.BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
+            _config = BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
 
             _factionRewardTimer = new Timer(_config.CaptureRewardPeriodInMinutes * 1000.0 * 60.0);
 
