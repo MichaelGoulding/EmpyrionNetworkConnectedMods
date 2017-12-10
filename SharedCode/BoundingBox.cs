@@ -16,8 +16,8 @@ namespace EmpyrionModApi
 
         public class Rect3
         {
-            public Vector3 pt0 { get; set; }
-            public Vector3 pt1 { get; set; }
+            public Vector3 min { get; set; }
+            public Vector3 max { get; set; }
         }
 
         public Rect3 Rect { get; set; }
@@ -50,8 +50,8 @@ namespace EmpyrionModApi
             PlayersInArea = new List<Player>();
             _playfield = gameServerConnection.GetPlayfield(boundingBoxInfo.Playfield);
             _rect = new Rect3(
-                new Vector3(boundingBoxInfo.Rect.pt0.x, boundingBoxInfo.Rect.pt0.y, boundingBoxInfo.Rect.pt0.z),
-                new Vector3(boundingBoxInfo.Rect.pt1.x, boundingBoxInfo.Rect.pt1.y, boundingBoxInfo.Rect.pt1.z));
+                new Vector3(boundingBoxInfo.Rect.min.x, boundingBoxInfo.Rect.min.y, boundingBoxInfo.Rect.min.z),
+                new Vector3(boundingBoxInfo.Rect.max.x, boundingBoxInfo.Rect.max.y, boundingBoxInfo.Rect.max.z));
         }
 
         public void OnPlayerUpdate(Player player)

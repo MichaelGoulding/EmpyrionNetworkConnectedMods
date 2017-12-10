@@ -3,11 +3,11 @@ SellLocations:
 - BoundingBox:
     Playfield: Akua2
     Rect:
-      pt0:
+      min:
         x: -1434
         y: 48
         z: 700
-      pt1:
+      max:
         x: -1430
         y: 51
         z: 701.5
@@ -19,11 +19,11 @@ SellLocations:
 - BoundingBox:
     Playfield: Akua2
     Rect:
-      pt0:
+      min:
         x: -1439
         y: 49
         z: 707.5
-      pt1:
+      max:
         x: -1437.7
         y: 51
         z: 710
