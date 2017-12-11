@@ -1,5 +1,7 @@
-﻿using System;
+﻿using EmpyrionModApi.ExtensionMethods;
+using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace EmpyrionModApi
 {
@@ -16,7 +18,7 @@ namespace EmpyrionModApi
 
         public bool Contains(Vector3 pt)
         {
-            return (pt >= pt0) && (pt <= pt1);
+            return (pt.GreaterOrEqual(pt0) && pt.LessOrEqual(pt1));
         }
 
         public bool Equals(Rect3 other)

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using EmpyrionModApi.ExtensionMethods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -57,14 +59,18 @@ namespace EmpyrionModApi
         {
             return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_Entity_Teleport,
-                new Eleon.Modding.IdPositionRotation(EntityId, newPosition, newRotation));
+                new Eleon.Modding.IdPositionRotation(EntityId, newPosition.ToPVector3(), newRotation.ToPVector3()));
         }
 
         public Task ChangePlayfield(WorldPosition newWorldPosition)
         {
             return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_Entity_ChangePlayfield,
-                new Eleon.Modding.IdPlayfieldPositionRotation(EntityId, newWorldPosition.playfield.Name, newWorldPosition.position, newWorldPosition.rotation));
+                new Eleon.Modding.IdPlayfieldPositionRotation(
+                    EntityId,
+                    newWorldPosition.playfield.Name,
+                    newWorldPosition.position.ToPVector3(),
+                    newWorldPosition.rotation.ToPVector3()));
         }
 
         public Task Destroy()
@@ -86,7 +92,7 @@ namespace EmpyrionModApi
 
                     lock (this)
                     {
-                        Position = new WorldPosition(Position.playfield, new Vector3(newData.pos), new Vector3(newData.rot));
+                        Position = new WorldPosition(Position.playfield, newData.pos.ToVector3(), newData.rot.ToVector3());
                     }
                 });
         }

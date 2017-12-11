@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EmpyrionModApi.ExtensionMethods;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,7 +22,7 @@ namespace EmpyrionModApi
             : base(gameServerConnection, info.id, (EntityType)info.type, info.name)
         {
             Class = info.classNr;
-            this.Position = new WorldPosition(playfield, new Vector3(info.pos), new Vector3(info.rot));
+            this.Position = new WorldPosition(playfield, info.pos.ToVector3(), info.rot.ToVector3());
             this.MemberOfFaction = _gameServerConnection.GetFaction(info.factionId);
             this.Pilot = (info.pilotId == 0) ? null : _gameServerConnection.GetOnlinePlayers()[info.pilotId];
         }

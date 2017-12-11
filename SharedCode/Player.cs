@@ -1,4 +1,4 @@
-﻿using System;
+﻿using EmpyrionModApi.ExtensionMethods;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -55,7 +55,11 @@ namespace EmpyrionModApi
         {
             return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
-                new Eleon.Modding.IdPlayfieldPositionRotation(EntityId, newWorldPosition.playfield.Name, newWorldPosition.position, newWorldPosition.rotation));
+                new Eleon.Modding.IdPlayfieldPositionRotation(
+                    EntityId,
+                    newWorldPosition.playfield.Name,
+                    newWorldPosition.position.ToPVector3(),
+                    newWorldPosition.rotation.ToPVector3()));
         }
 
         //Request_Player_SetPlayerInfo = 34,
@@ -128,7 +132,7 @@ namespace EmpyrionModApi
         {
             System.Diagnostics.Debug.Assert(EntityId == pInfo.entityId);
             this.SteamId = pInfo.steamId;
-            this.Position = new WorldPosition { playfield = playfield, position = new Vector3(pInfo.pos) };
+            this.Position = new WorldPosition { playfield = playfield, position = pInfo.pos.ToVector3() };
             this.MemberOfFaction = _gameServerConnection.GetFaction(pInfo.factionId);
             this.BpResourcesInFactory = pInfo.bpResourcesInFactory;
             _permission = pInfo.permission;

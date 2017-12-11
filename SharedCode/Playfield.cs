@@ -1,5 +1,7 @@
-﻿using System;
+﻿using EmpyrionModApi.ExtensionMethods;
+using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace EmpyrionModApi
@@ -24,8 +26,8 @@ namespace EmpyrionModApi
             var spawnInfo = new Eleon.Modding.EntitySpawnInfo();
             spawnInfo.forceEntityId = newId.id;
             spawnInfo.playfield = this.Name;
-            spawnInfo.pos = position;
-            spawnInfo.rot = new Vector3();
+            spawnInfo.pos = position.ToPVector3();
+            spawnInfo.rot = new Eleon.Modding.PVector3();
             spawnInfo.name = name;
             spawnInfo.type = (byte)type;
             spawnInfo.prefabName = prefabName;

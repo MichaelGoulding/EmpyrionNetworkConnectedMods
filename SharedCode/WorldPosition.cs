@@ -1,4 +1,6 @@
-﻿namespace EmpyrionModApi
+﻿using System.Numerics;
+
+namespace EmpyrionModApi
 {
     public struct WorldPosition
     {
