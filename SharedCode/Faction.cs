@@ -100,6 +100,5 @@ namespace EmpyrionModApi
         }
 
         private IGameServerConnection _gameServerConnection;
-        private FactionInfo factionInfo;
     }
 }
