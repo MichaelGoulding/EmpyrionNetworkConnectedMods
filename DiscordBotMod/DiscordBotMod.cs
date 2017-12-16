@@ -54,7 +54,7 @@ namespace DiscordBotMod
                     if(e.Message.Content == "cb:get_online_users")
                     {
                         // build list of online players:
-                        string onlinePlayers = string.Join("\n", from player in _gameServerConnection.GetOnlinePlayers().Values select player.Name);
+                        string onlinePlayers = string.Join("\n", from player in _gameServerConnection.GetOnlinePlayers().Values select player.DisplayName);
 
                         var dmUserChannel = await _discordClient.CreateDmAsync(e.Author);
 
@@ -95,7 +95,7 @@ namespace DiscordBotMod
                 {
                     if (_discordChannel != null)
                     {
-                        _discordClient.SendMessageAsync(_discordChannel, string.Format(_config.FromGameFormattingString, player.Name, msg));
+                        _discordClient.SendMessageAsync(_discordChannel, string.Format(_config.FromGameFormattingString, player.DisplayName, msg));
                     }
                 }
             }

@@ -51,6 +51,14 @@ namespace EmpyrionModApi
 
         public string Name { get; protected set; }
 
+        public string DisplayName
+        {
+            get
+            {
+                return $"[{MemberOfFaction.Initials}] {Name}";
+            }
+        }
+
         public WorldPosition Position { get; protected set; }
 
         public Faction MemberOfFaction { get; protected set; }
