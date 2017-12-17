@@ -54,19 +54,28 @@ namespace StructureOwnershipMod
                         {
                             lock (_saveState)
                             {
-                                var rewards = _saveState.FactionIdToRewards[ownerId];
+                                if (_incomeScreensOpen.Contains(ownerId))
+                                {
+                                    player.SendAlarmMessage("Another member of your faction has the income window open.");
+                                }
+                                else
+                                {
+                                    _incomeScreensOpen.Add(ownerId);
+                                    var rewards = _saveState.FactionIdToRewards[ownerId];
 
-                                var task = player.DoItemExchange("test1", "test2", "Process", rewards.ExtractOutForItemExchange());
+                                    var task = player.DoItemExchange("Income from captured structures", "Shared faction income", "Process", rewards.ExtractOutForItemExchange());
 
-                                task.ContinueWith(
-                                    (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
-                                    {
-                                        lock (_saveState)
+                                    task.ContinueWith(
+                                        (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
                                         {
-                                            var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
-                                            rewards.AddStacks(new ItemStacks(itemExchangeInfoInQuote.items));
-                                        }
-                                    });
+                                            lock (_saveState)
+                                            {
+                                                var itemExchangeInfoInQuote = itemExchangeInfoInTask.Result;
+                                                rewards.AddStacks(new ItemStacks(itemExchangeInfoInQuote.items));
+                                                _incomeScreensOpen.Remove(ownerId);
+                                            }
+                                        });
+                                }
                             }
 
                         }
@@ -178,5 +187,6 @@ namespace StructureOwnershipMod
         private SaveState _saveState;
         private Timer _factionRewardTimer;
 
+        private HashSet<int> _incomeScreensOpen = new HashSet<int>(); // key is the owner id
     }
 }
