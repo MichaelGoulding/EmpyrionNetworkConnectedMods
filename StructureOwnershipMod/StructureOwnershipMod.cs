@@ -63,7 +63,7 @@ namespace StructureOwnershipMod
                                     _incomeScreensOpen.Add(ownerId);
                                     var rewards = _saveState.FactionIdToRewards[ownerId];
 
-                                    var task = player.DoItemExchange("Income from captured structures", "Shared faction income", "Process", rewards.ExtractOutForItemExchange());
+                                    var task = player.DoItemExchange("Shared faction income", "Income from captured structures", "Process", rewards.ExtractOutForItemExchange());
 
                                     task.ContinueWith(
                                         (Task<Eleon.Modding.ItemExchangeInfo> itemExchangeInfoInTask) =>
