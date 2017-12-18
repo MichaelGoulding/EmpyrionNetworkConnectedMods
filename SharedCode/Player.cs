@@ -109,7 +109,6 @@ namespace EmpyrionModApi
 
         public Task<Eleon.Modding.ItemExchangeInfo> DoItemExchange(string title, string description, string buttonText, Eleon.Modding.ItemStack[] items)
         {
-
             var data = new Eleon.Modding.ItemExchangeInfo();
             data.id = EntityId;
             data.title = title;

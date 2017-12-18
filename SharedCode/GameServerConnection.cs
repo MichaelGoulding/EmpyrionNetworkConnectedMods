@@ -17,6 +17,8 @@ namespace EmpyrionModApi
     {
         #region Private Data
 
+        const int k_RequestFactionListStartingFromId = 1;
+
         List<string> _versionStrings = new List<string>();
 
         EPMConnector.Client _client = new EPMConnector.Client(12345);
@@ -72,8 +74,7 @@ namespace EmpyrionModApi
                 try
                 {
                     // Request various lists to start off
-                    const int factionFromId = 1;
-                    ProcessEvent_Get_Factions(await SendRequest<Eleon.Modding.FactionInfoList>(Eleon.Modding.CmdId.Request_Get_Factions, new Eleon.Modding.Id(factionFromId)));
+                    ProcessEvent_Get_Factions(await SendRequest<Eleon.Modding.FactionInfoList>(Eleon.Modding.CmdId.Request_Get_Factions, new Eleon.Modding.Id(k_RequestFactionListStartingFromId)));
                     ProcessEvent_Player_List(await SendRequest<Eleon.Modding.IdList>(Eleon.Modding.CmdId.Request_Player_List, null));
                     ProcessEvent_Playfield_List(await SendRequest<Eleon.Modding.PlayfieldList>(Eleon.Modding.CmdId.Request_Playfield_List, null));
                 }
@@ -195,8 +196,35 @@ namespace EmpyrionModApi
         {
             lock (_factionsById)
             {
-                return _factionsById[factionId];
+                if (_factionsById.ContainsKey(factionId))
+                {
+                    return _factionsById[factionId];
+                }
+                else
+                {
+                    return null;
+                }
             }
+        }
+
+        public Structure GetStructure(int structureId)
+        {
+            lock (_playfieldsByName)
+            {
+                foreach (var kv in _playfieldsByName)
+                {
+                    var structuresById = kv.Value.StructuresById;
+                    lock (structuresById)
+                    {
+                        if (structuresById.ContainsKey(structureId))
+                        {
+                            return structuresById[structureId];
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         #endregion
@@ -788,6 +816,8 @@ namespace EmpyrionModApi
             {
                 foreach (var entityId in _onlinePlayersInfoById.Keys)
                 {
+                    SendRequest<Eleon.Modding.FactionInfoList>(Eleon.Modding.CmdId.Request_Get_Factions, new Eleon.Modding.Id(k_RequestFactionListStartingFromId))
+                         .ContinueWith((task) => this.ProcessEvent_Get_Factions(task.Result));
                     SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(entityId))
                         .ContinueWith((task) => this.Process_Event_Player_Info(task.Result));
                 }

@@ -101,6 +101,28 @@ namespace StructureOwnershipMod
 
                     _saveState.FactionIdToEntityIds[obj.factionId].Add(obj.id);
 
+                    // get player
+                    var playerDict = _gameServerConnection.GetOnlinePlayers();
+                    lock (playerDict)
+                    {
+                        // if faction id is a player id, switch to faction
+                        if (playerDict.ContainsKey(obj.factionId))
+                        {
+                            var player = playerDict[obj.factionId];
+
+                            // only switch if the player is a member of a faction.
+                            if (player.MemberOfFaction != null)
+                            {
+                                var structure = _gameServerConnection.GetStructure(obj.id);
+                                if (structure != null)
+                                {
+                                    // do stuff here
+                                    structure.ChangeFaction(player.MemberOfFaction);
+                                }
+                            }
+                        }
+                    }
+
                     if (_saveState.EntityIdToFactionId.ContainsKey(obj.id))
                     {
                         // remove entity id from old faction

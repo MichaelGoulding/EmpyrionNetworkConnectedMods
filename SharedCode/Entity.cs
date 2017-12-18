@@ -86,6 +86,13 @@ namespace EmpyrionModApi
             return _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Entity_Destroy, new Eleon.Modding.Id(EntityId));
         }
 
+        public Task ChangeFaction(Faction faction)
+        {
+            return _gameServerConnection.SendRequest(
+                Eleon.Modding.CmdId.Request_ConsoleCommand,
+                new Eleon.Modding.PString(string.Format("remoteex pf={0} 'faction entity {1} {2}'", Position.playfield.ProcessId, faction.Id, EntityId )));
+        }
+
         //Request_Entity_Destroy2,            // IdPlayfield (id of entity, playfield the entity is in)
         //Request_Entity_Export,              // EntityExportInfo
         //Request_Entity_SetName,             // IdPlayfieldName (if playfield == null we try to find the corresponding playfield, playfield must be loaded)

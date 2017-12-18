@@ -28,7 +28,7 @@ namespace EmpyrionModApi
         Dictionary<int, Player> GetOnlinePlayers();
         Playfield GetPlayfield(string playfieldName);
         Faction GetFaction(int factionId);
-
+        Structure GetStructure(int structureId);
         Task RequestEntitySpawn(EntitySpawnInfo entitySpawnInfo);
         Task RequestPlayfieldLoad(PlayfieldLoad playfieldLoad);
         Task RequestConsoleCommand(string commandString);
