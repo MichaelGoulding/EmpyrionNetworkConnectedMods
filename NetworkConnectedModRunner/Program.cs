@@ -8,6 +8,9 @@ namespace NetworkConnectedModRunner
 {
     class Program
     {
+        private static System.Diagnostics.TraceSource _traceSource =
+                new System.Diagnostics.TraceSource("NetworkConnectedModRunner");
+
         CompositionContainer _container;
 
         IGameServerConnection _gameServerConnection;
@@ -60,7 +63,7 @@ namespace NetworkConnectedModRunner
                 }
                 catch (CompositionException compositionException)
                 {
-                    Console.WriteLine(compositionException.ToString());
+                    _traceSource.TraceEvent(System.Diagnostics.TraceEventType.Error, 1, compositionException.ToString());
                 }
             }
         }
@@ -70,6 +73,9 @@ namespace NetworkConnectedModRunner
             var prog = new Program();
 
             prog.Run();
+
+            _traceSource.Flush();
+            _traceSource.Close();
         }
     }
 }

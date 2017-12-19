@@ -157,7 +157,7 @@ namespace EmpyrionModApi
 
         public override string ToString()
         {
-            return string.Format("{0}({1}", Name, EntityId );
+            return string.Format("{0}({1})", Name, EntityId );
         }
 
         public override bool Equals(object obj)

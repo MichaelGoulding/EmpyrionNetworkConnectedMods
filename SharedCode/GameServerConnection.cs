@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using Eleon.Modding;
@@ -31,6 +32,7 @@ namespace EmpyrionModApi
         List<BoundingBox> _bboxes = new List<BoundingBox>();
 
         BaseConfiguration _config;
+        private TraceSource _traceSource = new TraceSource("GameServerConnection");
 
         private RequestTracker _requestTracker = new RequestTracker();
 
@@ -50,7 +52,7 @@ namespace EmpyrionModApi
 
         #region Public Methods
 
-        public GameServerConnection( BaseConfiguration config )
+        public GameServerConnection(BaseConfiguration config)
         {
             _config = config;
             _playerUpdateTimer = new Timer(config.PlayerUpdateIntervalInSeconds * 1000);
@@ -80,7 +82,7 @@ namespace EmpyrionModApi
                 }
                 catch (Exception ex)
                 {
-                    DebugOutput("OnConnected Exception: {0}", ex.Message);
+                    _traceSource.TraceEvent(TraceEventType.Error, 1, "OnConnected Exception: {0}", ex.Message);
                     BreakIfDebugBuild();
                 }
             };
@@ -90,7 +92,7 @@ namespace EmpyrionModApi
 
         public void DebugOutput(String format, params object[] args)
         {
-            Console.Out.WriteLine(string.Format("Output: {0}", string.Format(format, args)));
+            _traceSource.TraceEvent(TraceEventType.Information, 2, format, args);
         }
 
         public Task<T> SendRequest<T>(Eleon.Modding.CmdId cmdID, object data)
@@ -109,12 +111,6 @@ namespace EmpyrionModApi
             SendRequest(cmdID, trackingId, data);
 
             return task;
-        }
-
-        private void SendRequest(Eleon.Modding.CmdId cmdID, ushort seqNr, object data)
-        {
-            DebugOutput("SendRequest: Command {0} SeqNr: {1}", cmdID, seqNr);
-            _client.Send(cmdID, (ushort)seqNr, data);
         }
 
         public Task SendChatMessageToAll(string format, params object[] args)
@@ -230,6 +226,12 @@ namespace EmpyrionModApi
         #endregion
 
         #region Private Helper Methods
+
+        private void SendRequest(Eleon.Modding.CmdId cmdID, ushort seqNr, object data)
+        {
+            _traceSource.TraceEvent(TraceEventType.Information, 1, "SendRequest: Command {0} SeqNr: {1}", cmdID, seqNr);
+            _client.Send(cmdID, (ushort)seqNr, data);
+        }
 
         private void OnClient_GameEventReceived(EPMConnector.ModProtocol.Package p)
         {
@@ -663,9 +665,8 @@ namespace EmpyrionModApi
             }
             catch (Exception ex)
             {
-                DebugOutput("OnClient_GameEventReceived Exception: {0}", ex.Message);
+                _traceSource.TraceEvent(TraceEventType.Error, 1, "OnClient_GameEventReceived Exception: {0}", ex.Message);
                 BreakIfDebugBuild();
-                
             }
         }
 
@@ -846,6 +847,8 @@ namespace EmpyrionModApi
                     // dispose managed state (managed objects).
                     _client.Disconnect();
                     _client = null;
+                    _traceSource.Flush();
+                    _traceSource.Close();
                 }
 
                 // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.

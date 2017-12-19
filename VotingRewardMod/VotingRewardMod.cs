@@ -1,5 +1,7 @@
 ﻿using EmpyrionModApi;
 using EmpyrionModApi.ExtensionMethods;
+using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
@@ -11,9 +13,13 @@ namespace VotingRewardMod
     {
         static readonly string k_versionString = EmpyrionModApi.Helpers.GetVersionString(typeof(VotingRewardMod));
 
+        private TraceSource _traceSource = new TraceSource("VotingRewardMod");
+
         public void Start(IGameServerConnection gameServerConnection)
         {
+            _traceSource.TraceEvent(TraceEventType.Information, 3, "Starting up...");
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "VotingRewardMod_Settings.yaml";
+            _traceSource.TraceEvent(TraceEventType.Verbose, 3, "Loaded configuration.");
 
             _gameServerConnection = gameServerConnection;
             _config = BaseConfiguration.GetConfiguration<Configuration>(configFilePath);
@@ -24,30 +30,49 @@ namespace VotingRewardMod
 
         public void Stop()
         {
+            _traceSource.TraceEvent(TraceEventType.Information, 3, "Stopping...");
+            _traceSource.Flush();
+            _traceSource.Close();
         }
 
         private async void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
-            switch (msg)
+            try
             {
-                case "/votereward":
-                    {
-                        if (await DoesPlayerHaveReward(player))
+                switch (msg)
+                {
+                    case "/votereward":
                         {
-                            var rewardItems = _config.VotingRewards.ToEleonArray();
-                            var itemExchangeInfo = await player.DoItemExchange("Voting Reward", "Remember to vote everyday. Enjoy!", "Close", rewardItems);
-
-                            if (!rewardItems.AreTheSame(itemExchangeInfo.items))
+                            _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} is trying to claim a voting reward.", player);
+                            if (await DoesPlayerHaveReward(player))
                             {
-                                await MarkRewardClaimed(player);
+                                _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} has a voting reward to claim; show reward to player.", player);
+                                var rewardItems = _config.VotingRewards.ToEleonArray();
+                                var itemExchangeInfo = await player.DoItemExchange("Voting Reward", "Remember to vote everyday. Enjoy!", "Close", rewardItems);
+                                _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} has closed the voting reward UI.", player);
+                                if (!rewardItems.AreTheSame(itemExchangeInfo.items))
+                                {
+                                    _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} took at least some of the voting reward.", player);
+                                    await MarkRewardClaimed(player);
+                                    _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} claimed a voting reward.", player);
+                                }
+                                else
+                                {
+                                    _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} didn't claim any reward items.", player);
+                                }
+                            }
+                            else
+                            {
+                                _traceSource.TraceEvent(TraceEventType.Information, 3, "No unclaimed voting reward found for {0}.", player);
+                                await player.SendAlarmMessage("No unclaimed voting reward found.");
                             }
                         }
-                        else
-                        {
-                            await player.SendAlarmMessage("No unclaimed voting reward found.");
-                        }
-                    }
-                    break;
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                _traceSource.TraceEvent(TraceEventType.Error, 1, ex.ToString());
             }
         }
 
