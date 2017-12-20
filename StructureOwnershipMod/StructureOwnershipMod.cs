@@ -198,7 +198,7 @@ namespace StructureOwnershipMod
         {
             int ownerId = 0;
 
-            if (_saveState.FactionIdToEntityIds.ContainsKey(player.MemberOfFaction.Id))
+            if ((player.MemberOfFaction != null) && _saveState.FactionIdToEntityIds.ContainsKey(player.MemberOfFaction.Id))
             {
                 ownerId = player.MemberOfFaction.Id;
             }

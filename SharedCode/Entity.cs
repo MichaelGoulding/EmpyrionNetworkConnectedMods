@@ -55,7 +55,14 @@ namespace EmpyrionModApi
         {
             get
             {
-                return $"[{MemberOfFaction.Initials}] {Name}";
+                if (MemberOfFaction != null)
+                {
+                    return $"[{MemberOfFaction.Initials}] {Name}";
+                }
+                else
+                {
+                    return Name;
+                }
             }
         }
 
