@@ -39,7 +39,10 @@ namespace StructureOwnershipMod
 
         public void Stop()
         {
-            _saveState.Save(k_saveStateFilePath);
+            lock (_saveState)
+            {
+                _saveState.Save(k_saveStateFilePath);
+            }
         }
 
         private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
@@ -184,6 +187,9 @@ namespace StructureOwnershipMod
                             player.SendAttentionMessage("Added income!");
                         }
                     }
+
+                    // save state before exiting
+                    _saveState.Save(k_saveStateFilePath);
                 }
             }
         }
