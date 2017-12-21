@@ -1,4 +1,6 @@
 ﻿---
 GameServerIp: "127.0.0.1"
 GameServerApiPort: 12345
-PlayerUpdateIntervalInSeconds: 1
+
+# Change this value to something like '1' if you are using the SellToServerMod
+PlayerUpdateIntervalInSeconds: 60
