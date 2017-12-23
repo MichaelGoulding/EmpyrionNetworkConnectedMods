@@ -97,7 +97,7 @@ namespace StructureOwnershipMod
             {
                 if (_config.EntityIdToRewards.ContainsKey(obj.id))
                 {
-                    if(!_saveState.FactionIdToEntityIds.ContainsKey(obj.factionId))
+                    if (!_saveState.FactionIdToEntityIds.ContainsKey(obj.factionId))
                     {
                         _saveState.FactionIdToEntityIds.Add(obj.factionId, new HashSet<int>());
                     }
@@ -147,25 +147,29 @@ namespace StructureOwnershipMod
                 {
                     var ownerId = factionEntitySet.Key;
 
-                    var itemStacks = new ItemStacks();
-
-                    foreach (var entityId in factionEntitySet.Value)
+                    // 'Public' faction doesn't get rewards
+                    if (ownerId != 0)
                     {
-                        itemStacks.AddStacks(_config.EntityIdToRewards[entityId]);
-                    }
+                        var itemStacks = new ItemStacks();
 
-                    if (itemStacks.Count != 0)
-                    {
-                        if (!_saveState.FactionIdToRewards.ContainsKey(ownerId))
+                        foreach (var entityId in factionEntitySet.Value)
                         {
-                            _saveState.FactionIdToRewards[ownerId] = itemStacks;
-                        }
-                        else
-                        {
-                            _saveState.FactionIdToRewards[ownerId].AddStacks(itemStacks);
+                            itemStacks.AddStacks(_config.EntityIdToRewards[entityId]);
                         }
 
-                        ownersWhoGotSomething.Add(ownerId);
+                        if (itemStacks.Count != 0)
+                        {
+                            if (!_saveState.FactionIdToRewards.ContainsKey(ownerId))
+                            {
+                                _saveState.FactionIdToRewards[ownerId] = itemStacks;
+                            }
+                            else
+                            {
+                                _saveState.FactionIdToRewards[ownerId].AddStacks(itemStacks);
+                            }
+
+                            ownersWhoGotSomething.Add(ownerId);
+                        }
                     }
                 }
             }
