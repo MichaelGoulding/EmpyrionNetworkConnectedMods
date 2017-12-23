@@ -13,6 +13,7 @@ namespace EmpyrionModApi
 
         public ItemStack()
         {
+
         }
 
         public ItemStack(int id, int amount)
@@ -25,6 +26,11 @@ namespace EmpyrionModApi
         {
             this.Id = itemStack.id;
             this.Amount = itemStack.count;
+        }
+
+        public ItemStack Clone()
+        {
+            return new ItemStack(Id, Amount);
         }
     }
 
@@ -55,13 +61,14 @@ namespace EmpyrionModApi
                     if (newTotal > int.MaxValue)
                     {
                         itemStack.Amount = int.MaxValue;
-                        Add(new ItemStack(newItemStack.Id, (int)(newTotal-int.MaxValue)));
+                        newItemStack = new ItemStack(newItemStack.Id, (int)(newTotal - int.MaxValue));
+                        break;
                     }
                     else
                     {
                         itemStack.Amount = (int)newTotal;
+                        return;
                     }
-                    return;
                 }
             }
 
@@ -73,7 +80,7 @@ namespace EmpyrionModApi
         {
             foreach (var itemStack in itemStacks)
             {
-                AddStack(itemStack);
+                AddStack(itemStack.Clone());
             }
         }
 
