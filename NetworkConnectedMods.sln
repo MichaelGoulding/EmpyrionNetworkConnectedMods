@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2010
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoHome", "GoHome\GoHome.csproj", "{E936179F-CFC8-45F5-9B1C-EE699EE76EA7}"
 EndProject
@@ -39,6 +39,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deprecated", "Deprecated", "{367F7F55-7C16-49A8-9512-41C207871CBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +95,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F5BAC378-0E04-49AC-AB40-FFBCCB35F9E5} = {367F7F55-7C16-49A8-9512-41C207871CBF}
+		{7E7DA794-412D-4557-AC8C-FB511E8C28D7} = {367F7F55-7C16-49A8-9512-41C207871CBF}
+		{5D260F95-8FCF-4222-8EA8-12013C8B7860} = {367F7F55-7C16-49A8-9512-41C207871CBF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2E170453-FF5C-4F91-9F0C-3E7A23A3BDCB}
