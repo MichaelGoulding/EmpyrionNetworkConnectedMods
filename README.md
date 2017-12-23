@@ -4,8 +4,8 @@ This is a wrapper for the Empyrion Mod API and a system to run mods without havi
 # Getting Started
 
 ## Build
-1.	Clone the code (recursively to include submodules).
-2.	Load up in Visual Studio 2017
+1.  Clone the code (recursively to include submodules).  Don't just download a .zip of the code.
+2.  Load up in Visual Studio 2017
 3.  Build all.
 
  ## Run
@@ -18,12 +18,12 @@ Send bugs or send pull requests with any improvements, modules, or documentation
 # Included mods
 | Module | Description |
 |:-----------|:-----------|
-| DiscordBotMod | Connects in-game general chat to a specific channel in your Discord server.  Two-way communication. |
 | VotingRewardMod | Calls empyrion-servers.com REST API to give configured rewards to players every day they vote. |
-| SellToServer | Lets you configure an area where you can type /sell and sell items back to the server for credits.  Prices are configured in yaml (including a default price if you want to accept any item). |
+| StructureOwnershipMod | It gives periodic rewards to any faction that captures the core of configured ships/buildings. You then use /income to take out the items you've earned. The idea is that it gives purpose in PVP to take over bases in space/planet. It also reduce the need to use autominers as you could capture a "steel block" factory or something. |
 | PlayfieldStructureRegenMod| Regenerates POIs or asteriods when a playfield is loaded. |
-| FactionPlayfieldKickerMod| Keeps people not belonging to a specifc faction out of a playfield if they try to warp in. |
-| StructureOwnershipMod | Not done. It gives periodic rewards to any faction that captures the core of configured ships/buildings you then use /income to take out the items you've earned. the idea is that it gives purpose in PVP to take over bases in space/planet it also reduce the need to use autominers as you could capture a "steal block" factory or something |
+| SellToServer | (Deprecated as it's a part of game now) Lets you configure an area where you can type /sell and sell items back to the server for credits.  Prices are configured in yaml (including a default price if you want to accept any item). |
+| DiscordBotMod | (Deprecated as it's a part of EAH now) Connects in-game general chat to a specific channel in your Discord server.  Two-way communication. |
+| FactionPlayfieldKickerMod| (Deprecated as it's a part of EAH now) Keeps people not belonging to a specifc faction out of a playfield if they try to warp in. |
 
 
 
