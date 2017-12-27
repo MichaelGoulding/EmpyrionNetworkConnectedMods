@@ -61,23 +61,27 @@ namespace StarterShipMod
                     else
                     {
                         _traceSource.TraceInformation($"Creating '{_config.BlueprintName}' for '{player}'.");
-                        player.Position.playfield.SpawnEntity(
-                            string.Format(_config.ShipNameFormat, player.Name),
-                            Entity.EntityType.SV, // this value works for CVs as well.
-                            _config.BlueprintName,
-                            player.Position.position + new System.Numerics.Vector3(0, 50, 0),
-                            player)
-                            .ContinueWith(
-                            (task) =>
-                            {
-                                player.SendAlertMessage("Look up.");
-                                lock (_saveState)
-                                {
-                                    _traceSource.TraceInformation($"Recording that '{player}' redeemed a ship.");
-                                    _saveState.MarkGotStarterShip(player);
-                                    _saveState.Save(k_saveStateFilePath);
-                                }
-                            });
+
+                        player.GetCurrentPosition().ContinueWith((posTask) =>
+                        {
+                            player.Position.playfield.SpawnEntity(
+                                string.Format(_config.ShipNameFormat, player.Name),
+                                Entity.EntityType.SV, // this value works for CVs as well.
+                                _config.BlueprintName,
+                                player.Position.position + new System.Numerics.Vector3(0, 50, 0),
+                                player)
+                                .ContinueWith(
+                                    (task) =>
+                                    {
+                                        player.SendAlertMessage("Look up.");
+                                        lock (_saveState)
+                                        {
+                                            _traceSource.TraceInformation($"Recording that '{player}' redeemed a ship.");
+                                            _saveState.MarkGotStarterShip(player);
+                                            _saveState.Save(k_saveStateFilePath);
+                                        }
+                                    });
+                        });
                     }
                 }
             }
