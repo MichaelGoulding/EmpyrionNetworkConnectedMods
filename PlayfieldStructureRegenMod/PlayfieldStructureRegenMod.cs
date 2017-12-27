@@ -17,7 +17,7 @@ namespace PlayfieldStructureRegenMod
 
         public void Start(IGameServerConnection gameServerConnection)
         {
-            _traceSource.TraceEvent(TraceEventType.Information, 3, "Starting up...");
+            _traceSource.TraceInformation("Starting up...");
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "PlayfieldStructureRegenMod_Settings.yaml";
 
             _gameServerConnection = gameServerConnection;
@@ -29,7 +29,7 @@ namespace PlayfieldStructureRegenMod
 
         public void Stop()
         {
-            _traceSource.TraceEvent(TraceEventType.Information, 3, "Stopping...");
+            _traceSource.TraceInformation("Stopping...");
             _traceSource.Flush();
             _traceSource.Close();
         }

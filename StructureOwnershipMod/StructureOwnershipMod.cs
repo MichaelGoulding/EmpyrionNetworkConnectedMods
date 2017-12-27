@@ -1,6 +1,7 @@
 ﻿using EmpyrionModApi;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,11 @@ namespace StructureOwnershipMod
 
         static readonly string k_saveStateFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "SaveState.yaml";
 
+        private TraceSource _traceSource = new TraceSource("StructureOwnershipMod");
+
         public void Start(IGameServerConnection gameServerConnection)
         {
+            _traceSource.TraceInformation("Starting up...");
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "StructureOwnershipMod_Settings.yaml";
 
             _gameServerConnection = gameServerConnection;
@@ -43,6 +47,10 @@ namespace StructureOwnershipMod
             {
                 _saveState.Save(k_saveStateFilePath);
             }
+
+            _traceSource.TraceInformation("Stopping...");
+            _traceSource.Flush();
+            _traceSource.Close();
         }
 
         private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
@@ -93,6 +101,7 @@ namespace StructureOwnershipMod
 
         private void OnEvent_Faction_Changed(Eleon.Modding.FactionChangeInfo obj)
         {
+            _traceSource.TraceInformation($"OnEvent_Faction_Changed(obj={{id={obj.id},factionId={obj.factionId}}})");
             lock (_saveState)
             {
                 if (_config.EntityIdToRewards.ContainsKey(obj.id))
@@ -120,7 +129,8 @@ namespace StructureOwnershipMod
                                 if (structure != null)
                                 {
                                     // do stuff here
-                                    structure.ChangeFaction(player.MemberOfFaction);
+                                    _traceSource.TraceInformation("Change core to player's faction");
+                                    structure.ChangeFaction(player.MemberOfFaction); // we don't wait here
                                 }
                             }
                         }
@@ -139,6 +149,7 @@ namespace StructureOwnershipMod
 
         private void OnFactionRewardTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            _traceSource.TraceInformation("Entering OnFactionRewardTimer_Elapsed");
             var ownersWhoGotSomething = new HashSet<int>();
 
             lock (_saveState)
@@ -196,6 +207,8 @@ namespace StructureOwnershipMod
                     _saveState.Save(k_saveStateFilePath);
                 }
             }
+
+            _traceSource.TraceInformation("Exiting OnFactionRewardTimer_Elapsed");
         }
 
         private int GetOwnerIdForReward(Player player)

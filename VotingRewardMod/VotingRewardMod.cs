@@ -17,7 +17,7 @@ namespace VotingRewardMod
 
         public void Start(IGameServerConnection gameServerConnection)
         {
-            _traceSource.TraceEvent(TraceEventType.Information, 3, "Starting up...");
+            _traceSource.TraceInformation("Starting up...");
             var configFilePath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\" + "VotingRewardMod_Settings.yaml";
             _traceSource.TraceEvent(TraceEventType.Verbose, 3, "Loaded configuration.");
 
@@ -30,7 +30,7 @@ namespace VotingRewardMod
 
         public void Stop()
         {
-            _traceSource.TraceEvent(TraceEventType.Information, 3, "Stopping...");
+            _traceSource.TraceInformation("Stopping...");
             _traceSource.Flush();
             _traceSource.Close();
         }
@@ -43,27 +43,27 @@ namespace VotingRewardMod
                 {
                     case "/votereward":
                         {
-                            _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} is trying to claim a voting reward.", player);
+                            _traceSource.TraceInformation("{0} is trying to claim a voting reward.", player);
                             if (await DoesPlayerHaveReward(player))
                             {
-                                _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} has a voting reward to claim; show reward to player.", player);
+                                _traceSource.TraceInformation("{0} has a voting reward to claim; show reward to player.", player);
                                 var rewardItems = _config.VotingRewards.ToEleonArray();
                                 var itemExchangeInfo = await player.DoItemExchange("Voting Reward", "Remember to vote everyday. Enjoy!", "Close", rewardItems);
-                                _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} has closed the voting reward UI.", player);
+                                _traceSource.TraceInformation("{0} has closed the voting reward UI.", player);
                                 if (!rewardItems.AreTheSame(itemExchangeInfo.items))
                                 {
-                                    _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} took at least some of the voting reward.", player);
+                                    _traceSource.TraceInformation("{0} took at least some of the voting reward.", player);
                                     await MarkRewardClaimed(player);
-                                    _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} claimed a voting reward.", player);
+                                    _traceSource.TraceInformation("{0} claimed a voting reward.", player);
                                 }
                                 else
                                 {
-                                    _traceSource.TraceEvent(TraceEventType.Information, 3, "{0} didn't claim any reward items.", player);
+                                    _traceSource.TraceInformation("{0} didn't claim any reward items.", player);
                                 }
                             }
                             else
                             {
-                                _traceSource.TraceEvent(TraceEventType.Information, 3, "No unclaimed voting reward found for {0}.", player);
+                                _traceSource.TraceInformation("No unclaimed voting reward found for {0}.", player);
                                 await player.SendAlarmMessage("No unclaimed voting reward found.");
                             }
                         }
