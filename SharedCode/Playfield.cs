@@ -38,6 +38,26 @@ namespace EmpyrionModApi
             await _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Entity_Spawn, spawnInfo);
         }
 
+
+        public async Task SpawnEntity(string name, Entity.EntityType type, string prefabName, Vector3 position, Player player)
+        {
+            var newId = await _gameServerConnection.SendRequest<Eleon.Modding.Id>(Eleon.Modding.CmdId.Request_NewEntityId, null);
+
+            var spawnInfo = new Eleon.Modding.EntitySpawnInfo();
+            spawnInfo.forceEntityId = newId.id;
+            spawnInfo.playfield = this.Name;
+            spawnInfo.pos = position.ToPVector3();
+            spawnInfo.rot = new Eleon.Modding.PVector3();
+            spawnInfo.name = name;
+            spawnInfo.type = (byte)type;
+            spawnInfo.prefabName = prefabName;
+            spawnInfo.factionGroup = player.FactionGroupId;
+            spawnInfo.factionId = player.EntityId;
+            //spawnInfo.exportedEntityDat = exportFile;
+
+            await _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Entity_Spawn, spawnInfo);
+        }
+
         internal int ProcessId { get; private set; }
 
         #region Common overloads

@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Deprecated", "Deprecated", "{367F7F55-7C16-49A8-9512-41C207871CBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StarterShipMod", "StarterShipMod\StarterShipMod.csproj", "{FE658DA4-27DE-40BF-B9FD-2BEBB410C07F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,6 +94,10 @@ Global
 		{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC5A5011-2BB6-4914-A090-D6EE42DEA9C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE658DA4-27DE-40BF-B9FD-2BEBB410C07F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE658DA4-27DE-40BF-B9FD-2BEBB410C07F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE658DA4-27DE-40BF-B9FD-2BEBB410C07F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE658DA4-27DE-40BF-B9FD-2BEBB410C07F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -47,6 +47,8 @@ namespace EmpyrionModApi
             }
         }
 
+        public byte FactionGroupId { get; protected set; }
+
         public EntityType Type { get; private set; }
 
         public string Name { get; protected set; }
