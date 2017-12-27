@@ -21,6 +21,7 @@ Send bugs or send pull requests with any improvements, modules, or documentation
 | VotingRewardMod | Calls empyrion-servers.com REST API to give configured rewards to players every day they vote. |
 | StructureOwnershipMod | It gives periodic rewards to any faction that captures the core of configured ships/buildings. You then use /income to take out the items you've earned. The idea is that it gives purpose in PVP to take over bases in space/planet. It also reduce the need to use autominers as you could capture a "steel block" factory or something. |
 | PlayfieldStructureRegenMod| Regenerates POIs or asteriods when a playfield is loaded. |
+| StarterShipMod | Grants each player a one-time ship. |
 | SellToServer | (Deprecated as it's a part of game now) Lets you configure an area where you can type /sell and sell items back to the server for credits.  Prices are configured in yaml (including a default price if you want to accept any item). |
 | DiscordBotMod | (Deprecated as it's a part of EAH now) Connects in-game general chat to a specific channel in your Discord server.  Two-way communication. |
 | FactionPlayfieldKickerMod| (Deprecated as it's a part of EAH now) Keeps people not belonging to a specifc faction out of a playfield if they try to warp in. |
