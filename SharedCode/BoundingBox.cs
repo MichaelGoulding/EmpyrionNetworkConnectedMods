@@ -13,6 +13,11 @@ namespace EmpyrionModApi
             public float x { get; set; }
             public float y { get; set; }
             public float z { get; set; }
+
+            public System.Numerics.Vector3 ToNumericsVector3()
+            {
+                return new System.Numerics.Vector3(x, y, z);
+            }
         }
 
         public class Rect3

@@ -1,0 +1,63 @@
+﻿---
+BuyShipCommand: "/buyship"
+ShipSellers:
+- Name: Bob
+  Origin: 1
+  BoundingBox:
+    Playfield: Akua2
+    Rect:
+      min:
+        x: -1434
+        y: 48
+        z: 700
+      max:
+        x: -1430
+        y: 51
+        z: 701.5
+  ShipsForSale:
+  - DisplayName: Ship One
+    BlueprintName: SV_PF1
+    ShipNameFormat: "Cool ship1 for {0}"
+    Price: 100.50
+    SpawnLocation:
+      x: -1439
+      y: 149
+      z: 707.5
+  - DisplayName: Ship Two
+    BlueprintName: SV_PF2
+    ShipNameFormat: "Cool ship2 for {0}"
+    Price: 200.50
+    SpawnLocation:
+      x: -1439
+      y: 149
+      z: 707.5
+- Name: Bobby
+  Origin: 1
+  BoundingBox:
+    Playfield: Akua2
+    Rect:
+      min:
+        x: -1439
+        y: 49
+        z: 707.5
+      max:
+        x: -1437.7
+        y: 51
+        z: 710
+  ShipsForSale:
+  - DisplayName: Shipp One
+    BlueprintName: SV_PF1
+    ShipNameFormat: "Cool ship1 for {0}"
+    Price: 100.50
+    SpawnLocation:
+      x: -1439
+      y: 149
+      z: 707.5
+  - DisplayName: Shipp Two
+    BlueprintName: SV_PF2
+    ShipNameFormat: "Cool ship2 for {0}"
+    Price: 200.50
+    SpawnLocation:
+      x: -1439
+      y: 149
+      z: 707.5
