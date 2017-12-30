@@ -26,13 +26,13 @@ ShipSellers:
   - DisplayName: Ship Two
     BlueprintName: SV_PF2
     ShipNameFormat: "Cool ship2 for {0}"
-    Price: 200.50
+    Price: 2000000.50
     SpawnLocation:
       x: -1439
       y: 149
       z: 707.5
 - Name: Bobby
-  Origin: 1
+  Origin: -1   # -1 means any player can buy
   BoundingBox:
     Playfield: Akua2
     Rect:
@@ -56,7 +56,7 @@ ShipSellers:
   - DisplayName: Shipp Two
     BlueprintName: SV_PF2
     ShipNameFormat: "Cool ship2 for {0}"
-    Price: 200.50
+    Price: 20000000.50
     SpawnLocation:
       x: -1439
       y: 149

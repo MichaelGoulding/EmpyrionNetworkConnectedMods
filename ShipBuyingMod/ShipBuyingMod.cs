@@ -113,40 +113,60 @@ namespace ShipBuyingMod
 
                 if (shipSeller != null)
                 {
-                    if (string.IsNullOrWhiteSpace(restOfCommandString))
+                    if ((shipSeller.Origin == 255) || (shipSeller.Origin == player.FactionGroupId))
                     {
-                        // print welcome and usage
-                        await ShowWelcome(player, shipSeller);
-                    }
-                    else if (int.TryParse(restOfCommandString, out int originalNumber))
-                    {
-                        int number = originalNumber - 1;
-
-                        if ((number >= 0) && (number < shipSeller.ShipsForSale.Count))
+                        if (string.IsNullOrWhiteSpace(restOfCommandString))
                         {
-                            var shipInfo = shipSeller.ShipsForSale[number];
+                            // print welcome and usage
+                            await ShowWelcome(player, shipSeller);
+                        }
+                        else if (int.TryParse(restOfCommandString, out int originalNumber))
+                        {
+                            int number = originalNumber - 1;
 
-                            // TODO: look up credit balance?
-
-                            // ask for confirmation
-                            lock (_pendingTransactions)
+                            if ((number >= 0) && (number < shipSeller.ShipsForSale.Count))
                             {
-                                _pendingTransactions.Add(player, shipInfo);
-                            }
+                                var shipInfo = shipSeller.ShipsForSale[number];
 
-                            await player.SendChatMessage($"Are you sure you want to buy \"{shipInfo.DisplayName}\"? (yes/no)");
+                                // look up credit balance
+                                var credits = await player.GetCreditBalance();
+
+                                if (credits >= shipInfo.Price)
+                                {
+                                    _traceSource.TraceInformation("Starting pending transaction for player '{0}' wanting to buy ship '{1}'", player, shipInfo.DisplayName);
+
+                                    lock (_pendingTransactions)
+                                    {
+                                        _pendingTransactions.Add(player, shipInfo);
+                                    }
+
+                                    // ask for confirmation
+                                    await player.SendChatMessage($"Are you sure you want to buy \"{shipInfo.DisplayName}\"? (yes/no)");
+                                }
+                                else
+                                {
+                                    // Need more $$$
+                                    _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' doesn't have enough money (Price:{shipInfo.Price}). Balance: {credits}");
+                                    await player.SendAlarmMessage("Insufficient funds!");
+                                }
+                            }
+                            else
+                            {
+                                _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' invalid ship number to buy. ({originalNumber})");
+                                await player.SendAlarmMessage("Invalid ship number to buy.");
+                            }
                         }
                         else
                         {
-                            _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' invalid ship number to buy. ({originalNumber})");
-                            await player.SendAlarmMessage("Invalid ship number to buy.");
+                            // not an integer.  Print usage.
+                            _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' invalid command to buy. ({restOfCommandString})");
+                            await ShowUsage(player, shipSeller);
                         }
                     }
                     else
                     {
-                        // not an integer.  Print usage.
-                        _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' invalid command to buy. ({restOfCommandString})");
-                        await ShowUsage(player, shipSeller);
+                        _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' not the right origin to buy. (player:{player.FactionGroupId}, seller:{shipSeller.Origin})");
+                        await player.SendAlarmMessage("Not the right origin to buy a ship from.");
                     }
                 }
                 else
