@@ -9,7 +9,7 @@ namespace EmpyrionModApi
     {
         public int Id { get; private set; }
 
-        public byte Group { get; private set; }
+        public byte Origin { get; private set; }
 
         public string Initials { get; private set; }
 
@@ -85,7 +85,7 @@ namespace EmpyrionModApi
         internal Faction(IGameServerConnection gameServerConnection, FactionInfo factionInfo)
         {
             _gameServerConnection = gameServerConnection;
-            Group = factionInfo.origin;
+            Origin = factionInfo.origin;
             Id = factionInfo.factionId;
             Initials = factionInfo.abbrev;
             Name = factionInfo.name;
@@ -93,7 +93,7 @@ namespace EmpyrionModApi
 
         internal void UpdateInfo(FactionInfo factionInfo)
         {
-            Group = factionInfo.origin;
+            Origin = factionInfo.origin;
             Id = factionInfo.factionId;
             Initials = factionInfo.abbrev;
             Name = factionInfo.name;

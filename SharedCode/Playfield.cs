@@ -31,7 +31,7 @@ namespace EmpyrionModApi
             spawnInfo.name = name;
             spawnInfo.type = (byte)type;
             spawnInfo.prefabName = prefabName;
-            spawnInfo.factionGroup = faction.Group;
+            spawnInfo.factionGroup = faction.Origin;
             spawnInfo.factionId = faction.Id;
             //spawnInfo.exportedEntityDat = exportFile;
 
