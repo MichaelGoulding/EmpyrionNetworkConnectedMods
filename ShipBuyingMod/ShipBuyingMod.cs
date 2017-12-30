@@ -113,7 +113,7 @@ namespace ShipBuyingMod
 
                 if (shipSeller != null)
                 {
-                    if ((shipSeller.Origin == 255) || (shipSeller.Origin == player.FactionGroupId))
+                    if ((shipSeller.Origin == 255) || (shipSeller.Origin == player.Origin))
                     {
                         if (string.IsNullOrWhiteSpace(restOfCommandString))
                         {
@@ -165,7 +165,7 @@ namespace ShipBuyingMod
                     }
                     else
                     {
-                        _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' not the right origin to buy. (player:{player.FactionGroupId}, seller:{shipSeller.Origin})");
+                        _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' not the right origin to buy. (player:{player.Origin}, seller:{shipSeller.Origin})");
                         await player.SendAlarmMessage("Not the right origin to buy a ship from.");
                     }
                 }

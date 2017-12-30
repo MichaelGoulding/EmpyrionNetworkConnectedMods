@@ -141,6 +141,7 @@ namespace EmpyrionModApi
             System.Diagnostics.Debug.Assert(EntityId == pInfo.entityId);
             this.SteamId = pInfo.steamId;
             this.FactionGroupId = pInfo.factionGroup;
+            this.Origin = pInfo.origin;
             this.Position = new WorldPosition { playfield = playfield, position = pInfo.pos.ToVector3() };
             this.MemberOfFaction = _gameServerConnection.GetFaction(pInfo.factionId);
             this.BpResourcesInFactory = pInfo.bpResourcesInFactory;
