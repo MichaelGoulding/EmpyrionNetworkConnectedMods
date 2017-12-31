@@ -85,7 +85,7 @@ namespace ShipBuyingMod
                 // spawn ship
                 await player.Position.playfield.SpawnEntity(
                     shipName,
-                    Entity.EntityType.SV, // this value works for CVs as well.
+                    shipInfo.EntityType,
                     shipInfo.BlueprintName,
                     shipInfo.SpawnLocation.ToNumericsVector3(),
                     player);

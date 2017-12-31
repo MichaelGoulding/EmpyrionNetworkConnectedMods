@@ -66,7 +66,7 @@ namespace StarterShipMod
                         {
                             player.Position.playfield.SpawnEntity(
                                 string.Format(_config.ShipNameFormat, player.Name),
-                                Entity.EntityType.SV, // this value works for CVs as well.
+                                _config.EntityType,
                                 _config.BlueprintName,
                                 player.Position.position + new System.Numerics.Vector3(0, 50, 0),
                                 player)

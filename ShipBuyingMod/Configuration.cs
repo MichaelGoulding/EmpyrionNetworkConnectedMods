@@ -19,6 +19,8 @@ namespace ShipBuyingMod
             {
                 public string DisplayName { get; set; }
 
+                public Entity.EntityType EntityType { get; set; }
+
                 public string BlueprintName { get; set; }
 
                 public string ShipNameFormat { get; set; }

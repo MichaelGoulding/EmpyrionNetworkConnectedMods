@@ -17,6 +17,7 @@ ShipSellers:
   ShipsForSale:
   - DisplayName: Ship One
     BlueprintName: SV_PF1
+    EntityType: SV
     ShipNameFormat: "Cool ship1 for {0}"
     Price: 100.50
     SpawnLocation:
@@ -25,8 +26,9 @@ ShipSellers:
       z: 707.5
   - DisplayName: Ship Two
     BlueprintName: SV_PF2
+    EntityType: CV
     ShipNameFormat: "Cool ship2 for {0}"
-    Price: 2000000.50
+    Price: 2000.50
     SpawnLocation:
       x: -1439
       y: 149
@@ -47,6 +49,7 @@ ShipSellers:
   ShipsForSale:
   - DisplayName: Shipp One
     BlueprintName: SV_PF1
+    EntityType: SV
     ShipNameFormat: "Cool ship1 for {0}"
     Price: 100.50
     SpawnLocation:
@@ -55,8 +58,9 @@ ShipSellers:
       z: 707.5
   - DisplayName: Shipp Two
     BlueprintName: SV_PF2
+    EntityType: CV
     ShipNameFormat: "Cool ship2 for {0}"
-    Price: 20000000.50
+    Price: 2000.50
     SpawnLocation:
       x: -1439
       y: 149

@@ -7,7 +7,7 @@ namespace StarterShipMod
     {
         public string StarterShipCommand { get; set; }
         public string BlueprintName { get; set; }
-
+        public Entity.EntityType EntityType { get; set; }
         public string ShipNameFormat { get; set; }
 
 
@@ -15,6 +15,7 @@ namespace StarterShipMod
         {
             StarterShipCommand = "cb:startership";
             BlueprintName = "SV_Prefab_Tier1";
+            EntityType = Entity.EntityType.SV;
             ShipNameFormat = "{0}'s Starter Ship";
         }
     }

@@ -1,4 +1,5 @@
 ﻿---
 StarterShipCommand: "cb:startership"
 BlueprintName: "SV_PF1"   # Prebuilt file name minus the .epb extension.
+EntityType: SV
 ShipNameFormat: "{0}'s Starter Ship"
