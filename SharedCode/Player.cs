@@ -4,6 +4,35 @@ using System.Threading.Tasks;
 
 namespace EmpyrionModApi
 {
+    public enum ExpLevel
+    {
+        L1 = 0,
+        L2 = 799,
+        L3 = 3199,
+        L4 = 7199,
+        L5 = 12799,
+        L6 = 20000,
+        L7 = 28799,
+        L8 = 39200,
+        L9 = 51199,
+        L10 = 64800,
+        L11 = 80000,
+        L12 = 96799,
+        L13 = 115199,
+        L14 = 135199,
+        L15 = 156800,
+        L16 = 180000,
+        L17 = 204799,
+        L18 = 231200,
+        L19 = 259200,
+        L20 = 288800,
+        L21 = 320000,
+        L22 = 352799,
+        L23 = 387199,
+        L24 = 423200,
+        L25 = 500000,
+    }
+
     public class Player : Entity
     {
         public bool IsPrivileged
@@ -78,6 +107,36 @@ namespace EmpyrionModApi
             UpdateInfo(pInfo, this.Position.playfield);
 
             return pInfo.credits;
+        }
+
+        public async Task<int> GetExperiencePoints()
+        {
+            var pInfo = await _gameServerConnection.SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(EntityId));
+
+            UpdateInfo(pInfo, this.Position.playfield);
+
+            return pInfo.exp;
+        }
+
+        public async Task<ExpLevel> GetExperienceLevel()
+        {
+            ExpLevel result = ExpLevel.L1;
+
+            int expPoints = await GetExperiencePoints();
+
+            foreach (ExpLevel level in System.Enum.GetValues(typeof(ExpLevel)))
+            {
+                if (expPoints < (int)level)
+                {
+                    break;
+                }
+                else
+                {
+                    result = level;
+                }
+            }
+
+            return result;
         }
 
         public Task SendChatMessage(string format, params object[] args)

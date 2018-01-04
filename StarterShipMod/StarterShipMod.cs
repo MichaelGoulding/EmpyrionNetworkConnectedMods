@@ -60,29 +60,57 @@ namespace StarterShipMod
                     }
                     else
                     {
-                        _traceSource.TraceInformation($"Creating '{_config.BlueprintName}' for '{player}'.");
-
-                        player.GetCurrentPosition().ContinueWith((posTask) =>
-                        {
-                            player.Position.playfield.SpawnEntity(
-                                string.Format(_config.ShipNameFormat, player.Name),
-                                _config.EntityType,
-                                _config.BlueprintName,
-                                player.Position.position + new System.Numerics.Vector3(0, 50, 0),
-                                player)
-                                .ContinueWith(
-                                    (task) =>
-                                    {
-                                        player.SendAlertMessage("Look up.");
-                                        lock (_saveState)
-                                        {
-                                            _traceSource.TraceInformation($"Recording that '{player}' redeemed a ship.");
-                                            _saveState.MarkGotStarterShip(player);
-                                            _saveState.Save(k_saveStateFilePath);
-                                        }
-                                    });
-                        });
+                        OnGetStarterShip(player);
                     }
+                }
+            }
+        }
+
+        private static int GetLevelAsInt(ExpLevel playersLevel)
+        {
+            int index = 1;
+            foreach (ExpLevel level in System.Enum.GetValues(typeof(ExpLevel)))
+            {
+                if(playersLevel == level)
+                {
+                    return index;
+                }
+                else
+                {
+                    ++index;
+                }
+            }
+
+            throw new InvalidOperationException(playersLevel.ToString());
+        }
+
+        private async Task OnGetStarterShip(Player player)
+        {
+            var playersLevel = await player.GetExperienceLevel();
+            if (playersLevel < _config.MinimumLevelNeeded)
+            {
+                _traceSource.TraceInformation($"Player '{player}' not the right level.  Has {playersLevel}, but needs {_config.MinimumLevelNeeded}.");
+                await player.SendAlarmMessage($"You need to be at least level {GetLevelAsInt(_config.MinimumLevelNeeded)} to redeem your starter ship.");
+            }
+            else
+            {
+                _traceSource.TraceInformation($"Creating '{_config.BlueprintName}' for '{player}'.");
+
+                await player.GetCurrentPosition();
+
+                await player.Position.playfield.SpawnEntity(
+                    string.Format(_config.ShipNameFormat, player.Name),
+                    _config.EntityType,
+                    _config.BlueprintName,
+                    player.Position.position + new System.Numerics.Vector3(0, 50, 0),
+                    player);
+
+                await player.SendAlertMessage("Look up.");
+                lock (_saveState)
+                {
+                    _traceSource.TraceInformation($"Recording that '{player}' redeemed a ship.");
+                    _saveState.MarkGotStarterShip(player);
+                    _saveState.Save(k_saveStateFilePath);
                 }
             }
         }
