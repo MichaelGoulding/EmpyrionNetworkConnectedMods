@@ -100,6 +100,13 @@ namespace EmpyrionModApi
                 new Eleon.Modding.IdMsgPrio(EntityId, msg, (byte)priority, time));
         }
 
+        public async Task RefreshInfo()
+        {
+            var pInfo = await _gameServerConnection.SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(EntityId));
+
+            UpdateInfo(pInfo, this.Position.playfield);
+        }
+
         public async Task<double> GetCreditBalance()
         {
             var pInfo = await _gameServerConnection.SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(EntityId));

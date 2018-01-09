@@ -203,6 +203,11 @@ namespace EmpyrionModApi
             }
         }
 
+        public async Task RefreshFactionList()
+        {
+            ProcessEvent_Get_Factions(await SendRequest<Eleon.Modding.FactionInfoList>(Eleon.Modding.CmdId.Request_Get_Factions, new Eleon.Modding.Id(k_RequestFactionListStartingFromId)));
+        }
+
         public Structure GetStructure(int structureId)
         {
             lock (_playfieldsByName)
@@ -817,13 +822,14 @@ namespace EmpyrionModApi
             {
                 foreach (var entityId in _onlinePlayersInfoById.Keys)
                 {
-                    SendRequest<Eleon.Modding.FactionInfoList>(Eleon.Modding.CmdId.Request_Get_Factions, new Eleon.Modding.Id(k_RequestFactionListStartingFromId))
-                         .ContinueWith((task) => this.ProcessEvent_Get_Factions(task.Result));
+                    RefreshFactionList();
                     SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(entityId))
                         .ContinueWith((task) => this.Process_Event_Player_Info(task.Result));
                 }
             }
         }
+
+        
 
         private void BreakIfDebugBuild()
         {
