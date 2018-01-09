@@ -105,13 +105,14 @@ namespace StarterShipMod
                     player.Position.position + new System.Numerics.Vector3(0, 50, 0),
                     player);
 
-                await player.SendAlertMessage("Look up.");
                 lock (_saveState)
                 {
                     _traceSource.TraceInformation($"Recording that '{player}' redeemed a ship.");
                     _saveState.MarkGotStarterShip(player);
                     _saveState.Save(k_saveStateFilePath);
                 }
+
+                await player.SendAlertMessage("Look up.");
             }
         }
     }
