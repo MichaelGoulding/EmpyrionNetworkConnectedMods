@@ -38,7 +38,7 @@ namespace FactionPlayfieldKickerMod
                     int factionIdAllowed = _config.FactionHomeWorlds[newPlayfield.Name];
 
                     // check if player is allowed
-                    bool playerIsAllowed = (oldPlayerInfo.MemberOfFaction == factionIdAllowed);
+                    bool playerIsAllowed = (oldPlayerInfo.FactionIdOrEntityId == factionIdAllowed);
 
                     if (!playerIsAllowed)
                     {

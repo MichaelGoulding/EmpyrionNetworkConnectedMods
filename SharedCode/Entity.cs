@@ -74,6 +74,21 @@ namespace EmpyrionModApi
 
         public Faction MemberOfFaction { get; protected set; }
 
+        public int FactionIdOrEntityId
+        {
+            get
+            {
+                if (MemberOfFaction != null)
+                {
+                    return MemberOfFaction.Id;
+                }
+                else
+                {
+                    return EntityId;
+                }
+            }
+        }
+
         public Task Teleport(Vector3 newPosition, Vector3 newRotation)
         {
             return _gameServerConnection.SendRequest(
