@@ -11,19 +11,19 @@ namespace EmpyrionModApi
             return (modType.GetTypeInfo().Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute)).SingleOrDefault() as AssemblyTitleAttribute).Title;
         }
 
-        public static T LoadFromYamlOrDefault<T>(string filePath) where T : new()
+        public static T LoadFromYamlOrDefault<T>(string filePath) where T : class, new()
         {
+            T result = null;
+
             if (System.IO.File.Exists(filePath))
             {
                 using (var input = System.IO.File.OpenText(filePath))
                 {
-                    return (new YamlDotNet.Serialization.Deserializer()).Deserialize<T>(input);
+                    result = (new YamlDotNet.Serialization.Deserializer()).Deserialize<T>(input);
                 }
             }
-            else
-            {
-                return new T();
-            }
+
+            return (result == null) ? new T() : result;
         }
 
         public static void SaveAsYaml(string filePath, object obj)
