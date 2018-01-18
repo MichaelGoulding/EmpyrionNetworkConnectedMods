@@ -1,6 +1,6 @@
 ﻿---
 StarterShipCommand: "cb:startership"
-BlueprintName: "SV_PF1"   # Prebuilt file name minus the .epb extension.
+BlueprintName: "SV_PF1"   # Prebuilt file name minus the .epb extension from the Content\Prefabs folder.
 EntityType: SV
 ShipNameFormat: "{0}'s Starter Ship"
 MinimumLevelNeeded: L10
