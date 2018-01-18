@@ -54,5 +54,11 @@ namespace EmpyrionModApi.ExtensionMethods
         {
             return ((lhs.X <= rhs.X) && (lhs.Y <= rhs.Y) && (lhs.Z <= rhs.Z));
         }
+
+        // Only format if args are actually passed in to prevent a string passed in from a config using {0} and crashing us.
+        static public string SafeFormat(this string format, params object[] args)
+        {
+            return (args.Length > 0) ? string.Format(format, args) : format;
+        }
     }
 }

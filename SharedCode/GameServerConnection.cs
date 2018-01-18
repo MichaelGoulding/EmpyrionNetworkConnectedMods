@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Timers;
 using Eleon.Modding;
+using EmpyrionModApi.ExtensionMethods;
 
 namespace EmpyrionModApi
 {
@@ -115,7 +116,7 @@ namespace EmpyrionModApi
 
         public Task SendChatMessageToAll(string format, params object[] args)
         {
-            string msg = string.Format(format, args);
+            string msg = format.SafeFormat(args);
             string command = $"SAY '{msg}'";
             DebugOutput("ChatMessage(\"{0}\")", msg);
             return SendRequest(
@@ -140,7 +141,7 @@ namespace EmpyrionModApi
 
         public Task SendMessageToAll(MessagePriority priority, float time, string format, params object[] args)
         {
-            string msg = string.Format(format, args);
+            string msg = format.SafeFormat(args);
             return SendRequest(
                 Eleon.Modding.CmdId.Request_InGameMessage_AllPlayers,
                 new Eleon.Modding.IdMsgPrio(0, msg, (byte)priority, time));

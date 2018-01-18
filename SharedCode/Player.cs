@@ -148,7 +148,7 @@ namespace EmpyrionModApi
 
         public Task SendChatMessage(string format, params object[] args)
         {
-            string msg = string.Format(format, args);
+            string msg = format.SafeFormat(args);
             return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_ConsoleCommand,
                 new Eleon.Modding.PString($"SAY p:{EntityId} '{msg}'"));
@@ -171,7 +171,7 @@ namespace EmpyrionModApi
 
         public Task SendMessage(MessagePriority priority, float time, string format, params object[] args)
         {
-            string msg = string.Format(format, args);
+            string msg = format.SafeFormat(args);
             return _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_InGameMessage_SinglePlayer,
                 new Eleon.Modding.IdMsgPrio(EntityId, msg, (byte)priority, time));
