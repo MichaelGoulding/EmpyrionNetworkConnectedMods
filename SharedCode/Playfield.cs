@@ -55,6 +55,8 @@ namespace EmpyrionModApi
             spawnInfo.factionId = player.EntityId;
             //spawnInfo.exportedEntityDat = exportFile;
 
+            _gameServerConnection.DebugOutput("Creating entity for '{0}' of faction group '{1}', entity id '{2}' ", player, spawnInfo.factionGroup, spawnInfo.factionId);
+
             await _gameServerConnection.SendRequest(Eleon.Modding.CmdId.Request_Entity_Spawn, spawnInfo);
         }
 
