@@ -94,14 +94,14 @@ namespace ShipBuyingMod
 
                 if (shipInfo.MessageToShowOnPurchase != null)
                 {
-                    await player.SendAlertMessage(shipInfo.MessageToShowOnPurchase);
+                    /*await*/ player.SendAlertMessage(shipInfo.MessageToShowOnPurchase);
                 }
             }
             else
             {
                 // something changed since they wanted to buy it...
                 _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' suddenly doesn't have enough money (Price:{shipInfo.Price}). Balance: {credits}");
-                await player.SendAlarmMessage("Insufficient funds!");
+                /*await*/ player.SendAlarmMessage("Insufficient funds!");
             }
 
             lock (_pendingTransactions)
@@ -142,7 +142,16 @@ namespace ShipBuyingMod
 
                                     lock (_pendingTransactions)
                                     {
-                                        _pendingTransactions.Add(player, shipInfo);
+                                        if(!_pendingTransactions.ContainsKey(player))
+                                        {
+                                            _pendingTransactions.Add(player, shipInfo);
+                                        }
+                                        else
+                                        {
+                                            _traceSource.TraceEvent(TraceEventType.Warning, 0, $"Replacing existing transaction for Player '{player}'.");
+                                            _pendingTransactions[player] = shipInfo;
+                                        }
+                                        
                                     }
 
                                     // ask for confirmation
