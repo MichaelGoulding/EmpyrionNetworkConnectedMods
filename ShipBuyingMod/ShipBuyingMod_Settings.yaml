@@ -19,6 +19,7 @@ ShipSellers:
     BlueprintName: SV_PF1   # Name of a file (minus extension) from the Content\Prefabs folder
     EntityType: SV
     ShipNameFormat: "Cool ship1 for {0}"
+    MessageToShowOnPurchase: "Look outside for your new ship!"
     Price: 100.50
     SpawnLocation:
       x: -1439
@@ -28,6 +29,7 @@ ShipSellers:
     BlueprintName: SV_PF2
     EntityType: CV
     ShipNameFormat: "Cool ship2 for {0}"
+    MessageToShowOnPurchase: "Look outside for your new ship!"
     Price: 2000.50
     SpawnLocation:
       x: -1439
@@ -51,6 +53,7 @@ ShipSellers:
     BlueprintName: SV_PF1
     EntityType: SV
     ShipNameFormat: "Cool ship1 for {0}"
+    MessageToShowOnPurchase: "Look outside for your new ship!"
     Price: 100.50
     SpawnLocation:
       x: -1439
@@ -60,6 +63,7 @@ ShipSellers:
     BlueprintName: SV_PF2
     EntityType: CV
     ShipNameFormat: "Cool ship2 for {0}"
+    MessageToShowOnPurchase: "Look outside for your new ship!"
     Price: 2000.50
     SpawnLocation:
       x: -1439

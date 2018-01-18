@@ -91,6 +91,11 @@ namespace ShipBuyingMod
                     player);
 
                 _traceSource.TraceInformation($"Player '{player}' bought {shipInfo.BlueprintName} named '{shipName}'");
+
+                if (shipInfo.MessageToShowOnPurchase != null)
+                {
+                    await player.SendAlertMessage(shipInfo.MessageToShowOnPurchase);
+                }
             }
             else
             {

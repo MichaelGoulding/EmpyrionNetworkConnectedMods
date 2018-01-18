@@ -28,6 +28,8 @@ namespace ShipBuyingMod
                 public double Price { get; set; }
 
                 public BoundingBoxInfo.Vector3 SpawnLocation { get; set; }
+
+                public string MessageToShowOnPurchase { get; set; }
             }
 
             public List<ShipInfo> ShipsForSale { get; set; }
