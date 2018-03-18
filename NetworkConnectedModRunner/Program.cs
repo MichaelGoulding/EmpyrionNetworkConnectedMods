@@ -3,11 +3,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Threading;
 
 namespace NetworkConnectedModRunner
 {
     class Program
     {
+        private static readonly Mutex Mutex = new Mutex(false, "NetworkConnectedModRunner");
+
         private static System.Diagnostics.TraceSource _traceSource =
                 new System.Diagnostics.TraceSource("NetworkConnectedModRunner");
 
@@ -70,6 +73,13 @@ namespace NetworkConnectedModRunner
 
         static void Main(string[] args)
         {
+            if (!Mutex.WaitOne(TimeSpan.FromSeconds(2), false)) // singleton application already started
+            {
+                Console.WriteLine("Another instance of NetworkConnectedModRunner is already running... Press ENTER to exit");
+                Console.ReadLine();
+                return;
+            }
+
             var prog = new Program();
 
             prog.Run();
