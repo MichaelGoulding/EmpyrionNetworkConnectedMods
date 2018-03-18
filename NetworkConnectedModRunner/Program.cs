@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace NetworkConnectedModRunner
@@ -10,6 +11,24 @@ namespace NetworkConnectedModRunner
     class Program
     {
         private static readonly Mutex Mutex = new Mutex(false, "NetworkConnectedModRunner");
+
+        [DllImport("Kernel32")]
+        private static extern bool SetConsoleCtrlHandler(EventHandler handler, bool add);
+
+        enum CtrlType
+        {
+            CTRL_C_EVENT = 0,
+            CTRL_BREAK_EVENT = 1,
+            CTRL_CLOSE_EVENT = 2,
+            CTRL_LOGOFF_EVENT = 5,
+            CTRL_SHUTDOWN_EVENT = 6
+        }
+
+        private delegate bool EventHandler(CtrlType sig);
+        static EventHandler exitHandler;
+
+        static ManualResetEvent run = new ManualResetEvent(true);
+        private bool _exiting;
 
         private static System.Diagnostics.TraceSource _traceSource =
                 new System.Diagnostics.TraceSource("NetworkConnectedModRunner");
@@ -29,6 +48,9 @@ namespace NetworkConnectedModRunner
             var config = Configuration.GetConfiguration<Configuration>(configFilePath);
 
             var modPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + "\\Extensions";
+
+            exitHandler += new EventHandler(ExitHandler);
+            SetConsoleCtrlHandler(exitHandler, true);
 
             using (var catalog = new AggregateCatalog(
                 new AssemblyCatalog(typeof(Program).Assembly),
@@ -55,13 +77,11 @@ namespace NetworkConnectedModRunner
 
                         _gameServerConnection.Connect();
 
-                        // wait until the user presses Enter.
-                        string input = Console.ReadLine();
-
-                        foreach (var gameMod in _gameMods)
+                        while (!_exiting)
                         {
-                            gameMod.Stop();
+                            Thread.Sleep(500);
                         }
+
                     }
                 }
                 catch (CompositionException compositionException)
@@ -87,5 +107,27 @@ namespace NetworkConnectedModRunner
             _traceSource.Flush();
             _traceSource.Close();
         }
+
+        private bool ExitHandler(CtrlType sig)
+        {
+            ExitGameMods();
+            Console.WriteLine("Shutting down: " + sig.ToString());
+            run.Reset();
+            Thread.Sleep(2000);
+            return false; // If the function handles the control signal, it should return TRUE. If it returns FALSE, the next handler function in the list of handlers for this process is used (from MSDN).
+
+        }
+
+        private void ExitGameMods()
+        {
+            Console.WriteLine("Gracefully shutting down mods...");
+            foreach (var gameMod in _gameMods)
+            {
+                gameMod.Stop();
+            }
+            Console.WriteLine("All mods have been shut down");
+            _exiting = true;
+        }
+
     }
 }
