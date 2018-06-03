@@ -93,11 +93,20 @@ namespace EmpyrionModApi
 
         //Request_Player_SetPlayerInfo = 34,
 
-        public Task ShowDialog(string msg, MessagePriority priority, float time=10)
+        public async Task<int> ShowDialog(string msg, string posButtonText = "Ok", string negButtonText = null)
         {
-            return _gameServerConnection.SendRequest(
-                Eleon.Modding.CmdId.Request_ShowDialog_SinglePlayer,
-                new Eleon.Modding.IdMsgPrio(EntityId, msg, (byte)priority, time));
+            Eleon.Modding.IdAndIntValue idAndValue = 
+                await _gameServerConnection.SendRequest<Eleon.Modding.IdAndIntValue> (
+                    Eleon.Modding.CmdId.Request_ShowDialog_SinglePlayer,
+                    new Eleon.Modding.DialogBoxData
+                    {
+                        Id = EntityId,
+                        MsgText = msg,
+                        PosButtonText = posButtonText,
+                        NegButtonText = negButtonText
+                    });
+
+            return idAndValue.Value;
         }
 
         public async Task RefreshInfo()
