@@ -678,26 +678,33 @@ namespace EmpyrionModApi
 
         private void ProcessEvent_Get_Factions(FactionInfoList obj)
         {
-            DebugOutput("Event_Get_Factions- Faction list. Count: {0}", obj.factions != null ? obj.factions.Count : 0);
-            if (obj.factions != null)
+            if (obj != null)
             {
-                lock (_factionsById)
+                DebugOutput("Event_Get_Factions- Faction list. Count: {0}", obj.factions != null ? obj.factions.Count : 0);
+                if (obj.factions != null)
                 {
-                    // TODO: remove deleted factions
-                    foreach (Eleon.Modding.FactionInfo factionInfo in obj.factions)
+                    lock (_factionsById)
                     {
-                        DebugOutput("Id: {0}, Abrev: {1}, Name: {2}, Origin: {3}", factionInfo.factionId, factionInfo.abbrev, factionInfo.name, factionInfo.origin);
+                        // TODO: remove deleted factions
+                        foreach (Eleon.Modding.FactionInfo factionInfo in obj.factions)
+                        {
+                            DebugOutput("Id: {0}, Abrev: {1}, Name: {2}, Origin: {3}", factionInfo.factionId, factionInfo.abbrev, factionInfo.name, factionInfo.origin);
 
-                        if (!_factionsById.ContainsKey(factionInfo.factionId))
-                        {
-                            _factionsById[factionInfo.factionId] = new Faction(this, factionInfo);
-                        }
-                        else
-                        {
-                            _factionsById[factionInfo.factionId].UpdateInfo(factionInfo);
+                            if (!_factionsById.ContainsKey(factionInfo.factionId))
+                            {
+                                _factionsById[factionInfo.factionId] = new Faction(this, factionInfo);
+                            }
+                            else
+                            {
+                                _factionsById[factionInfo.factionId].UpdateInfo(factionInfo);
+                            }
                         }
                     }
                 }
+            }
+            else
+            {
+                _traceSource.TraceEvent(TraceEventType.Warning, 1, "ProcessEvent_Get_Factions got null object");
             }
         }
 
