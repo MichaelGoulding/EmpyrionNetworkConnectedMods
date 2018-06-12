@@ -11,7 +11,7 @@ namespace ShipBuyingMod
         {
             public string Name { get; set; }
 
-            public byte Origin { get; set; }
+            public int Origin { get; set; }
 
             public BoundingBoxInfo BoundingBox { get; set; }
 
