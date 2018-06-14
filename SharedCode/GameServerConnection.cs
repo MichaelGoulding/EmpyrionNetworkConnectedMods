@@ -824,13 +824,14 @@ namespace EmpyrionModApi
             }
         }
 
-        private void OnPlayerUpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private async void OnPlayerUpdateTimer_Elapsed(object sender, ElapsedEventArgs e)
         {
+            await RefreshFactionList();
+
             lock (_onlinePlayersInfoById)
             {
                 foreach (var entityId in _onlinePlayersInfoById.Keys)
                 {
-                    RefreshFactionList();
                     SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(entityId))
                         .ContinueWith((task) => this.Process_Event_Player_Info(task.Result));
                 }
