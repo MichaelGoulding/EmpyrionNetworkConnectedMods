@@ -96,13 +96,11 @@ namespace StarterShipMod
             {
                 _traceSource.TraceInformation($"Creating '{_config.BlueprintName}' for '{player}'.");
 
-                await player.GetCurrentPosition();
-
                 await player.Position.playfield.SpawnEntity(
                     string.Format(_config.ShipNameFormat, player.Name),
                     _config.EntityType,
                     _config.BlueprintName,
-                    player.Position.position + new System.Numerics.Vector3(0, 50, 0),
+                    (await player.GetCurrentPosition()).position + new System.Numerics.Vector3(0, 50, 0),
                     player);
 
                 lock (_saveState)
