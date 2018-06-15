@@ -155,6 +155,24 @@ namespace EmpyrionModApi
             return result;
         }
 
+        public async Task SetExperiencePoints(int newValue)
+        {
+            Eleon.Modding.PlayerInfoSet pInfo = new Eleon.Modding.PlayerInfoSet();
+            pInfo.entityId = EntityId;
+
+            pInfo.experiencePoints = newValue;
+
+            await _gameServerConnection.SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_SetPlayerInfo, pInfo);
+            _gameServerConnection.DebugOutput("Changed experiencePoints of {0} to: {1}", this, newValue);
+        }
+
+        public async Task ChangeExperiencePoints( int delta )
+        {
+            int expPoints = await GetExperiencePoints();
+
+            await SetExperiencePoints(expPoints + delta);
+        }
+
         public Task SendChatMessage(string format, params object[] args)
         {
             string msg = format.SafeFormat(args);
