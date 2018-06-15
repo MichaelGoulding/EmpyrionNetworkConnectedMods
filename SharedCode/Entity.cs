@@ -96,15 +96,22 @@ namespace EmpyrionModApi
                 new Eleon.Modding.IdPositionRotation(EntityId, newPosition.ToPVector3(), newRotation.ToPVector3()));
         }
 
-        public Task ChangePlayfield(WorldPosition newWorldPosition)
+        public virtual Task ChangePlayfield(WorldPosition newWorldPosition)
         {
-            return _gameServerConnection.SendRequest(
-                Eleon.Modding.CmdId.Request_Entity_ChangePlayfield,
-                new Eleon.Modding.IdPlayfieldPositionRotation(
-                    EntityId,
-                    newWorldPosition.playfield.Name,
-                    newWorldPosition.position.ToPVector3(),
-                    newWorldPosition.rotation.ToPVector3()));
+            if (Position.playfield == newWorldPosition.playfield)
+            {
+                return Teleport(newWorldPosition.position, newWorldPosition.rotation);
+            }
+            else
+            {
+                return _gameServerConnection.SendRequest(
+                    Eleon.Modding.CmdId.Request_Entity_ChangePlayfield,
+                    new Eleon.Modding.IdPlayfieldPositionRotation(
+                        EntityId,
+                        newWorldPosition.playfield.Name,
+                        newWorldPosition.position.ToPVector3(),
+                        newWorldPosition.rotation.ToPVector3()));
+            }
         }
 
         public Task Destroy()

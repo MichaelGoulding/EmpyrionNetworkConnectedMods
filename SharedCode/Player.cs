@@ -80,15 +80,22 @@ namespace EmpyrionModApi
                 new Eleon.Modding.BlueprintResources(EntityId, itemStacks, true));
         }
 
-        public Task ChangePlayerfield( WorldPosition newWorldPosition)
+        public override Task ChangePlayfield( WorldPosition newWorldPosition)
         {
-            return _gameServerConnection.SendRequest(
-                Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
-                new Eleon.Modding.IdPlayfieldPositionRotation(
-                    EntityId,
-                    newWorldPosition.playfield.Name,
-                    newWorldPosition.position.ToPVector3(),
-                    newWorldPosition.rotation.ToPVector3()));
+            if (Position.playfield == newWorldPosition.playfield)
+            {
+                return Teleport(newWorldPosition.position, newWorldPosition.rotation);
+            }
+            else
+            {
+                return _gameServerConnection.SendRequest(
+                    Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
+                    new Eleon.Modding.IdPlayfieldPositionRotation(
+                        EntityId,
+                        newWorldPosition.playfield.Name,
+                        newWorldPosition.position.ToPVector3(),
+                        newWorldPosition.rotation.ToPVector3()));
+            }
         }
 
         //Request_Player_SetPlayerInfo = 34,

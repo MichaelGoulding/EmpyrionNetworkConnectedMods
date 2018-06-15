@@ -53,7 +53,7 @@ namespace FactionPlayfieldKickerMod
                             oldPlayerInfo.SendAlarmMessage(_config.BootMessage);
 
                             // teleport them to their last location
-                            oldPlayerInfo.ChangePlayerfield(oldPlayerInfo.Position);
+                            oldPlayerInfo.ChangePlayfield(oldPlayerInfo.Position);
                         }
                     }
                 }
