@@ -40,14 +40,13 @@ namespace EmpyrionModApi
 
         #region Public Events
 
-        public event Action<Playfield> Event_Playfield_Loaded;
-
+        public event Action<Player> Event_Player_Connected;
+        public event Action<Player> Event_Player_Disconnected;
         public event Action<Playfield, Player> Event_Player_ChangedPlayfield;
-
         public event Action<Player, PlayerDeathInfo> Event_PlayerDied;
 
+        public event Action<Playfield> Event_Playfield_Loaded;
         public event Action<ChatType, string, Player> Event_ChatMessage;
-
         public event Action<Eleon.Modding.FactionChangeInfo> Event_Faction_Changed;
 
         #endregion
@@ -629,16 +628,23 @@ namespace EmpyrionModApi
 
             lock (_onlinePlayersInfoById)
             {
-                _onlinePlayersInfoById.Remove(entityId);
+                if (_onlinePlayersInfoById.TryGetValue(entityId, out Player player))
+                {
+                    _onlinePlayersInfoById.Remove(entityId);
+
+                    Event_Player_Disconnected?.Invoke(player);
+                }
+                
             }
         }
 
-        private void ProcessEvent_Player_Connected(int entityId)
+        private async void ProcessEvent_Player_Connected(int entityId)
         {
             DebugOutput("Event_Player_Connected- Player with id {0} connected", entityId);
 
-            SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(entityId))
-                .ContinueWith((task) => this.ProcessEvent_Player_Info(task.Result));
+            Player player = ProcessEvent_Player_Info(await SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(entityId)));
+
+            Event_Player_Connected?.Invoke(player);
         }
 
         private void ProcessEvent_GlobalStructure_List(GlobalStructureList obj)
@@ -788,7 +794,7 @@ namespace EmpyrionModApi
             {
                 var playerIds = idList.list;
 
-                DebugLog("Event_Player_List - Count: {0}", playerIds.Count);
+                DebugOutput("Event_Player_List - Count: {0}", playerIds.Count);
 
                 for (int i = 0; i < playerIds.Count; i++)
                 {
@@ -837,30 +843,35 @@ namespace EmpyrionModApi
             }
         }
 
-        private void ProcessEvent_Player_Info(Eleon.Modding.PlayerInfo pInfo)
+        private Player ProcessEvent_Player_Info(Eleon.Modding.PlayerInfo pInfo)
         {
             // from Request_Player_Info
             DebugLog("Event_Player_Info - Player info: cid={1} eid={2} name={3} playfield={4} fac={5}", pInfo.clientId, pInfo.entityId, pInfo.playerName, pInfo.playfield, pInfo.factionId);
 
+            Player player;
+
             lock (_onlinePlayersInfoById)
             {
-                if (_onlinePlayersInfoById.ContainsKey(pInfo.entityId))
+                if (_onlinePlayersInfoById.TryGetValue(pInfo.entityId, out player))
                 {
-                    _onlinePlayersInfoById[pInfo.entityId].UpdateInfo(pInfo);
+                    player.UpdateInfo(pInfo);
                 }
                 else
                 {
-                    _onlinePlayersInfoById[pInfo.entityId] = new Player(this, pInfo);
+                    player = new Player(this, pInfo);
+                    _onlinePlayersInfoById[pInfo.entityId] = player;
                 }
 
                 lock (_bboxes)
                 {
                     foreach (var bbox in _bboxes)
                     {
-                        bbox.OnPlayerUpdate(_onlinePlayersInfoById[pInfo.entityId], _onlinePlayersInfoById[pInfo.entityId].Position);
+                        bbox.OnPlayerUpdate(player);
                     }
                 }
             }
+
+            return player;
         }
 
         private void BreakIfDebugBuild()

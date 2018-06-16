@@ -60,10 +60,10 @@ namespace EmpyrionModApi
                 new Vector3(boundingBoxInfo.Rect.max.x, boundingBoxInfo.Rect.max.y, boundingBoxInfo.Rect.max.z));
         }
 
-        public void OnPlayerUpdate(Player player, WorldPosition playerPosition)
+        public void OnPlayerUpdate(Player player)
         {
             // is player in area?
-            if (IsInside(playerPosition))
+            if (IsInside(player.Position))
             {
                 // if not on list, add them and update listeners
                 if (!PlayersInArea.Contains(player))
