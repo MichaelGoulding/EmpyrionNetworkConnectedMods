@@ -686,14 +686,17 @@ namespace EmpyrionModApi
                 var playfield = GetPlayfield(playfieldLoadData.playfield);
                 playfield.UpdateInfo(playfieldLoadData);
 
-                SendRequest<Eleon.Modding.GlobalStructureList>(Eleon.Modding.CmdId.Request_GlobalStructure_Update, new Eleon.Modding.PString(playfieldLoadData.playfield))
-                    .ContinueWith((task) =>
-                    {
-                        playfield.UpdateInfo(task.Result);
+                if (Event_Playfield_Loaded != null)
+                {
+                    SendRequest<Eleon.Modding.GlobalStructureList>(Eleon.Modding.CmdId.Request_GlobalStructure_Update, new Eleon.Modding.PString(playfieldLoadData.playfield))
+                        .ContinueWith((task) =>
+                        {
+                            playfield.UpdateInfo(task.Result);
 
                         // call event only after structures have been updated.
                         Event_Playfield_Loaded?.Invoke(playfield);
-                    });
+                        });
+                }
             }
         }
 
