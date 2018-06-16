@@ -80,15 +80,26 @@ namespace EmpyrionModApi
                 new Eleon.Modding.BlueprintResources(EntityId, itemStacks, true));
         }
 
-        public override Task ChangePlayfield( WorldPosition newWorldPosition)
+        public override async Task<WorldPosition> GetCurrentPosition()
         {
-            if (Position.playfield == newWorldPosition.playfield)
+            var pInfo = await _gameServerConnection.SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(EntityId));
+
+            UpdateInfo(pInfo);
+
+            return Position;
+        }
+
+        public override async Task ChangePlayfield( WorldPosition newWorldPosition)
+        {
+            var playerPosition = await GetCurrentPosition();
+
+            if (playerPosition.playfield == newWorldPosition.playfield)
             {
-                return Teleport(newWorldPosition.position, newWorldPosition.rotation);
+                await Teleport(newWorldPosition.position, newWorldPosition.rotation);
             }
             else
             {
-                return _gameServerConnection.SendRequest(
+                await _gameServerConnection.SendRequest(
                     Eleon.Modding.CmdId.Request_Player_ChangePlayerfield,
                     new Eleon.Modding.IdPlayfieldPositionRotation(
                         EntityId,
@@ -120,14 +131,14 @@ namespace EmpyrionModApi
         {
             var pInfo = await _gameServerConnection.SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(EntityId));
 
-            UpdateInfo(pInfo, this.Position.playfield);
+            UpdateInfo(pInfo);
         }
 
         public async Task<double> GetCreditBalance()
         {
             var pInfo = await _gameServerConnection.SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(EntityId));
 
-            UpdateInfo(pInfo, this.Position.playfield);
+            UpdateInfo(pInfo);
 
             return pInfo.credits;
         }
@@ -136,7 +147,7 @@ namespace EmpyrionModApi
         {
             var pInfo = await _gameServerConnection.SendRequest<Eleon.Modding.PlayerInfo>(Eleon.Modding.CmdId.Request_Player_Info, new Eleon.Modding.Id(EntityId));
 
-            UpdateInfo(pInfo, this.Position.playfield);
+            UpdateInfo(pInfo);
 
             return pInfo.exp;
         }
@@ -233,19 +244,25 @@ namespace EmpyrionModApi
         internal Player(GameServerConnection gameServerConnection, Eleon.Modding.PlayerInfo pInfo)
             : base(gameServerConnection, pInfo.entityId, EntityType.Player, pInfo.playerName)
         {
-            UpdateInfo(pInfo, _gameServerConnection.GetPlayfield(pInfo.playfield));
+            UpdateInfo(pInfo);
         }
 
-        internal void UpdateInfo(Eleon.Modding.PlayerInfo pInfo, Playfield playfield)
+        internal void UpdateInfo(Eleon.Modding.PlayerInfo pInfo)
         {
-            System.Diagnostics.Debug.Assert(EntityId == pInfo.entityId);
-            this.SteamId = pInfo.steamId;
-            this.FactionGroupId = pInfo.factionGroup;
-            this.Origin = pInfo.origin;
-            this.Position = new WorldPosition { playfield = playfield, position = pInfo.pos.ToVector3() };
-            this.MemberOfFaction = _gameServerConnection.GetFaction(pInfo.factionId);
-            this.BpResourcesInFactory = pInfo.bpResourcesInFactory;
-            _permission = pInfo.permission;
+            var newFaction = _gameServerConnection.GetFaction(pInfo.factionId);
+            var newplayField = _gameServerConnection.GetPlayfield(pInfo.playfield);
+
+            lock (this)
+            {
+                System.Diagnostics.Debug.Assert(EntityId == pInfo.entityId);
+                this.SteamId = pInfo.steamId;
+                this.FactionGroupId = pInfo.factionGroup;
+                this.Origin = pInfo.origin;
+                this.Position = new WorldPosition { playfield = newplayField, position = pInfo.pos.ToVector3() };
+                this.MemberOfFaction = newFaction;
+                this.BpResourcesInFactory = pInfo.bpResourcesInFactory;
+                _permission = pInfo.permission;
+            }
         }
 
         #endregion

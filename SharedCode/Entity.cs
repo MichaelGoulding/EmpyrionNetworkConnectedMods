@@ -131,9 +131,10 @@ namespace EmpyrionModApi
         //Request_Entity_SetName,             // IdPlayfieldName (if playfield == null we try to find the corresponding playfield, playfield must be loaded)
 
 
-        public async Task<WorldPosition> GetCurrentPosition()
+        virtual public async Task<WorldPosition> GetCurrentPosition()
         {
             var newData = await _gameServerConnection.SendRequest<Eleon.Modding.IdPositionRotation>(Eleon.Modding.CmdId.Request_Entity_PosAndRot, new Eleon.Modding.Id(EntityId));
+
             lock (this)
             {
                 Position = new WorldPosition(Position.playfield, newData.pos.ToVector3(), newData.rot.ToVector3());

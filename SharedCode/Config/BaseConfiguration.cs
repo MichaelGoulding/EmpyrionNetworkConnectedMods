@@ -9,6 +9,7 @@ namespace EmpyrionModApi
         public string GameServerIp { get; set; }
         public int GameServerApiPort { get; set; }
 
+        // Kept in only so older configs won't choke
         public int PlayerUpdateIntervalInSeconds { get; set; }
 
         public BaseConfiguration()

@@ -50,14 +50,16 @@ namespace SellToServerMod
             }
         }
 
-        private void ProcessSellCommand(Player player)
+        private async void ProcessSellCommand(Player player)
         {
+            WorldPosition playerPosition = await player.GetCurrentPosition();
+
             bool found = false;
             foreach (var sellLocation in _config.SellLocations)
             {
                 BoundingBox boundingBox = new BoundingBox(_gameServerConnection, sellLocation.BoundingBox);
 
-                if (boundingBox.IsInside(player))
+                if (boundingBox.IsInside(playerPosition))
                 {
                     found = true;
 
@@ -69,8 +71,8 @@ namespace SellToServerMod
 
             if (!found)
             {
-                _gameServerConnection.DebugOutput("player not in the right spot: {0}", player.Position);
-                player.SendAlarmMessage("Not a valid place to sell.");
+                _gameServerConnection.DebugOutput("player not in the right spot: {0}", playerPosition);
+                await player.SendAlarmMessage("Not a valid place to sell.");
             }
         }
 

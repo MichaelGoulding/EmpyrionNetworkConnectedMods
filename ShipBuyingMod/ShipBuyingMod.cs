@@ -82,8 +82,11 @@ namespace ShipBuyingMod
                 await player.AddCredits(-shipInfo.Price);
 
                 string shipName = string.Format(shipInfo.ShipNameFormat, player.Name);
+
+                var playerPosition = await player.GetCurrentPosition();
+
                 // spawn ship
-                await player.Position.playfield.SpawnEntity(
+                await playerPosition.playfield.SpawnEntity(
                     shipName,
                     shipInfo.EntityType,
                     shipInfo.BlueprintName,
@@ -114,7 +117,9 @@ namespace ShipBuyingMod
         {
             try
             {
-                var shipSeller = await GetShipSellerAtPlayerLocation(player);
+                var playerPosition = await player.GetCurrentPosition(); // update current position
+
+                var shipSeller = GetShipSellerAtPlayerLocation(playerPosition);
 
                 if (shipSeller != null)
                 {
@@ -185,7 +190,7 @@ namespace ShipBuyingMod
                 }
                 else
                 {
-                    _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' not in the right location to buy. ({player.Position})");
+                    _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' not in the right location to buy. ({playerPosition})");
                     await player.SendAlarmMessage("Not a valid place to buy a ship.");
                 }
             }
@@ -217,15 +222,13 @@ namespace ShipBuyingMod
             await player.SendChatMessage($"Usage: \"{_config.BuyShipCommand} (number between 1 and {shipSeller.ShipsForSale.Count})\"");
         }
 
-        private async Task<Configuration.ShipSeller> GetShipSellerAtPlayerLocation(Player player)
+        private Configuration.ShipSeller GetShipSellerAtPlayerLocation(WorldPosition playerPosition)
         {
-            await player.GetCurrentPosition(); // update current position
-
             foreach (var shipSeller in _config.ShipSellers)
             {
                 BoundingBox boundingBox = new BoundingBox(_gameServerConnection, shipSeller.BoundingBox);
 
-                if (boundingBox.IsInside(player))
+                if (boundingBox.IsInside(playerPosition))
                 {
                     return shipSeller;
                 }

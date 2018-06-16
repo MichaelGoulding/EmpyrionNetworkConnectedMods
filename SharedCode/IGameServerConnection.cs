@@ -13,11 +13,17 @@ namespace EmpyrionModApi
         PlayerToServer = 9
     }
 
+    public struct PlayerDeathInfo
+    {
+        public Player killer;
+    }
+
     public interface IGameServerConnection : IDisposable
     {
         event Action<ChatType, string, Player> Event_ChatMessage;
         event Action<FactionChangeInfo> Event_Faction_Changed;
         event Action<Playfield, Player> Event_Player_ChangedPlayfield;
+        event Action<Player, PlayerDeathInfo> Event_PlayerDied;
         event Action<Playfield> Event_Playfield_Loaded;
 
         void AddBoundingBox(BoundingBox boundingBox);
