@@ -34,6 +34,7 @@ namespace EmpyrionModApi
         void DebugOutput(string format, params object[] args);
 
         Dictionary<int, Player> GetOnlinePlayers();
+        Player GetOnlinePlayerByName(string playerName);
         Playfield GetPlayfield(string playfieldName);
         Faction GetFaction(int factionId);
         Task RefreshFactionList();

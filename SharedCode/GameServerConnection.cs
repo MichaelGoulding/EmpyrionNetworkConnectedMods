@@ -128,17 +128,17 @@ namespace EmpyrionModApi
 
         public Task SendAlarmMessageToAll(string format, params object[] args)
         {
-            return SendMessageToAll(MessagePriority.Alarm, 100, format, args);
+            return SendMessageToAll(MessagePriority.Alarm, 1000, format, args);
         }
 
         public Task SendAlertMessageToAll(string format, params object[] args)
         {
-            return SendMessageToAll(MessagePriority.Alert, 100, format, args);
+            return SendMessageToAll(MessagePriority.Alert, 1000, format, args);
         }
 
         public Task SendAttentionMessageToAll(string format, params object[] args)
         {
-            return SendMessageToAll(MessagePriority.Attention, 100, format, args);
+            return SendMessageToAll(MessagePriority.Attention, 1000, format, args);
         }
 
         public Task SendMessageToAll(MessagePriority priority, float time, string format, params object[] args)
@@ -176,6 +176,22 @@ namespace EmpyrionModApi
         public Dictionary<int, Player> GetOnlinePlayers()
         {
             return _onlinePlayersInfoById;
+        }
+
+        public Player GetOnlinePlayerByName(string playerName)
+        {
+            lock(_onlinePlayersInfoById)
+            {
+                foreach(Player player in _onlinePlayersInfoById.Values)
+                {
+                    if(player.Name.Equals(playerName, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        return player;
+                    }
+                }
+            }
+
+            return null; // not found
         }
 
         public Playfield GetPlayfield(string playfieldName)
