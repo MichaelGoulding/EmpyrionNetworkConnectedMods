@@ -111,6 +111,7 @@ namespace EmpyrionModApi
 
         //Request_Player_SetPlayerInfo = 34,
 
+        // returns button id pressed (0-based index)
         public async Task<int> ShowDialog(string msg, string posButtonText = "Ok", string negButtonText = null)
         {
             Eleon.Modding.IdAndIntValue idAndValue = 

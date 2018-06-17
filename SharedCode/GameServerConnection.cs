@@ -419,6 +419,10 @@ namespace EmpyrionModApi
                             ProcessEvent_GameEvent((Eleon.Modding.GameEventData)p.data);
                             break;
 
+                        case Eleon.Modding.CmdId.Event_DialogButtonIndex:
+                            // We don't do anything with this here as this is from other mods.
+                            break;
+
                         default:
                             DebugOutput("(1) Unknown package cmd {0}", p.cmd);
                             BreakIfDebugBuild();
