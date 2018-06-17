@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\NetworkConnectedModRunner\bin\Debug\Extensions\StructureOwnershipMod\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,7 +24,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\NetworkConnectedModRunner\bin\Release\Extensions\StructureOwnershipMod\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -61,4 +61,8 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>xcopy /Y "$(TargetDir)$(TargetFileName)" "$(ProjectDir)..\NetworkConnectedModRunner\bin\$(ConfigurationName)\Extensions\$(TargetName)\"
+xcopy /Y  "$(TargetDir)$(TargetName)_Settings.yaml" "$(ProjectDir)..\NetworkConnectedModRunner\bin\$(ConfigurationName)\Extensions\$(TargetName)\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
