@@ -1,0 +1,50 @@
+﻿---
+#When the player is, where do they go?
+JailLocation:
+    Playfield: Inflicted Prime
+    Position:
+        x: 0
+        y: 365
+        z: 0
+    Rotation:
+        x: 0
+        y: 0
+        z: 0
+
+#When the admin lets them out, where do they go?
+JailExitLocation:
+    Playfield: Inflicted Prime
+    Position:
+        x: 0
+        y: 620
+        z: -65
+    Rotation:
+        x: 0
+        y: 0
+        z: 0
+
+NoKillZones:
+- Name: Moombi safe area
+  BoundingBox:
+    Playfield: Moombi
+    Rect:
+      min:
+        x: 1027
+        y: 0
+        z: -4932
+      max:
+        x: 1197
+        y: 9999
+        z: -4811
+- Name: Bobby
+  BoundingBox:
+    Playfield: Moombi
+    Rect:
+      min:
+        x: 1027
+        y: 49
+        z: -4932
+      max:
+        x: 1028
+        y: 51
+        z: -4811
