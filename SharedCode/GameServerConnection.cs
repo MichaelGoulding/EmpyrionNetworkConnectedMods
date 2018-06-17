@@ -843,7 +843,7 @@ namespace EmpyrionModApi
 
             DebugLog("Event_ChatMessage: Player: {0}, Recepient: {1}, Recepient Faction: {2}, {3}, Message: '{4}'", obj.playerId, obj.recipientEntityId, obj.recipientFactionId, chatType, obj.msg);
 
-            if (obj.type != 8 && obj.type != 7 && msg == "!MODS")
+            if (obj.type != 8 && obj.type != 7 && msg.ToUpper() == "!MODS")
             {
                 foreach (var versionString in _versionStrings)
                 {
