@@ -13,6 +13,8 @@ namespace ShipBuyingMod
     {
         static readonly string k_versionString = EmpyrionModApi.Helpers.GetVersionString(typeof(ShipBuyingMod));
 
+        static readonly int k_noOrigin = -1;
+
         private TraceSource _traceSource = new TraceSource("ShipBuyingMod");
         private IGameServerConnection _gameServerConnection;
         private Configuration _config;
@@ -123,7 +125,7 @@ namespace ShipBuyingMod
 
                 if (shipSeller != null)
                 {
-                    if ((shipSeller.Origin == 255) || (shipSeller.Origin == player.Origin))
+                    if ((shipSeller.Origin == k_noOrigin) || (shipSeller.Origin == player.Origin))
                     {
                         if (string.IsNullOrWhiteSpace(restOfCommandString))
                         {
