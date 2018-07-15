@@ -38,8 +38,6 @@ namespace ShipBuyingMod
             _traceSource.Close();
         }
 
-        private Dictionary<Player, Configuration.ShipSeller.ShipInfo> _pendingTransactions = new Dictionary<Player, Configuration.ShipSeller.ShipInfo>();
-
         private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
             if (msg.StartsWith(_config.BuyShipCommand))
@@ -47,34 +45,10 @@ namespace ShipBuyingMod
                 _traceSource.TraceInformation($"Player '{player}' asked to buy a ship.");
                 ProcessBuyCommand(msg.Substring(_config.BuyShipCommand.Length), player);
             }
-            else
-            {
-                lock (_pendingTransactions)
-                {
-                    if (_pendingTransactions.ContainsKey(player))
-                    {
-                        if (msg.Equals("yes", StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            CompleteTransaction(player);
-                        }
-                        else if (msg.Equals("no", StringComparison.CurrentCultureIgnoreCase))
-                        {
-                            _pendingTransactions.Remove(player);
-                        }
-                    }
-                }
-            }
         }
 
-        private async void CompleteTransaction(Player player)
+        private async void CompleteTransaction(Player player, Configuration.ShipSeller.ShipInfo shipInfo)
         {
-            Configuration.ShipSeller.ShipInfo shipInfo;
-
-            lock (_pendingTransactions)
-            {
-                shipInfo = _pendingTransactions[player];
-            }
-
             // check money
             var credits = await player.GetCreditBalance();
 
@@ -111,11 +85,6 @@ namespace ShipBuyingMod
                 _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' suddenly doesn't have enough money (Price:{shipInfo.Price}). Balance: {credits}");
                 /*await*/ player.SendAlarmMessage("Insufficient funds!");
             }
-
-            lock (_pendingTransactions)
-            {
-                _pendingTransactions.Remove(player);
-            }
         }
 
         private async void ProcessBuyCommand(string restOfCommandString, Player player)
@@ -150,22 +119,20 @@ namespace ShipBuyingMod
                                 {
                                     _traceSource.TraceInformation("Starting pending transaction for player '{0}' wanting to buy ship '{1}'", player, shipInfo.DisplayName);
 
-                                    lock (_pendingTransactions)
-                                    {
-                                        if(!_pendingTransactions.ContainsKey(player))
-                                        {
-                                            _pendingTransactions.Add(player, shipInfo);
-                                        }
-                                        else
-                                        {
-                                            _traceSource.TraceEvent(TraceEventType.Warning, 0, $"Replacing existing transaction for Player '{player}'.");
-                                            _pendingTransactions[player] = shipInfo;
-                                        }
-                                        
-                                    }
-
                                     // ask for confirmation
-                                    /*await*/ player.SendChatMessage($"Are you sure you want to buy \"{shipInfo.DisplayName}\"? (yes/no)");
+                                    int answer = await player.ShowDialog($"Are you sure you want to buy \"{shipInfo.DisplayName}\"?", "Yes", "No");
+
+                                    switch(answer)
+                                    {
+                                        case 0: // yes
+                                            _traceSource.TraceInformation("Player '{0}' confirmed transaction to buy ship '{1}'", player, shipInfo.DisplayName);
+                                            CompleteTransaction(player, shipInfo);
+                                            break;
+                                        case 1: // no
+                                        default:
+                                            _traceSource.TraceInformation("Player '{0}' canceled transaction to buy ship '{1}'", player, shipInfo.DisplayName);
+                                            break;
+                                    }
                                 }
                                 else
                                 {
