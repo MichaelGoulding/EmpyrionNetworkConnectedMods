@@ -2,29 +2,29 @@
 BuyShipCommand: "/buyship"
 ShipSellers:
 - Name: Bob
-  Origin: 1
+  Origin: -1
   BoundingBox:
-    Playfield: Akua2
+    Playfield: Akua
     Rect:
       min:
-        x: -1434
-        y: 48
-        z: 700
+        x: -16000
+        y: 0
+        z: 7500
       max:
-        x: -1430
-        y: 51
-        z: 701.5
+        x: -14000
+        y: 100
+        z: 8000
   ShipsForSale:
   - DisplayName: Ship One
-    BlueprintName: SV_PF1   # Name of a file (minus extension) from the Content\Prefabs folder
+    BlueprintName: SV_Viper   # Name of a file (minus extension) from the Content\Prefabs folder
     EntityType: SV
     ShipNameFormat: "Cool ship1 for {0}"
     MessageToShowOnPurchase: "Look outside for your new ship!"
     Price: 100.50
     SpawnLocation:
-      x: -1439
-      y: 149
-      z: 707.5
+      x: -15434
+      y: 68
+      z: 7689
   - DisplayName: Ship Two
     BlueprintName: SV_PF2
     EntityType: CV
@@ -38,7 +38,7 @@ ShipSellers:
 - Name: Bobby
   Origin: -1   # -1 means any player can buy
   BoundingBox:
-    Playfield: Akua2
+    Playfield: Akua
     Rect:
       min:
         x: -1439
