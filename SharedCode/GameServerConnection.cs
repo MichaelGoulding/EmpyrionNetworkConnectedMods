@@ -47,6 +47,7 @@ namespace EmpyrionModApi
 
         public event Action<Playfield> Event_Playfield_Loaded;
         public event Action<ChatType, string, Player> Event_ChatMessage;
+        public event Action<Player, string, bool> Event_ConsoleCommand;
         public event Action<Eleon.Modding.FactionChangeInfo> Event_Faction_Changed;
 
         #endregion
@@ -455,6 +456,14 @@ namespace EmpyrionModApi
         private void ProcessEvent_ConsoleCommand(ConsoleCommandInfo obj)
         {
             DebugOutput("Player {0}; Console command: {1} Allowed: {2}", obj.playerEntityId, obj.command, obj.allowed);
+
+            Player player;
+            lock (_onlinePlayersInfoById)
+            {
+                player = _onlinePlayersInfoById[obj.playerEntityId];
+            }
+
+            Event_ConsoleCommand?.Invoke(player, obj.command, obj.allowed);
         }
 
         private void ProcessEvent_Playfield_Entity_List(PlayfieldEntityList obj)
