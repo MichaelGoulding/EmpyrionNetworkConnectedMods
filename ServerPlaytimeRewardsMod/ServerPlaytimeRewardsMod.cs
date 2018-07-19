@@ -71,9 +71,12 @@ namespace ServerPlaytimeRewardsMod
 
         private void OnEvent_Player_Disconnected(Player player)
         {
-            _traceSource.TraceInformation($"Stopping reward timer for {player} who just disconnected.");
-            _playerRewardTimers[player].Stop();
-            _playerRewardTimers.Remove(player);
+            if (_playerRewardTimers.ContainsKey(player))
+            {
+                _traceSource.TraceInformation($"Stopping reward timer for {player} who just disconnected.");
+                _playerRewardTimers[player].Stop();
+                _playerRewardTimers.Remove(player);
+            }
         }
     }
 }
