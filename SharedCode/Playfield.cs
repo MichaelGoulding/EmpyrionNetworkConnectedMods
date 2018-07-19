@@ -19,6 +19,9 @@ namespace EmpyrionModApi
                 new Eleon.Modding.PString(string.Format("remoteex pf={0} 'regenerate {1}'", ProcessId, entityId)));
         }
 
+        const byte k_factionGroupId_Faction = 0;
+        const byte k_factionGroupId_Private = 1;
+
         public async Task SpawnEntity(string name, Entity.EntityType type, string prefabName, Vector3 position, Faction faction)
         {
             var newId = await _gameServerConnection.SendRequest<Eleon.Modding.Id>(Eleon.Modding.CmdId.Request_NewEntityId, null);
@@ -31,7 +34,7 @@ namespace EmpyrionModApi
             spawnInfo.name = name;
             spawnInfo.type = (byte)type;
             spawnInfo.prefabName = prefabName;
-            spawnInfo.factionGroup = faction.Origin;
+            spawnInfo.factionGroup = k_factionGroupId_Faction;
             spawnInfo.factionId = faction.Id;
             //spawnInfo.exportedEntityDat = exportFile;
 
@@ -51,7 +54,7 @@ namespace EmpyrionModApi
             spawnInfo.name = name;
             spawnInfo.type = (byte)type;
             spawnInfo.prefabName = prefabName;
-            spawnInfo.factionGroup = (player.MemberOfFaction != null) ? player.MemberOfFaction.Origin : player.FactionGroupId;
+            spawnInfo.factionGroup = k_factionGroupId_Private;
             spawnInfo.factionId = player.EntityId;
             //spawnInfo.exportedEntityDat = exportFile;
 
