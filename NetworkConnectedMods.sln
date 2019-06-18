@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoHome", "GoHome\GoHome.csproj", "{E936179F-CFC8-45F5-9B1C-EE699EE76EA7}"
 EndProject
@@ -56,6 +56,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoKillZonesMod", "NoKillZonesMod\NoKillZonesMod.csproj", "{1F8B53CA-D5E3-4844-8B2B-5EA0CCA77AF6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerPlaytimeRewardsMod", "ServerPlaytimeRewardsMod\ServerPlaytimeRewardsMod.csproj", "{D0BEC1EA-CC22-4E08-8756-7F0EC3472C07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankTransferMod", "BankTransferMod\BankTransferMod.csproj", "{9A3C3614-C124-48BE-99C7-4BDC0398D88A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,6 +129,10 @@ Global
 		{D0BEC1EA-CC22-4E08-8756-7F0EC3472C07}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D0BEC1EA-CC22-4E08-8756-7F0EC3472C07}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D0BEC1EA-CC22-4E08-8756-7F0EC3472C07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A3C3614-C124-48BE-99C7-4BDC0398D88A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A3C3614-C124-48BE-99C7-4BDC0398D88A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A3C3614-C124-48BE-99C7-4BDC0398D88A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A3C3614-C124-48BE-99C7-4BDC0398D88A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

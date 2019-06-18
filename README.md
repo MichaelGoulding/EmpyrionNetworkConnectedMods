@@ -18,6 +18,7 @@ Send bugs or send pull requests with any improvements, modules, or documentation
 # Included mods
 | Module | Description |
 |:-----------|:-----------|
+|Bank Transfer Mod| Lets players transfer funds to each other. |
 | FactionStorageMod | Lets players in the same faction access a shared storage area. |
 | NoKillZonesMod | Lets admins jail and release players from a configured jail location.  Also puts players in jail who kill other players in "protected" areas. |
 | PlayfieldStructureRegenMod | Regenerates POIs or asteriods when a playfield is loaded. |
