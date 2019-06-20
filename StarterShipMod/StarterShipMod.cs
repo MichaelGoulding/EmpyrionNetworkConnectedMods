@@ -46,22 +46,26 @@ namespace StarterShipMod
             _traceSource.Close();
         }
 
-        private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
+        private async void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
             if (msg == _config.StarterShipCommand)
             {
                 _traceSource.TraceInformation($"Player '{player}' asked for a ship.");
+
+                bool hasGotStarterShip;
                 lock (_saveState)
                 {
-                    if (_saveState.HasGotStarterShip(player))
-                    {
-                        _traceSource.TraceInformation($"Player '{player}' already redeemed a ship.");
-                        player.SendAlarmMessage("You already redeemed your starter ship earlier.");
-                    }
-                    else
-                    {
-                        OnGetStarterShip(player);
-                    }
+                    hasGotStarterShip = _saveState.HasGotStarterShip(player);
+                }
+
+                if (hasGotStarterShip)
+                {
+                    _traceSource.TraceInformation($"Player '{player}' already redeemed a ship.");
+                    await player.SendAlarmMessage("You already redeemed your starter ship earlier.");
+                }
+                else
+                {
+                    await OnGetStarterShip(player);
                 }
             }
         }

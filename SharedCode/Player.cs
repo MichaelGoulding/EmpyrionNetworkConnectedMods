@@ -218,9 +218,12 @@ namespace EmpyrionModApi
         public Task SendMessage(MessagePriority priority, float time, string format, params object[] args)
         {
             string msg = format.SafeFormat(args);
-            return _gameServerConnection.SendRequest(
+            _gameServerConnection.SendRequest(
                 Eleon.Modding.CmdId.Request_InGameMessage_SinglePlayer,
                 new Eleon.Modding.IdMsgPrio(EntityId, msg, (byte)priority, time));
+
+            // Until the server is fixed, we can't wait for an answer.
+            return Task.CompletedTask;
         }
 
         public Task<Eleon.Modding.ItemExchangeInfo> DoItemExchange(string title, string description, string buttonText,ItemStacks items = null)

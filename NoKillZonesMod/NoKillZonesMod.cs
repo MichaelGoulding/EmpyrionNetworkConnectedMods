@@ -56,7 +56,7 @@ namespace NoKillZonesMod
             _traceSource.Close();
         }
 
-        private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
+        private async void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
             if (player.IsPrivileged)
             {
@@ -72,16 +72,12 @@ namespace NoKillZonesMod
 
                     if (playerToJail != null)
                     {
-                        JailPlayer(requesterName, playerToJail, reason)
-                            .ContinueWith((task) =>
-                            {
-                                player.SendAttentionMessage($"{playerNameToJail} jailed for \"{reason}\".");
-
-                            });
+                        await JailPlayer(requesterName, playerToJail, reason);
+                        await player.SendAttentionMessage($"{playerNameToJail} jailed for \"{reason}\".");
                     }
                     else
                     {
-                        player.SendAlarmMessage($"{playerNameToJail} is not found.");
+                        await player.SendAlarmMessage($"{playerNameToJail} is not found.");
                     }
                 }
                 else
@@ -95,16 +91,13 @@ namespace NoKillZonesMod
 
                         if (playerToRelease != null)
                         {
-                            playerToRelease.ChangePlayfield(_jailExitLocation)
-                                .ContinueWith((task) =>
-                                {
-                                    player.SendAttentionMessage($"{playerToRelease} released.");
-                                    playerToRelease.SendAttentionMessage($"{requesterName} freed you.");
-                                });
+                            await playerToRelease.ChangePlayfield(_jailExitLocation);
+                            await player.SendAttentionMessage($"{playerToRelease} released.");
+                            await playerToRelease.SendAttentionMessage($"{requesterName} freed you.");
                         }
                         else
                         {
-                            player.SendAlarmMessage($"{playerNameToRelease} is not found.");
+                            await player.SendAlarmMessage($"{playerNameToRelease} is not found.");
                         }
                     }
                 }
@@ -118,8 +111,6 @@ namespace NoKillZonesMod
             await playerToJail.ChangePlayfield(_jailLocation);
 
             await playerToJail.SendAlarmMessage($"{requesterName} jailed you for \"{reason}\".");
-
-            _traceSource.TraceInformation("Test");
         }
 
         private async void OnEvent_PlayerDied(Player deadPlayer, PlayerDeathInfo playerDeathInfo)
@@ -138,7 +129,7 @@ namespace NoKillZonesMod
                 {
                     _traceSource.TraceInformation($"Rule breaker player {killer}!!");
 
-                    _gameServerConnection.SendMessageToAll(MessagePriority.Attention, 20*1000, $"{killer.Name} broke the rules and killed {deadPlayer.Name} in the {noKillZone.Name}.  He or she will be jailed.");
+                    await _gameServerConnection.SendMessageToAll(MessagePriority.Attention, 20*1000, $"{killer.Name} broke the rules and killed {deadPlayer.Name} in the {noKillZone.Name}.  He or she will be jailed.");
 
                     await JailPlayer("The server", killer, $"For breaking the rules and killing {deadPlayer.Name}");
                 }

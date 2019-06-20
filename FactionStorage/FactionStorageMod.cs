@@ -48,13 +48,13 @@ namespace FactionStorageMod
             _traceSource.Close();
         }
 
-        private void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
+        private async void OnEvent_ChatMessage(ChatType chatType, string msg, Player player)
         {
             if (msg == _config.FactionStorageCommand)
             {
                 _traceSource.TraceInformation($"Player '{player}' asked to see their faction's shared storage.");
 
-                OnUseFactionStorage(player);
+                await OnUseFactionStorage(player);
             }
         }
 

@@ -76,14 +76,14 @@ namespace ShipBuyingMod
 
                 if (shipInfo.MessageToShowOnPurchase != null)
                 {
-                    /*await*/ player.SendAlertMessage(shipInfo.MessageToShowOnPurchase);
+                    await player.SendAlertMessage(shipInfo.MessageToShowOnPurchase);
                 }
             }
             else
             {
                 // something changed since they wanted to buy it...
                 _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' suddenly doesn't have enough money (Price:{shipInfo.Price}). Balance: {credits}");
-                /*await*/ player.SendAlarmMessage("Insufficient funds!");
+                await player.SendAlarmMessage("Insufficient funds!");
             }
         }
 
@@ -102,7 +102,7 @@ namespace ShipBuyingMod
                         if (string.IsNullOrWhiteSpace(restOfCommandString))
                         {
                             // print welcome and usage
-                            /*await*/ ShowWelcome(player, shipSeller);
+                            await ShowWelcome(player, shipSeller);
                         }
                         else if (int.TryParse(restOfCommandString, out int originalNumber))
                         {
@@ -138,32 +138,32 @@ namespace ShipBuyingMod
                                 {
                                     // Need more $$$
                                     _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' doesn't have enough money (Price:{shipInfo.Price}). Balance: {credits}");
-                                    /*await*/ player.SendAlarmMessage("Insufficient funds!");
+                                    await player.SendAlarmMessage("Insufficient funds!");
                                 }
                             }
                             else
                             {
                                 _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' invalid ship number to buy. ({originalNumber})");
-                                /*await*/ player.SendAlarmMessage("Invalid ship number to buy.");
+                                await player.SendAlarmMessage("Invalid ship number to buy.");
                             }
                         }
                         else
                         {
                             // not an integer.  Print usage.
                             _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' invalid command to buy. ({restOfCommandString})");
-                            /*await*/ ShowUsage(player, shipSeller);
+                            await ShowUsage(player, shipSeller);
                         }
                     }
                     else
                     {
                         _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' not the right origin to buy. (player:{player.Origin}, seller:{shipSeller.Origin})");
-                        /*await*/ player.SendAlarmMessage("Not the right origin to buy a ship from.");
+                        await player.SendAlarmMessage("Not the right origin to buy a ship from.");
                     }
                 }
                 else
                 {
                     _traceSource.TraceEvent(TraceEventType.Error, 0, $"Player '{player}' not in the right location to buy. ({playerPosition})");
-                    /*await*/ player.SendAlarmMessage("Not a valid place to buy a ship.");
+                    await player.SendAlarmMessage("Not a valid place to buy a ship.");
                 }
             }
             catch (Exception ex)

@@ -59,7 +59,7 @@ namespace BankTransferMod
                         else
                         {
                             // player not found
-                            /*await*/ player.SendAlarmMessage("Player '{0}' not found.", receivingPlayerName);
+                            await player.SendAlarmMessage("Player '{0}' not found.", receivingPlayerName);
                         }
                     }
                     else
@@ -83,7 +83,7 @@ namespace BankTransferMod
 
         private async Task PrintUsageInfo(Player player)
         {
-            /*await*/ player.SendAlarmMessage("Usage: '{0} (receiving player name) (amount of credits)' ", _config.BankTransferCommand);
+            await player.SendAlarmMessage("Usage: '{0} (receiving player name) (amount of credits)' ", _config.BankTransferCommand);
         }
 
 
@@ -97,12 +97,12 @@ namespace BankTransferMod
                 await sendingPlayer.AddCredits(-creditsAmount);
                 await receivingPlayer.AddCredits(creditsAmount);
 
-                /*await*/ sendingPlayer.SendAttentionMessage("Sent {0} credits to {1}", creditsAmount, receivingPlayer.Name);
-                /*await*/ receivingPlayer.SendAttentionMessage("Received {0} credits from {1}", creditsAmount, sendingPlayer.Name);
+                await sendingPlayer.SendAttentionMessage("Sent {0} credits to {1}", creditsAmount, receivingPlayer.Name);
+                await receivingPlayer.SendAttentionMessage("Received {0} credits from {1}", creditsAmount, sendingPlayer.Name);
             }
             else
             {
-                /*await*/ sendingPlayer.SendAlarmMessage("Insufficient funds!");
+                await sendingPlayer.SendAlarmMessage("Insufficient funds!");
             }
         }
 
