@@ -23,6 +23,7 @@ namespace EmpyrionModApi
         event Action<Player> Event_Player_Connected;
         event Action<Player> Event_Player_Disconnected;
         event Action<ChatType, string, Player> Event_ChatMessage;
+        event Action<Player, string, bool> Event_ConsoleCommand;
         event Action<FactionChangeInfo> Event_Faction_Changed;
         event Action<Playfield, Player> Event_Player_ChangedPlayfield;
         event Action<Player, PlayerDeathInfo> Event_PlayerDied;
