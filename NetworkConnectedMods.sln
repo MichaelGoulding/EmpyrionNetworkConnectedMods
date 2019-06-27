@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankTransferMod", "BankTran
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdminConsoleCommandTattletaleMod", "AdminConsoleCommandTattletaleMod\AdminConsoleCommandTattletaleMod.csproj", "{FE256D87-2910-479F-B916-D931EE1BE494}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadarMod", "RadarMod\RadarMod.csproj", "{45B774A7-7DED-42A2-BC26-D9C7D2C55A1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,6 +141,10 @@ Global
 		{FE256D87-2910-479F-B916-D931EE1BE494}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE256D87-2910-479F-B916-D931EE1BE494}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE256D87-2910-479F-B916-D931EE1BE494}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45B774A7-7DED-42A2-BC26-D9C7D2C55A1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45B774A7-7DED-42A2-BC26-D9C7D2C55A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45B774A7-7DED-42A2-BC26-D9C7D2C55A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45B774A7-7DED-42A2-BC26-D9C7D2C55A1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
