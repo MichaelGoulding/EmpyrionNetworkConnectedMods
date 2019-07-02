@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 
 namespace BankTransferMod
 {
@@ -41,18 +42,21 @@ namespace BankTransferMod
             {
                 if (msg.StartsWith(_config.BankTransferCommand))
                 {
-                    string[] msgPieces = msg.Split(' ');
+                    string escapedCommand = _config.BankTransferCommand.Replace("/", "\\/");
+                    string regEx = string.Format("{0} (.+) (\\d+)", escapedCommand);
 
-                    if( msgPieces.Length == 3)
+                    Match match = Regex.Match(msg, regEx, RegexOptions.IgnoreCase);
+
+                    if (match.Success)
                     {
-                        string receivingPlayerName = msgPieces[1];
-                        string creditsAmountStr = msgPieces[2];
+                        string receivingPlayerName = match.Groups[1].Value;
+                        string creditsAmountStr = match.Groups[2].Value;
 
                         uint creditsAmount = uint.Parse(creditsAmountStr);
 
                         Player receivingPlayer = _gameServerConnection.GetOnlinePlayerByName(receivingPlayerName);
 
-                        if(receivingPlayer != null)
+                        if (receivingPlayer != null)
                         {
                             await TransferCreditsToPlayer(player, receivingPlayer, creditsAmount);
                         }
