@@ -18,13 +18,14 @@ Send bugs or send pull requests with any improvements, modules, or documentation
 # Included mods
 | Module | Description |
 |:-----------|:-----------|
-|Bank Transfer Mod| Lets players transfer funds to each other. |
+|BankTransferMod| Lets players transfer funds to each other. |
 | FactionStorageMod | Lets players in the same faction access a shared storage area. |
 | NoKillZonesMod | Lets admins jail and release players from a configured jail location.  Also puts players in jail who kill other players in "protected" areas. |
 | PlayfieldStructureRegenMod | Regenerates POIs or asteriods when a playfield is loaded. |
 | ServerPlaytimeRewardsMod | Gives a configured amount of XP points to every player every configured amount of minutes while they are logged in. |
 | ShipBuyingMod | Lets players buy ships for credits. |
 | StarterShipMod | Grants each player a one-time ship. |
+| StarterCreditsMod | Grants each player a one-time award of credits. |
 | StructureOwnershipMod | It gives periodic rewards to any faction that captures the core of configured ships/buildings. You then use /income to take out the items you've earned. The idea is that it gives purpose in PVP to take over bases in space/planet. It also reduce the need to use autominers as you could capture a "steel block" factory or something. |
 | VotingRewardMod | Calls empyrion-servers.com REST API to give configured rewards to players every day they vote. |
 | SellToServer | (Deprecated as it's a part of game now) Lets you configure an area where you can type /sell and sell items back to the server for credits.  Prices are configured in yaml (including a default price if you want to accept any item). |
