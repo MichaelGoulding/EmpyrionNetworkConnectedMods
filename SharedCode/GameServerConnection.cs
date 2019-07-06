@@ -195,6 +195,24 @@ namespace EmpyrionModApi
             return null; // not found
         }
 
+        public List<Player> GetOnlinePlayersByPlayfield(Playfield playfield)
+        {
+            List<Player> result = new List<Player>();
+
+            lock (_onlinePlayersInfoById)
+            {
+                foreach (Player player in _onlinePlayersInfoById.Values)
+                {
+                    if (player.Position.playfield.Equals(playfield))
+                    {
+                        result.Add(player);
+                    }
+                }
+            }
+
+            return result;
+        }
+
         public Playfield GetPlayfield(string playfieldName)
         {
             lock(_playfieldsByName)

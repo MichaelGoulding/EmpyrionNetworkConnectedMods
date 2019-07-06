@@ -12,6 +12,15 @@ namespace EmpyrionModApi
 
         public Dictionary<int, Structure> StructuresById { get { return _structuresById; } }
 
+        public async Task RefreshStructureList()
+        {
+            var result = await _gameServerConnection.SendRequest<Eleon.Modding.GlobalStructureList>(
+                Eleon.Modding.CmdId.Request_GlobalStructure_Update,
+                new Eleon.Modding.PString(Name));
+
+            UpdateInfo(result);
+        }
+
         public Task RegenerateStructure(int entityId)
         {
             return _gameServerConnection.SendRequest(

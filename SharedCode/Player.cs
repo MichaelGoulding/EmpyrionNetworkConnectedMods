@@ -1,5 +1,6 @@
 ﻿using EmpyrionModApi.ExtensionMethods;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Threading.Tasks;
 
 namespace EmpyrionModApi
@@ -47,6 +48,8 @@ namespace EmpyrionModApi
         public Dictionary<int, float> BpResourcesInFactory { get; protected set; }
 
         public string SteamId { get; private set; }
+
+        public int ClientId { get; private set; }
 
         public Task AddCredits(double amount)
         {
@@ -243,6 +246,55 @@ namespace EmpyrionModApi
             return _gameServerConnection.SendRequest<Eleon.Modding.ItemExchangeInfo>(Eleon.Modding.CmdId.Request_Player_ItemExchange, data);
         }
 
+        public Task<Eleon.Modding.Inventory> GetInventory()
+        {
+            return _gameServerConnection.SendRequest<Eleon.Modding.Inventory>(Eleon.Modding.CmdId.Request_Player_GetInventory, new Eleon.Modding.Id(EntityId));
+        }
+
+        public Task<Eleon.Modding.Inventory> SetInventory(ItemStacks toolbelt, ItemStacks bag)
+        {
+            var newInventory = new Eleon.Modding.Inventory(EntityId, toolbelt.ToEleonList().ToArray(), bag.ToEleonList().ToArray());
+
+            return _gameServerConnection.SendRequest<Eleon.Modding.Inventory>(Eleon.Modding.CmdId.Request_Player_SetInventory, newInventory);
+        }
+
+        public Task<Eleon.Modding.Inventory> GetAndRemoveInventory(ItemStacks toolbelt, ItemStacks bag)
+        {
+            var newInventory = new Eleon.Modding.Inventory(EntityId, toolbelt.ToEleonList().ToArray(), bag.ToEleonList().ToArray());
+
+            return _gameServerConnection.SendRequest<Eleon.Modding.Inventory>(Eleon.Modding.CmdId.Request_Player_GetAndRemoveInventory, newInventory);
+        }
+
+        public Task AddMarker(string name, Vector3 position, uint expireTimeInSeconds = 0)
+        {
+            return AddWaypointMarkerInternal("", name, position, expireTimeInSeconds);
+        }
+
+        public Task AddWaypointMarker(string name, Vector3 position, uint expireTimeInSeconds = 0)
+        {
+            return AddWaypointMarkerInternal("w", name, position, expireTimeInSeconds);
+        }
+
+        public Task AddDestoryOnReachWaypointMarker(string name, Vector3 position, uint expireTimeInSeconds = 0)
+        {
+            return AddWaypointMarkerInternal("wd", name, position, expireTimeInSeconds);
+        }
+
+        private Task AddWaypointMarkerInternal(string typeString, string name, Vector3 position, uint expireTimeInSeconds)
+        {
+            string command = string.Format("remoteex cl={0} marker add name={1} pos={2},{3},{4} {5} {6}",
+                this.ClientId,
+                name,
+                position.X,
+                position.Y,
+                position.Z,
+                typeString,
+                (expireTimeInSeconds > 0) ? string.Format("expire={0}", expireTimeInSeconds) : ""
+                );
+
+            return _gameServerConnection.RequestConsoleCommand(command);
+        }
+
         #region Internal Methods
 
         internal Player(GameServerConnection gameServerConnection, Eleon.Modding.PlayerInfo pInfo)
@@ -260,6 +312,7 @@ namespace EmpyrionModApi
             {
                 System.Diagnostics.Debug.Assert(EntityId == pInfo.entityId);
                 this.SteamId = pInfo.steamId;
+                this.ClientId = pInfo.clientId;
                 this.FactionGroupId = pInfo.factionGroup;
                 this.Origin = pInfo.origin;
                 this.Position = new WorldPosition { playfield = newplayField, position = pInfo.pos.ToVector3() };

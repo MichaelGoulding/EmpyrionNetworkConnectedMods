@@ -36,6 +36,7 @@ namespace EmpyrionModApi
 
         Dictionary<int, Player> GetOnlinePlayers();
         Player GetOnlinePlayerByName(string playerName);
+        List<Player> GetOnlinePlayersByPlayfield(Playfield playfield);
         Playfield GetPlayfield(string playfieldName);
         Faction GetFaction(int factionId);
         Task RefreshFactionList();
